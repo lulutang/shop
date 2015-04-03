@@ -1,0 +1,139 @@
+<link href="{$Think.ADMIN_CSS}style.css" rel="stylesheet" type="text/css">
+
+<div class="wapper">
+
+    <div class="wapper-right">
+    <div class="right_inner cart">
+    	<div class="path">您的位置：<a href="/Admin/Index/main">工作台</a> 》<a href="">促销管理</a> 》 <a href="/admin/gift/lists">赠品管理</a></div>     
+    
+    	   <form action="/admin/gift/search" method="get" name="search" >
+         <div class="search">
+                	<div class="sstj" >
+            			<select name="key">
+                    	   <option>关键词</option>
+                    	    <option <if condition="('用户昵称' eq $key1)">selected</if>>用户昵称</option>
+                    	    <option <if condition="('订单编号' eq $key1)">selected</if>>订单编号</option>
+                    	    <option <if condition="('赠品名称' eq $key1)">selected</if>>赠品名称</option>
+                    	    
+	                	</select><input type="text" name="keywords" placeholder ='请输入订单编号、用户昵称'  <if condition="( $keywords neq '' )"> value="{$keywords}"</if>  size="30" maxlength="30" /></p>
+                    	<p class="buytime"><span>赠品购买时间：</span>
+                    	<input type="text" <if condition="( $buy_timeb neq '' )"> value="{$buy_timeb}" <else/>value=""</if> id="" name="buy_timeb" onclick="SelectDate(this,'yyyy-MM-dd hh:mm')"/>
+                    	至
+                    	<input type="text" <if condition="( $buy_timeend neq '' )"> value="{$buy_timeend}" <else/>value=""</if> id="" name="buy_timeend" onclick="SelectDate(this,'yyyy-MM-dd hh:mm')"/></span>
+                        </p>
+                  <input type='hidden' name='sort' id='sort' value='{$sort}'>
+                    </div> 
+                   <div class="sstj_search_btn"> <input name="input" type="submit" value="搜索" /></div>
+                    <div class="clear"></div>
+		  			
+		      	
+		  		
+        </div>
+       	<div class="operation">
+        	<div id="systembox">
+
+    <div id="systembtn" class="systembtn">
+        <a href="javaScript:void(0)" id ='submit_order' class="abtn"><span>今日新增赠品({$dayCount})</span></a>
+      
+    </div>
+
+</div>
+		 
+			<div class="clear"></div>
+        </div>
+        <table class="cart hydd">
+        	<tr>
+                <th  class="col_11">赠品名称</th>
+            	<th  class="col_11">订单编号</th>
+                <th  class="col_11">用户昵称</th>
+                <th  class="col_13">购买商品数</th>
+                <th  class="col_16">赠品状态</th>
+                <th  class="col_17">赠品购买时间  <a class="<if condition="( 1 eq $sort )">px_down<else/>px_up </if>" href='javascript:void()' id='sort_gift'  >排序</a> </th>
+              <!--   <th  class="col_13">操作</th> -->
+            </tr>
+            <foreach name='lists' item='val' key = 'key'>
+              <tr <if condition="$key%2 neq 0">class="tr_bgcolor" </if>>
+
+                  <td>{$val.short_title}</td>
+                  <td>{$val.order_code}</td>
+                  <td>{$val.user_name}</td>
+                  <td>{$val.num}</td>
+                  <td>{$val.status}</td>
+               
+                  <td>{$val.addTime|date='Y-m-d H:i:s',###} </td>
+                  
+<!--                   <td><a style="cursor:pointer" onclick="javaScript:showOrder({$val.id},{$val.user_id},'{$val.totalprice}')">查看详情</a>
+ -->              
+                  </td>
+              
+                </tr>
+              </foreach>
+          <if condition="!empty($lists)">
+            <tr>
+            	<td class="hj" colspan="10">赠品总数：<span>{$goods_number}</span>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+            </tr>
+            </if>
+             
+            
+           
+        </table>	
+        <!--table end-->
+        </div>
+        {$pages}
+        </form>
+    <!--right_inner end-->
+     <div id="bg"></div>
+    <!--弹出二 开始-->
+    <div class="add detail" id = 'adddetail' style="display:none;" draggable="true">
+    	<div class="backcolor">
+
+        	<h3>订单详情                <span onclick='guanbi();' class="guanbi">X</span></h3>
+            <div class="jb_info" id= 'jb_info'>
+            
+
+            </div>
+            <div>
+            	<ul id ='dingdan'>
+                	
+                </ul>
+            </div>
+            <div class="zfxx">
+            	<ul id='zfxx' name = 'zfxx'>
+                
+                </ul>
+            	
+            </div>
+            <div class="zfxq">
+            	                	
+              <p class="zff_title02" id='zfzh'></p>
+
+            </div>
+            <table id='con'>
+            </table>
+        </div>
+    </div>
+    <!--弹出二 结束-->
+    <!--delete 开始-->
+    <div class="add delete" id ='showBigPic' name ="showBigPic" style="display:none;">
+    	<div class="backcolor">
+        	<h3>提示    <span class="guanbi">X</span></h3>
+            <table>
+            	<tr>
+                <td class="pic"><img src="" id="showBigImgPath" name ="showBigImgPath"/></td>
+              
+                </tr>
+            </table> 
+       
+        </div>
+    </div>
+    
+    
+    <!--delete 结束-->
+    </div><!--wapper-right end-->
+</div><!--wapper end-->
+<!--头部 开始-->
+</body>
+</html>
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}cart.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}Calendar1.js"></script>

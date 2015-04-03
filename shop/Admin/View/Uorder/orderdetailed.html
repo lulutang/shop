@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>工作台</title>
+<link href="{$Think.ADMIN_CSS}global.css" rel="stylesheet" type="text/css">
+<link href="{$Think.ADMIN_CSS}m_style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<div class="content_right paydetail">
+    <div id="indent" class="indent" onClick="changeWin()"></div>
+    <div class="link_path">您所在的位置：<a href="/admin/Uorder/judge">订单管理</a>&nbsp;>&nbsp;<a href="/admin/Uorder/judge">已支付</a>&nbsp;>&nbsp;{$orderfind["order_card"]}</div>
+    <table class="case_detail">
+      <tbody>
+        <tr>
+          <td width="20%">客官昵称：{$userdata["user_name"]}<img src="{$Think.ADMIN_IMAGES}u{$userdata['rank']}.png" class="imgqq"></th>
+          <td width="20%">客官姓名：{$userdata["truename"]}</th>
+          <td width="20%">可用盘缠：<span>{$userdata["coil"]}盘缠</span></th>
+          <td width="20%">手机号码：{$userdata["mobile_phone"]}</th>
+          <td width="20%">QQ：{$userdata["qq"]}<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin={$userdata['qq']}&site=qq&menu=yes"><img border="0" src="{$Think.ADMIN_IMAGES}icon09.jpg" class="imgqq" alt="点击这里给我发消息"></a></th>
+        </tr>
+        <tr>
+          <td class="cased" colspan="5">
+            <ul class="detail">
+            	<li><span>订单编号：</span>{$orderfind["order_card"]}</li>
+                <li><span>资金交易编号：</span> {$orderfind["fundnum"]} </li>
+                <li><span>支付方式：</span>
+                    <if condition="$orderfind['pay_type'] eq 0">线下</if>
+                    <if condition="$orderfind['pay_type'] eq 1">财付通</if>
+                    <if condition="$orderfind['pay_type'] eq 2">银联</if>
+                    <if condition="$orderfind['pay_type'] eq 3">支付宝</if>
+                </li>
+                <li><span>下单时间：</span> {$orderfind["createtime"]|date="Y-m-d H:i:s",###}</li>
+                <li><span>支付时间：</span> {$orderfind["pay_time"]|date="Y-m-d H:i:s",###}</li>
+            </ul>
+            <ul  class="detail">
+            	<li><span>是否开发票：</span>
+                <if condition="$orderfind['is_invoile'] eq 1">
+                  开
+                    <li><span>发票类型：</span><!--普通发票/增值税发票-->
+                        <if condition="$getbill['bill_type'] eq 1">
+                            专票
+                            <else/>
+                            普票
+                        </if>
+                    </li>
+                    <li><span>状态：</span>
+                        <if condition="$getbill['bill_status'] eq 0">
+                            未开
+                            <else/>
+                            已开
+                        </if>
+                    </li>
+                <else/>
+                    不开
+                </if>
+                </li>
+                
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td class="cased" colspan="5">
+            <ul  class="detail">
+            	<li><span>收货人：</span>{$receiver["sh_name"]} </li>
+                <li><span>收货人电话：</span>{$receiver["sh_phone"]} </li>
+                <li><span>收货人地址：</span>{$receiver["sh_province"]}  </li>
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="table_list">
+      <ul class="tab_list">
+        <li><a href="javascript:void(0)">商品服务信息</a></li>
+      </ul>    
+      <table class="spffxx">
+        <tbody>
+          <tr>
+            <th width="30%">商品信息</th>
+            <th width="22%">服务信息</th>
+            <th width="23%">服务状态</th>
+            <th width="25%">服务价（元）</th>
+          </tr>
+        <foreach name="ordergoods" item="ogs">
+          <tr class="tr_bgc1">
+              <td><a href="/Home/Goods/gooddetails/id/{$ogs['goods_id']}" target="_blank">{$ogs['erji']}[￥{$ogs['goods_price']}]</a></td>
+            <td>
+                    <if condition="$ogs['style'] eq 38">
+                           {$ogs["message"]["name"]} <br>
+                           {$ogs["message"]["style"]}
+                        </if>
+                        <if condition="$ogs['style'] eq 5">
+                            {$ogs["message"]["name"]}
+                        </if>
+                        <if condition="$ogs['style'] eq 6"> 
+                            {$ogs["mbtext"]}
+                        </if>
+            </td>       
+            <td>
+                <if condition="$orderfind['status'] eq 0">未支付</if>
+                <if condition="$orderfind['status'] eq 1">已支付</if>
+                
+            </td>
+            <td class="trr">￥{$ogs["service_price"]}</td>
+          </tr>
+           </foreach>
+          <tr>
+            <td class="tr_bgc1 sf" colspan="4">
+            	<p>应付额：￥{$orderfind["pay_money"]}</p>
+                <if condition="$orderfind['coil_money'] neq null && $orderfind['coil_money'] neq 0.00 || $orderfind['onsale_money'] neq null && $orderfind['onsale_money'] neq 0.00">
+                    <p>优惠：
+                          <if condition="$orderfind['coil_money'] neq null && $orderfind['coil_money'] neq 0.00">
+                             盘缠-{$orderfind["coil_money"]}
+                          </if>
+                          <if condition="$orderfind['onsale_money'] neq null && $orderfind['onsale_money'] neq 0.00">
+                          优惠券-{$orderfind["onsale_money"]}
+                          </if>
+                      </p>
+                </if>
+            	实付总额：<span>￥{$orderfind['totalprice']}</span>
+            </td>
+          </tr>       
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}order.js"></script>
+</script>
+</body>

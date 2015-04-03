@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>商城优惠</title>
+<link href="{$Think.HOME_CSS}style.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<!--顶部导航 开始-->
+<include file="Public/header" />
+<!--顶部导航 结束-->
+<!--主要内容 开始-->
+<div class="main_preferentia_main">
+	<div class="container">
+    	<!--消息提示 开始-->
+        <p class="main-info">
+                        您的位置：<a href="{$Think.DOMAIN}">中细软服务商城</a><a href="{$Think.DOMAIN}home/package/lists">>享优惠</a>
+            
+        </p>
+        <!--消息提示 结束-->
+    	
+        
+        <div class="main_preferentia_banner"><a href="javascript:void()"><img src="{$Think.HOME_IMAGES}main_preferentia_banner.png"></a></div>
+        
+        <div class="main_preferentia_buying" >
+        	<div class="main_preferentia_buyingtitle">
+            	<h3>优惠套餐</h3>
+            </div>
+          
+            <foreach name='lists' item='val'>
+          
+            <div class="main_preferentia_buyingborder">
+                <div class="main_preferentia_buyingcontent">
+                    <div class="float_left">
+                        <p class="remainingtime" id="remainingtime_{$val.package_id}" value='{$val.package_id}'  endtime="{$val.endtime}" > <if condition="$val.endtime lt time()"><else/>剩余：<span>00</span>天<span>00</span>时<span>00</span>分<span>00</span>秒</if></p>           
+                        <ul>
+                        <foreach name="val.goods" item ='value' key='key'>
+                            <li>
+                                <div class="product_img">
+                                    <a href="/Home/Goods/gooddetails/id/{$value.goods_id}" target="_blank"><img width='290px' height='165px' src="<if condition="($value.thumb eq '')">{$Think.HOME_IMAGES}product2.png<else/>{$current|current_cdn_img}{$value.thumb}</if>" /></a>
+                                </div>
+                                <h5>{$value.short_title}</h5>
+                                <p><span>￥{$value.now_price}</span></p>
+                            </li>  
+                            
+                             <if condition="(($key+1) lt count($val['goods']) )">
+                                <li class="plus"><img src="{$Think.HOME_IMAGES}jia.png" /></li>     
+							 </if>
+                         
+                               
+                             <div style="clear:none"></div>
+                        </foreach>
+                       
+                        </ul>
+                     </div>
+                     
+                     <ul  class="float_right">
+                         <li class="equal"><img src="{$Think.HOME_IMAGES}equal.png" /></li> 
+                         <li>
+                            <h3>{$val.short_title}</h3>
+                            <p>抢购价</br><strong>￥{$val.now_price}</strong></p>
+                            <p><s>￥{$val.old_price}</s></p>
+                            <p class="save"><img src="{$Think.HOME_IMAGES}button_jiesheng.png" />￥{$val.youhui}</p>
+                            <if condition="($val.endtime lt time())">
+                 	 	      <!--   <p><img src="{$Think.HOME_IMAGES}button_end.png"  /></p>   -->      
+                 	 	        
+                 	 	     <a href="javascript:void(0)" class="yixiajia">已结束</a>        
+                  			<else/>
+                  		        <p><a class="button05 button" href="/home/package/details/id/{$val.package_id}" id='endHuodong_{$val.package_id}'>立即购买</a></p>                   
+
+                  			</if>
+                         </li>                     
+                     </ul>  
+                     <div style="clear:none"></div>             
+                </div>               
+                <p class="details">活动详情：<?php if(mb_strlen($val['description'],'utf-8') > 50) {echo mb_substr($val['description'],0,50,'utf8').'...'; }else {echo $val['description']; }?><a href="/home/package/details/id/{$val.package_id}">查看该活动详细信息》</a></p>      
+                  <if condition="($val.endtime lt time())">
+                 	 	<div class="buying_icon"><img src="  {$Think.HOME_IMAGES}icon_end.png"  /></div> 
+                  <else/>
+                  		<div class="buying_icon"><img src="{$Think.HOME_IMAGES}qiang.png"  /></div> 
+                  </if>
+
+           </div>
+           </foreach>
+   
+        </div>
+    </div>
+</div>
+<!--主要内容 结束-->
+
+<!--页脚 开始-->
+<include file="Public/footer" />
+
+<!--页脚 结束-->
+</body>
+</html>
+<script src="{$Think.HOME_JS}package.js"></script>

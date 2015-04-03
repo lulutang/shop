@@ -1,0 +1,6 @@
+<select name="" onchange="change('serveris_{$pid}')" id="serveris_{$pid}">
+<option >请选择</option>
+	<volist name="server_arr" id="ra">
+		<option value="{$ra['id']}">{$ra['server_name']}</option>
+	</volist>
+</select>

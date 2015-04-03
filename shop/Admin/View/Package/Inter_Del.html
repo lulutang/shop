@@ -1,0 +1,16 @@
+<volist name="Goods_arr" id="Ga">
+					<tr>
+						<td><p><img src="{$Think.ADMIN_IMAGES}shop_img.png" /></p> <p class="service">{$Ga["now_servername"]}<br /><span>[{$Ga["attr_name"]}]</span></p></td>
+						<td>{$Ga["server_name"]}</td>
+						<td>￥{$Ga["now_price"]}</td>
+						<td class="open">
+						<if condition="$Ga['is_hot'] eq 1">
+							热门推荐
+						</if>
+						<if condition="$Ga['is_index'] eq 1">
+							首页推广
+						</if>
+						</td>
+						<td class="del"><a href="#" onclick="Goods_Del({$Ga['goods_id']} )">{$Ga['goods_id']}<img src="{$Think.ADMIN_IMAGES}1_07.png"></a></td>
+					</tr>
+				</volist>

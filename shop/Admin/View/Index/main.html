@@ -1,0 +1,212 @@
+<link href="{$Think.ADMIN_CSS}style.css" rel="stylesheet" type="text/css">
+<div class="wapper">
+    <div class="wapper-right">
+    	<div class="right_inner">
+    		<div class="path">您的位置：<a href="#">工作台</a></div>
+            <p class="welcome">欢迎<font>“{$user_arr["truename"]}”</font>进入中细软服务商城后台管理系统！</p>
+            <p class="find_order"><a href="/Admin/UserOrder/Orders/">查询订单</a></p>
+            <!-- tab标签代码begin -->
+            <div class="tab1_wxm" id="tab1_wxm">
+                <div class="menu_wxm">
+                    <ul>
+                        <a href="/Admin/Index/main"><li id="one1" style="background-color: #ffbb44;">今天</li></a>
+                        <li id="one2" onclick="setTab(2)">昨天</li>
+                        <li id="one3" onclick="setTab(3)">本周</li>
+                        <li id="one4" onclick="setTab(4)">本月</li>
+                        <li id="one5" onclick="setTab(5)">本季度</li>
+                        <li id="one6" onclick="setTab(6)">本年</li>
+                        <li id="one7" onclick="setTab(7)">全部</li>
+                    </ul>
+                </div>
+                <div class="menu_wxm_div">
+                    <div id="con_one_1">
+
+
+
+
+
+                    	<table>
+                        	<tr>
+                            	<td class="jrdd">
+                                    	<p class="amount">{$newc_data}</p>
+                                        <p>今日生成新订单</p>
+                                </td>
+                                <td>
+								<if condition="$order_lv['new_order'] gt 0">
+                                                                    <span class="ss"><php>
+                                                                        $number= $order_lv['new_order']; 
+                                                                        $p= stripos($number, '.'); 
+                                                                        echo substr($number,0,$p+3);
+                                                                        </php>%</span>
+									<else/>
+                                                                        <if condition="$order_lv['new_order'] eq 0">
+                                                                            <php>
+                                                                                 if($new_arr['new_order'] == 0 && $old_arr['new_order'] == 0)
+                                                                                 {
+                                                                                      echo "<span class='ss'>0.00%</span>";
+                                                                                 }else{
+                                                                                    echo "<span class='xj'>0%</span>";
+                                                                                 }
+                                                                             </php>
+                                                                            <else/><!--strstr(substr($order_lv['new_order'] ,1)-->
+									<span class="xj"><php>
+                                                                                            $number= $order_lv['new_order']; 
+                                                                                            $p= stripos($number, '.'); 
+                                                                                            if(!empty($p)){
+                                                                                                echo substr($number,1,$p+2);
+                                                                                            }else{
+                                                                                                echo substr($number,1,$p+3);
+                                                                                            }
+                                                                            </php>%</span>
+                                                                        </if>
+								</if>
+                                </td>
+                                <td class="xxzf">
+                                	<p class="amount">{$new_arr["down_order"]}</p>
+                                        <p>支付确认订单</p>
+                                </td>
+                                <td>
+								<if condition="$order_lv['down_order'] gt 0">
+                                                                    <span class="ss"><php>
+                                                                        $number= $order_lv['down_order']; 
+                                                                        $p= stripos($number, '.'); 
+                                                                        echo substr($number,0,$p+3);
+                                                                        </php>%</span>
+									<else/>
+                                                                         <if condition="$order_lv['down_order'] eq 0">
+                                                                             <php>
+                                                                                 if($new_arr['down_order'] == 0 && $old_arr['down_order'] == 0)
+                                                                                 {
+                                                                                      echo "<span class='ss'>0.00%</span>";
+                                                                                 }else{
+                                                                                    echo "<span class='xj'>0%</span>";
+                                                                                 }
+                                                                             </php>
+                                                                            
+                                                                            <else/>
+									<span class="xj"><php>
+                                                                                $number= $order_lv['down_order']; 
+                                                                                $p= stripos($number, '.'); 
+                                                                                    if(!empty($p)){
+                                                                                        echo substr($number,1,$p+2);
+                                                                                    }else{
+                                                                                        echo substr($number,1,$p+3);
+                                                                                    }
+                                                                            </php>%</span>
+                                                                        </if>
+								</if>
+                                </td>
+                            </tr>
+                            <tr>
+                            	<td class="jrfk">
+                                    	<p class="amount">{$new_arr["pay_order"]}</p>
+                                        <p>今日付款订单</p>
+                                </td>
+                                
+                                <td>
+								
+                                	<if condition="$order_lv['pay_order'] gt 0">
+                                            <span class="ss"><php>
+                                                $number= $order_lv['pay_order']; 
+                                                                        $p= stripos($number, '.'); 
+                                                                        echo substr($number,0,$p+3);
+                                                </php>%</span>
+									<else/>
+                                                                         <if condition="$order_lv['pay_order'] eq 0">
+                                                                             <php>
+                                                                                 if($new_arr['pay_order'] == 0 && $old_arr['pay_order'] == 0)
+                                                                                 {
+                                                                                      echo "<span class='ss'>0.00%</span>";
+                                                                                 }else{
+                                                                                    echo "<span class='xj'>0%</span>";
+                                                                                 }
+                                                                             </php>
+                                                                            <else/>
+									<span class="xj"><php> $number= $order_lv['pay_order']; 
+                                                                        $p= stripos($number, '.'); 
+                                                                       if(!empty($p)){
+                                                                            echo substr($number,1,$p+2);
+                                                                        }else{
+                                                                            echo substr($number,1,$p+3);
+                                                                        }
+                                                                            </php>%</span>
+                                                                        </if>
+								</if>
+                                </td>
+                                
+                            <td class="volume">
+                                	<p class="total">￥{$new_arr["total"]}</p>
+                                        <p>今日成交额</p>
+                                </td>
+                                <td>
+									<if condition="$order_lv['total'] gt 0">
+										<span class="ss"> <php>$number= $order_lv['total']; 
+                                                                        $p= stripos($number, '.'); 
+                                                                        echo substr($number,0,$p+3);</php>%</span>
+										<else/>
+                                                                                 <if condition="$order_lv['total'] eq 0">
+                                                                             <php>
+                                                                                 if($new_arr['total'] == 0 && $old_arr['total'] == 0)
+                                                                                 {
+                                                                                      echo "<span class='ss'>0.00%</span>";
+                                                                                 }else{
+                                                                                    echo "<span class='xj'>0%</span>";
+                                                                                 }
+                                                                             </php>
+                                                                            <else/>
+										<span class="xj"><php>$number= $order_lv['total']; 
+                                                                        $p= stripos($number, '.'); 
+                                                                        if(!empty($p)){
+                                                                            echo substr($number,1,$p+2);
+                                                                        }else{
+                                                                            echo substr($number,1,$p+3);
+                                                                        }
+                                                                        </php>%</span>
+                                                                                </if>
+									</if>
+                                </td>
+                            </tr>
+                        </table>
+
+
+                    </div>
+                   
+                </div>
+
+
+
+
+
+
+
+            </div>
+            <!-- tab标签代码end -->                        
+    	</div>
+    </div>
+</div>
+
+</body>
+</html>
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script>
+	function setTab(num)
+	{
+		for(var i=1; i<=7; i++)
+		{
+			if(i == num)
+			{
+				$("#one"+i).attr("style","background-color:#ffbb44");
+			}else{
+				$("#one"+i).removeAttr("style");
+			}
+		}
+		$.ajax({
+			url:"/Admin/Index/order_show",
+			type:"get",
+			data:{"num":num},
+			success:function(e){
+				$("#con_one_1").html(e);
+			}
+		});
+	}
+</script>

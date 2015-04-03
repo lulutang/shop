@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>单品促销-全部</title>
+<link href="{$Think.ADMIN_CSS}global.css" rel="stylesheet" type="text/css">
+<link href="{$Think.ADMIN_CSS}g_style.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+    <div class="content_right">
+    <div class="indent" onclick="javascript:changeWin();"></div>
+    <div class="link_path">您所在的位置：<a href="javascript:void(0)">运营管理</a>&nbsp;>&nbsp;<a href="javascript:void(0)">单品促销</a>&nbsp;>&nbsp;<a href="javascript:void(0)">全部</a></div>
+    <div class="promotion"><b>单品促销</b></div>
+	<div class="directions">说明：单品促销，请谨慎设置相关参数！</div>
+	<ul class="g_edit_tab clearfix">
+      <li class="cur"><a href="/admin/operation/singlePromotion">全部<b></b></a></li>
+      <li><a href="singlePromotion_money.html">赠送-盘缠<b></b></a></li>
+      <li><a href="singlePromotion_coupon.html">赠送-优惠券<b></b></a></li>
+    </ul>
+    <form action="/admin/operation/singlePromotion" method="get" name="search" >
+    <div class="table_list casePay s" style="border:none;padding-top:49px;">
+      <div class="case_search">商品类型：
+        <select class="goodstype"  id='goodstype' name='goodstype'>
+          <option value="-1">---全部类型---</option>
+          <foreach name='groupType' item='val' key = 'key'>
+         		 <option  value="{$val['now_servername']}" <if condition="($groupTypeKey eq $val['now_servername'])">  selected </if> >{$val['now_servername']}</option> 
+		  </foreach>
+		 
+        </select>
+        <a class="commonsettings" href="commonSet.html">单品促销通用设置</a>
+      </div>
+      <table class="spffxx">
+          <tr>
+			<th width="5%"><input type="checkbox" id="chk_all"/>&nbsp;全选</th>		  
+            <th width="10%">商品ID</th>
+            <th width="21%">商品展示</th>
+            <th width="11%">商品编码</th>
+            <th width="11%">商品类型</th>
+            <th width="21%">商品名称</th>
+			<th>商品价格</th>
+          </tr>
+           <foreach name='list' item='val' key = 'key'>
+          <tr   <if condition="$key%2 neq 0">class="tr_bgc2" <else/>class="tr_bgc1"</if>>
+            <td><input id="chk_list_{$val.goods_id}" type="checkbox" name ='check_list[]' value="{$val.goods_id}" onclick="setselect({$val.goods_id});"/></td>
+            <td>{$val.goods_id}</td>
+            <td><a href="{$Think.DOMAIN}" target="_blank"><img class="image" src="{$val.thumb}" width="100px" height="100px"></img></a></td>
+            <td>{$val.goods_code}</td>
+            <td>{$val.title}</td>
+            <td>{$val.now_servername}</td>
+			<td>￥&nbsp;{$val.now_price}</td>
+          </tr>
+          </foreach>
+		 
+		
+      </table>
+    </div>    
+    <div class="pageNew">
+     {$pages}
+    </div>
+    </form>
+	<div class="foot">
+		<p>亲，您已选中了&nbsp;<span>0</span>&nbsp;件商品</p>
+		<p><button class="sumit">提交</button></p>
+	</div>
+  </div>
+
+</body>
+</html>
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script type="text/javascript">
+	//定义一个判断函数
+	 function in_array (arr,val){
+	
+	// 遍历是否在数组中
+	for(var i=0,k=arr.length;i<k;i++){
+		if(val==arr[i]){
+		return true;
+		}
+	}
+	// 如果不在数组中就会返回false
+	return false;
+	}
+  //菜单缩放
+  openclose=true;
+  function changeWin(){ 
+      parent.bodyFrame.cols =openclose?"1,*":"210,*";//这句话有报错
+      $(".indent").toggleClass('ind');
+      openclose=!openclose;
+  }
+  $(function(){
+	
+    //列表标题排序
+    $(".casePay table.spffxx tr th").bind("click",function(){
+      $(this).find('a').toggleClass("cur"); 
+    });
+	$('#goodstype').bind('change',function(){
+		var val = $(this).val();
+		document.search.action = "/admin/operation/singlePromotion/groupType/"+val;
+		 document.search.submit();
+	});
+	//全选
+	$("#chk_all").bind("click",function(){
+			if($(this).attr("checked")){
+				$(":checkbox").attr("checked", true);
+				$(".foot span").html($("input[type='checkbox'][id='chk_list_1']").length);
+			}else{
+				$(":checkbox").attr("checked", false);
+				$(".foot span").html(0);
+			}
+		});
+	$(".sumit").click(function(){
+		var storage = window.localStorage;
+		var yiyou = storage.getItem("checkbox_list");
+		if(yiyou.length <= 0){
+			alert('请选择商品');
+		}else{
+		    window.location.href="/admin/operation/commonSet/data/"+yiyou;
+		}
+	});
+	
+  });
+	
+	function setselect(goods_id){
+		var sum=$("input[type='checkbox'][name='check_list[]']").length;
+		var checkedsum=$("input[type='checkbox'][name='check_list[]']:checked").length;
+		$(".foot span").html(checkedsum);
+		var storage = window.localStorage;
+		var yiyou = storage.getItem("checkbox_list");
+		
+		 if( yiyou != null && yiyou.length>0){
+			
+			 var strArr = yiyou.split(","); 
+			 
+			 strArr = $.grep(strArr, function(n) {return $.trim(n).length > 0;})
+			 strArr.sort();  
+             var result =$.unique(strArr); 
+             var isInarray = in_array(result,goods_id); 
+            
+             if(isInarray) {
+            	 $('#chk_list_'+goods_id).attr('checked',false);
+
+            	   var anArray = [];
+                   $.each(result,function(n,value){
+                	   if(value != goods_id){
+                		   anArray[n]=value;
+                	   }
+                   }
+                   );
+                 var filterarray =  anArray.join(',');
+            	 storage.setItem("checkbox_list", filterarray);
+             }else {
+            	 result =  result.join(',')+','+goods_id;
+            	 $('#chk_list_'+goods_id).attr('checked','checked');
+    			 storage.setItem("checkbox_list", result);
+             }
+		 }else{
+			 $('#chk_list_'+goods_id).attr('checked','checked');
+			 storage.setItem("checkbox_list", goods_id);
+		 }
+	
+		if(sum==checkedsum){
+			$("#chk_all").attr("checked", true);	
+		}else{
+			$("#chk_all").attr("checked", false);
+		}
+	}
+	
+</script>

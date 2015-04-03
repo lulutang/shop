@@ -1,0 +1,47 @@
+<!--顶部导航 开始-->
+<include file="Public/header" />
+
+<!--个人中心 安全中心 修改密码 开始-->
+<div class="container">
+	<div class="crumbs">
+    	您的位置：
+        <a href="">中细软服务平台</a>&gt;
+        <a href="">个人中心</a>&gt;
+        <a href="">我的订单</a>&gt;
+        <a href="">订单管理</a>
+    </div>
+	<include file="Public/ucenter_left"/>
+    <div class="members_right  account_safyte float-right">
+    	<p class="members_right_title">账号安全</p>
+          <table class="account_safyteinfo">
+          	  <tr>
+              	<th colspan="3">设置密码</th>
+              </tr>
+              <tr>
+              	<td class="text-right">您绑定的手机是：</td>
+              	<td colspan="3"><p class="prompt01">{$acinfo['bind_mobile']} <a href="/Home/User/bindphone">修改号码</a></p></td>
+              </tr>
+              <tr>
+                  <td width="189" class="text-right">支付密码：</td>
+                  <td width="318" class="text-left">在账户盘缠变动、修改账户信息时需要输入的密码</td>
+                  <td width="457" class="text-left color9"><p class="prompt01"><a href="/Home/User/resetpasswd">重置支付密码</a></p></td>
+              </tr>
+              <tr>
+                  <td class="text-right">安全保护问题：</td>
+                  <td class="text-left"> 您没有设置安全保护问题，请设置</td>
+                  <td class="text-left color9"><p class="prompt01"><a href="">设置</a></p></td>
+              </tr>
+               <tr>
+                  <td class="text-right padding_bottom30"></td>
+                  <td class="text-left padding_bottom30"><input class="button_save" type="button" value="确认"></td>
+                  <td></td>
+              </tr>  
+          </table>              
+    </div>
+    <div style="clear:both;"></div> 
+</div>
+
+<!--个人中心 安全中心 修改密码 结束-->
+
+
+<include file="Public/footer" />

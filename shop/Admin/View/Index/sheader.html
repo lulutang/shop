@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>工作台</title>
+<link href="{$Think.ADMIN_CSS}global.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+</head>
+
+<body>
+<!--头部 开始-->
+<div class="header">
+  <div class="header_left">    
+    <p class="ptitle"><a href="">中细软跑堂端口</a></p>  
+  </div>
+  <div class="header_right">
+    <a href="http://shop.gbicom.cn/" class="link_home" target="parent">商城首页</a>    
+    <div class="header_handle">
+      <a href="../members/members_index.html" class="link_user" target="main"><img src="{$Think.ADMIN_IMAGES}user.jpg" /> 张某某</a>
+      
+    </div>
+    <a href="" class="quit">退出</a>
+    <div class="clear"></div>
+  </div>
+  <ul class="header_search">
+    <li>
+      <a href="javascript:void(0)" class="a1">订单号</a>
+      <div class="con hide">
+        <input type="text" class="input" placeholder="请输入订单编号">
+        <a href="javascript:void(0)" class="search_btn"></a>
+      </div>
+    </li>
+    <li>
+      <a href="javascript:void(0)" class="a1">业务员</a>
+      <div class="con hide">
+        <input type="text" class="input" placeholder="请输入业务员编号">
+        <a href="javascript:void(0)" class="search_btn"></a>
+      </div>
+    </li>
+    <li>
+      <a href="javascript:void(0)" class="a1">用户姓名</a>
+      <div class="con hide">
+        <input type="text" class="input" placeholder="请输入用户姓名">
+        <a href="javascript:void(0)" class="search_btn"></a>
+      </div>
+    </li>
+  </ul>
+</div>
+<div class="clear"></div>
+
+<script type="text/javascript"> 
+$(function(){
+  //头部搜索hover
+  $(".header_search li:first .a1").addClass("hover");
+  $(".header_search li:first").find('.con').removeClass("hide");
+  $(".header_search li .a1").hover(function(){
+    $(".header_search").find('.con').addClass("hide");   
+    $(".header_search").find('li .a1').removeClass("hover");
+        $(this).addClass("hover");
+        $(this).parent().find('.con').removeClass("hide");
+  });  
+
+
+});
+
+</script>
+</body>

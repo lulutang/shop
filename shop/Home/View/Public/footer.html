@@ -1,0 +1,93 @@
+
+
+<!--页脚 开始-->
+<php>
+$data = M('category')->order("orderid")->limit(3)->select();
+foreach ($data as $key => $val) {
+    $data[$key]['article'] = M('article')->where("cateid = ".$val['cateid']."")->order("orderid desc")->limit(3)->select();
+}
+</php>
+<div class="footer">
+  <div class="container">
+   	<ul class="footerbox">
+        <foreach name="data" item="art">
+        	<li style="border-left:none 0;">
+                <h3 <if condition="0 eq $key"> class="footerimg01"</if> <if condition="1 eq $key"> class="footerimg02"</if> <if condition="2 eq $key"> class="footerimg03"</if> >{$art.catename}</h3>
+                <foreach name="art.article" item="v">
+                    <p><a href="/index.php/Home/Article/detialarticle/id/{$v.art_id}" target="_blank">{$v.short_title}</a></p>
+                </foreach>
+            </li>
+        </foreach>
+            <li class="footerweixin">
+                <p>关注微信公众平台<br>
+                    获得最新活动信息<br>
+                    扫描二维码或添加<br>
+                    “细软知识产权”<br>
+                </p>
+            </li>
+            <div style=" clear:both"></div>
+      </ul>
+    </div>
+</div>
+<div class="copy">
+	<div class="container">
+    	<ul class="copybox">
+        	<li>
+            	<img src="{$Think.HOME_IMAGES}logo.png">
+            </li>
+            <li>
+            	<p>
+                <a target="_blank" href="http://about.gbicom.cn/aboutus/">关于我们</a>&nbsp;&nbsp;|&nbsp;  
+                <a target="_blank" href="http://about.gbicom.cn/concatus/">联系我们</a>&nbsp;&nbsp;|&nbsp;     
+                <a target="_blank" href="http://about.gbicom.cn/job/">招聘信息</a>&nbsp;&nbsp;|&nbsp;      
+                <a target="_blank" href="http://about.gbicom.cn/nav/">服务导航</a>&nbsp;&nbsp;|&nbsp;      
+                <a target="_blank" href="http://about.gbicom.cn/customerService/">客服中心</a>&nbsp;&nbsp;|&nbsp;      
+                <a target="_blank" href="http://about.gbicom.cn/honor/">企业资质</a>&nbsp;&nbsp;|&nbsp;      
+                <a target="_blank" href="http://about.gbicom.cn/service/">服务客户</a>&nbsp;&nbsp;|&nbsp;      
+                <a target="_blank" href="http://about.gbicom.cn/partner/">合作伙伴</a>&nbsp;&nbsp;|&nbsp;     
+                <a target="_blank" href="http://about.gbicom.cn/feedback/">意见反馈</a> 
+                <br>
+                中细软网络科技有限公司   版权所有 ©2002-2015  京ICP备11017069号-5  京公网安备 11010802012915号 <script src="http://s11.cnzz.com/stat.php?id=1254274863&web_id=1254274863" language="JavaScript"></script>
+                </p>
+            </li>
+            <li>
+            	<img src="{$Think.HOME_IMAGES}footer01.png">
+            </li>
+            <li>
+            	<img src="{$Think.HOME_IMAGES}footer02.png">
+            </li>
+            <li>
+            	<img src="{$Think.HOME_IMAGES}footer03.png">
+            </li>
+            <li>
+            	<img src="{$Think.HOME_IMAGES}footer04.png">
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!--页脚 结束-->
+</body>
+</html>
+<script type="text/javascript" src="{$Think.HOME_JS}jquery-1.7.2.js"></script>
+<script type="text/javascript" src="{$Think.HOME_JS}common.js"></script>
+<script type="text/javascript" src="{$Think.HOME_JS}nav.js"></script>
+<script type="text/javascript" src="{$Think.HOME_JS}top.js"></script>
+<script type="text/javascript" src="{$Think.HOME_JS}swt.js"></script>
+
+
+<script>
+	$(document).ready(function(){
+	  $("#showAll").click(function(){
+	    $("#SNmenuNav").slideToggle();
+	  });
+
+	});
+
+    function line()
+    {
+            var linren = 'http://'+window.location.host+'/';
+            window.open ('http://webchart.gbicom.cn/LR/Chatpre.aspx?id=KJI83683011&lng=cn&e='+linren,'newwindow','height=648,width=1052,top=150,left=500,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');//写成一行
+    }
+
+</script>

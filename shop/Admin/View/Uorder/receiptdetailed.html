@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>已开发票</title>
+<link href="{$Think.ADMIN_CSS}global.css" rel="stylesheet" type="text/css">
+<link href="{$Think.ADMIN_CSS}m_style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+<div class="content_right have_invoice">
+     <div id="indent" class="indent" onClick="changeWin()"></div>
+     <div class="link_path">您所在的位置：<a href="/Admin/Uorder/orderreceipt/invoile/1">发票 </a>&nbsp; &gt; &nbsp;
+         
+             <if condition="$receiptdata['bill_status'] eq 1">
+                 <a href="/Admin/Uorder/orderreceipt/invoile/1">  已开发票</a>
+                 <else/>
+                <a href="/Admin/Uorder/orderreceipt/invoile/0"> 未开发票</a>
+             </if>
+         &nbsp; &gt; &nbsp;{$receiptdata["getOrderFind"]["order_card"]}</div>
+     <p class="download"><a href="/admin/Uorder/receiptdetailed/downword/down/receiptid/{$receiptdata['getOrderFind']['order_id']}">下载word文档</a></p>
+     <div class="title">
+     	<span class="float-left">订单号：{$receiptdata["getOrderFind"]["order_card"]}</span>
+     	<span class="float-right">金额总计：￥{$receiptdata["getOrderFind"]["totalprice"]}</span>
+     </div>
+     <ul class="order_detail">
+         <foreach name="orderGoods" item="ogd">
+            <if condition="$ogd['style'] eq 38">
+                <if condition="$ogd['goods_id'] eq 8">
+                        <li class="order_detail_li">
+                            <p class="text-center"><img src="{$Think.ADMIN_IMAGES}w_icon12.png" /></p>
+                            <p><span>业务类型：</span>{$ogd["message"]["short_title"]}</p>
+                            <p><span>商标名称：</span>{$ogd["message"]["name"]}</p>
+                            <p><span>商标类别：</span>{$ogd["message"]["style"]}</p>
+                            <p><span>需求描述：</span>{$ogd["message"]["text"]}</p>  
+                        </li>
+                    <else/>
+                        <li class="order_detail_li">
+                            <p class="text-center"><img src="{$ogd['enroll']}" /></p>
+                            <p><span>业务类型：</span>{$ogd["message"]["short_title"]}</p>
+                            <p><span>商标名称：</span>{$ogd["message"]["name"]}</p>
+                            <p><span>商标类别：</span>{$ogd["message"]["style"]}<a class="add">增+1</a></p>
+                            <p><span>服务项目：</span>{$ogd["subd"]}</p>  
+                        </li>
+                </if>
+            </if>
+             <if condition="$ogd['style'] eq 5">
+                 <li class="order_detail_li">
+                            <p class="text-center"><img src="{$Think.ADMIN_IMAGES}w_icon12.png" /></p>
+                            <p><span>业务类型：</span>{$ogd["message"]["short_title"]}</p>
+                            <p><span>专利名称：</span>{$ogd["message"]["name"]}</p>
+                            <p><span>行业类型：</span>{$ogd["message"]["style"]}</p>
+                            <p><span>需求描述：</span>{$ogd["message"]["text"]}</p>  
+                  </li>
+             </if>
+            <if condition="$ogd['style'] eq 6">
+                 <li class="order_detail_li">
+                            <p class="text-center"><img src="{$Think.ADMIN_IMAGES}w_icon12.png" /></p>
+                            <p><span>业务类型：</span>{$ogd["message"]["short_title"]}</p>
+                            <p><span>需求描述：</span>{$ogd["message"]["text"]}</p>  
+                  </li>
+            </if>
+         </foreach>
+     </ul>
+     <div class="title">开票信息</div>
+     <div class="invoice_detail">
+     	<div class="detail_bor">
+        	<ul class="detail_left">
+            	<li><span>发票类型：</span> 
+                    <if condition="$billdata['bill_type'] eq 1">专票</if>
+                    <if condition="$billdata['bill_type'] eq 2">普票</if>
+                </li>
+               <li><span>企业名称：</span> {$billdata["company_name"]}</li>
+                <li><span>纳税人识别号：</span> {$billdata["taxes_number"]}</li>
+                <li><span>地址：</span> {$billdata["address"]}  </li>
+                <li><span>电话：</span> {$billdata["phone"]}</li>
+                <li><span>开户银行：</span> {$billdata["bank"]}</li>
+                <li><span>开户银行账号：</span> {$billdata["bank_number"]}</li>
+            </ul>
+            <ul class="detail_right">
+               <li><a href="{$billdata['company_linease']}" target="_blank"><img src="{$billdata['company_linease']}" alt="营业执照" width="195" height="149"/></a></li>
+ <li><a href="{$billdata['allow_phoro']}" target="_blank"><img src="{$billdata['allow_phoro']}" alt="银行开户许可" width="195" height="149" /></a></li>
+<li><a href="{$billdata['taxes_phore']}" target="_blank"><img src="{$billdata['taxes_phore']}"  alt="税务登记证" width="195" height="149"/></a></li>
+<li><a href="{$billdata['taxes_prove']}" target="_blank"><img src="{$billdata['taxes_prove']}"  alt="一般纳税人证明" width="195" height="149"/></a></li>
+            	
+            </ul>
+        </div>
+        <if condition="$receiptdata['bill_status'] eq 0">
+            <p class="confirm">
+                <a class="btn_check" href="/admin/Uorder/upreceipt/order_id/{$receiptdata['order_id']}/invoile/1">发票信息确认</a> 
+                <a class="btn_reject" href="/admin/Uorder/upreceipt/phone/{$receiptdata['phone']}/bill_id/{$receiptdata['bill_id']}">发票信息驳回</a>
+            </p>
+        </if>
+        
+     </div>
+     
+</div>
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}order.js"></script>
+</body>
+</html>

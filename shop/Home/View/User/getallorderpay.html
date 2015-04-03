@@ -1,0 +1,210 @@
+<include file="Public/header" />
+<!--个人中心 安全中心 所有订单 开始-->
+<div class="container">
+	<div class="crumbs">
+    您的位置：
+        <a href="{$Think.DOMAIN}">中细软服务商城</a>&gt;
+        <a href="{$Think.DOMAIN}Home/User/allorder">订单管理</a>&gt;
+        <a href="javascript:void()">未支付的订单</a>
+    </div>
+	<include file="Public/ucenter_left"/>
+    <div class="members_right  allorder  float-right">
+    	<p class="members_right_title">未支付的订单</p>
+        <table>
+        	<tr>
+            	<th width="44%">商品</th>
+                <th width="11%">单价（元）</th>
+                <th width="35%">交易状态</th>
+            </tr>
+        <foreach name="orderinfo" item="val">
+            <tr>
+            	<td class="borderno" name="delete_{$val['order_id']}" colspan="4"></td>
+            </tr>
+            <tr name="delete_{$val['order_id']}" >
+                <td class="td_bg" colspan="4">订单号：{$val['order_card']} <p style="float:right;" class="change_order">
+                <span style="float:left;margin-right: 2px;color:black;">
+                	优惠券金额 ：￥<if condition="(isset($val['onsale_money']))">{$val.onsale_money}<else/>0</if> &nbsp;&nbsp;
+                	订单生成时间：<php>echo date('Y-m-d H:i:s',$val['createtime']);</php></span>
+                	<font color="red" style="float:left">订单总额：￥{$val['totalprice']}&nbsp;&nbsp;</font>
+                	<a href="/Home/order/pay/orderId/{$val['order_id']}" style="float:left">去结算 </a> 
+                	<span style='float:right;margin-right: 0px;'>  <a href="javascript:delete_order({$val['order_id']})">取消订单</a></span>
+                	
+                	</p></td>
+            </tr>
+            <foreach name="val['order']" item="info">
+            <tr name="delete_{$val['order_id']}" >
+            	<td class="text-left"><a href="/Home/Goods/gooddetails/id/{$info['goods_id']}" target="_blank"><img src="{$current|current_cdn_img}{$info['thumb']}" height="80px" width="140px"/>
+                <p>{$info['short_title']} <br />商品编码：{$info['goods_code']}</p></a></td>
+                <td><font>￥{$info['now_price']}</font></td>
+                <td>未支付<br /><p class="color9">亲，请您尽快支付您的商品</p></td>
+                
+                 
+            </tr>
+        </foreach>
+        
+         </foreach>       
+</table>
+        
+    
+    </div>
+	<div style="clear:both;"></div> 
+
+</div>
+
+
+<!--个人中心 安全中心 所有订单结束-->
+<include file="Public/footer" />
+<!--- ---------------------注册完善信息弹出----------------------------- -->
+<div id="popDivZhu" class="mydiv popup" style="display:none;">  
+<form action="updatemessage" method="post">
+<input type="hidden" name="id" id="z_id">
+<input type="hidden" name="order_id" id="z_order_id">           
+<table>
+    <tr>
+        <th colspan="2">完善订单信息</th>
+    </tr>
+
+    <tr>
+        <td class="text-right"><span>*</span>申请人信息：</td>
+        <td class="text-left">
+            <select class="padding_l20" id="z_j_info" name="j_info">
+                <foreach name="usrinfo" item="val">
+                <option value="{$val}">{$val}</option>
+                </foreach>
+            </select></td>
+    </tr>
+     <tr>
+        <td class="text-right"><span>*</span>商标名称：</td>
+        <td class="text-left"><input class="lineheight29" type="text" size="50" id="z_name" name="name"/></td>
+    </tr>
+     <tr>
+        <td class="text-right"><span>*</span>商品分类：</td>
+        <td class="text-left">
+            <select class="padding_l20" id="z_style" name="style">
+                <foreach name="style" item="val">
+                <option value="{$val}">{$val}</option>
+                </foreach>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td class="text-right"><span>*</span>产品经营范围：</td>
+        <td class="text-left"><input class="lineheight29" type="text" size="50" id="z_text" name="text"/></td>
+    </tr>
+     <tr>
+        <td class="text-right"><span>*</span>收货人地址：</td>
+        <td class="text-left" >
+            <select class="padding_l20" id="z_address" name="address">
+                <foreach name="resinfo" item="val">
+                <option value="{$val}">{$val}</option>
+                </foreach>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td class="padding_bottom30 text-left"><input class="button_save" type="submit" value="保存"></td>
+    </tr>
+</table>
+</form>
+<a href="javascript:CloseAll()">关闭X </a>
+
+</div>
+<!--- ---------------------版权完善信息弹出----------------------------- -->
+<div id="popDivBan" class="mydiv popup" style="display:none;">
+<form action="updatemessage" method="post">
+<input type="hidden" name="id" id="b_id">
+<input type="hidden" name="order_id" id="b_order_id">               
+<table>
+    <tr>
+        <th colspan="2">完善订单信息</th>
+    </tr>
+
+    <tr>
+        <td class="text-right"><span>*</span>申请人信息：</td>
+        <td class="text-left">
+            <select class="padding_l20" id="b_j_info" name="j_info">
+                <foreach name="usrinfo" item="val">
+                <option value="{$val}">{$val}</option>
+                </foreach>
+            </select></td>
+    </tr>
+    <tr>
+        <td class="text-right"><span>*</span>产品经营范围：</td>
+        <td class="text-left"><input class="lineheight29" type="text" size="50" id="b_text" name="text"/></td>
+    </tr>
+     <tr>
+        <td class="text-right"><span>*</span>收货人地址：</td>
+        <td class="text-left">
+            <select class="padding_l20" id="b_address" name="address">
+                <foreach name="resinfo" item="val">
+                <option value="{$val}">{$val}</option>
+                </foreach>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td class="padding_bottom30 text-left"><input class="button_save" type="submit" value="保存"></td>
+    </tr>
+</table>
+</form>
+<a href="javascript:CloseAll()">关闭X </a>
+
+</div>
+<!--- ---------------------专利完善信息弹出----------------------------- -->
+<div id="popDivZhuan" class="mydiv popup" style="display:none;">
+<form action="updatemessage" method="post">
+<input type="hidden" name="id" id="zh_id">
+<input type="hidden" name="order_id" id="zh_order_id">             
+<table>
+    <tr>
+        <th colspan="2">完善订单信息</th>
+    </tr>
+
+    <tr>
+        <td class="text-right"><span>*</span>申请人信息：</td>
+        <td class="text-left">
+            <select class="padding_l20" id="zh_j_info" name="j_info">
+                <foreach name="usrinfo" item="val">
+                <option value="{$val}">{$val}</option>
+                </foreach>
+            </select></td>
+    </tr>
+     <tr>
+        <td class="text-right"><span>*</span>专利名称：</td>
+        <td class="text-left"><input class="lineheight29" type="text" size="50" id="zh_name" name="name"/></td>
+    </tr>
+    <tr>
+        <td class="text-right"><span>*</span>行业分类：</td>
+        <td class="text-left">
+            <input type="radio" name="style" value="科技">科技
+            <input type="radio" name="style" value="商贸">商贸
+            <input type="radio" name="style" value="服务">服务
+            <input type="radio" name="style" value="制造">制造
+            <input type="radio" name="style" value="其他">其他
+        </td>
+    </tr>
+    
+    <tr>
+        <td class="text-right"><span>*</span>产品经营范围：</td>
+        <td class="text-left"><input class="lineheight29" type="text" size="50" id="zh_text" name="text"/></td>
+    </tr>
+     <tr>
+        <td class="text-right"><span>*</span>收货人地址：</td>
+        <td class="text-left">
+            <select class="padding_l20" id="zh_address" name="address">
+                <foreach name="usrinfo" item="val">
+                <option value="{$val}">{$val}</option>
+                </foreach>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td class="padding_bottom30 text-left"><input class="button_save" type="button" value="保存"></td>
+    </tr>
+</table>
+<a href="javascript:CloseAll()">关闭X </a>
+
+</div>

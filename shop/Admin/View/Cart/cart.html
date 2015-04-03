@@ -1,0 +1,125 @@
+<link href="{$Think.ADMIN_CSS}style.css" rel="stylesheet" type="text/css">
+<div class="wapper">
+  <form action="/admin/cart/search" method="get" name="search1">
+  </form>
+    <form action="/admin/cart/search" method="get" name="search" >
+      <div class="wapper-right">
+    <div class="right_inner cart">
+    	<div class="path">您的位置：<a href="/Admin/Index/main">工作台</a> 》 <a href="">订单管理</a> 》 <a href="__URL__/carts/">会员购物车管理</a></div>
+        
+        <div class="search">
+                	<div class="sstj">
+                    	<p><span>业务类型：</span>
+                    	<select name="ywlx">
+                    	   <option>请选择</option>
+                    	   <foreach name='yewu' item='y'>
+                    	   {$y['server_name']}
+                    	    <if condition="($y['server_name'] eq $ywlx)"><option selected value="{$y.id}_{$y.server_name}">{$y.server_name}</option> <else/> <option value="{$y.id}_{$y.server_name}">{$y.server_name}</option></if>
+                    	   </foreach>
+	                	   <if condition="('组合商品' eq $ywlx)"><option selected value="{$ywlx}">{$ywlx}</option> <else/> <option value="组合商品">组合商品</option></if>
+						</select>
+            			<select name="key">
+                    	   <option>关键词</option>
+                    	    <option <if condition="('用户昵称' eq $key1)">selected</if>>用户昵称</option>
+                    	    <option <if condition="('用户联系方式' eq $key1)">selected</if>>用户联系方式</option>
+                    	    <option <if condition="('商品编码' eq $key1)">selected</if>>商品编码</option>
+                    	    <option <if condition="('商品简称' eq $key1)">selected</if>>商品简称</option>
+                    	
+	                	</select><input placeholder ='请输入用户昵称、用户联系方式、商品编码、商品简称'  name="keywords" type="text" <if condition="( $keywords neq '' )"> value="{$keywords}" </if>  size="20" maxlength="20" /></p>
+                    	<p class="buytime"><span>加入购买时间：</span>
+                    	<input type="text" <if condition="( $buy_timeb neq '' )"> value="{$buy_timeb}" <else/>value=""</if> id="" name="buy_timeb" onclick="SelectDate(this,'yyyy-MM-dd hh:mm')"/>
+                    	&nbsp;&nbsp;至&nbsp;&nbsp;
+                    	<input type="text" <if condition="( buy_timeend neq '' )"> value="{$buy_timeend}" <else/>value=""</if> id="" name="buy_timeend" onclick="SelectDate(this,'yyyy-MM-dd hh:mm')"/></p>
+                    </div>
+                    
+		      			<div class='sstj_search_btn'><input name="input" type="submit" value="搜索" /></div>
+                    <div class="clear"></div>
+		  		
+        </div>
+       	<div class="operation">
+        	<div id="systembox">
+
+    <div id="systembtn" class="systembtn">
+        <a href="javaScript:void(0)" id ='submit_cart' class="abtn"><span>今日新加入 购物车商品({$dayCount})</span></a>
+        <div id="menu_xl" class="menu_xl">
+          <dl>
+             <dt><a href="#" target="_blank">今日新加入购买商品(200)</a></dt>
+          </dl>
+          <dl>
+             <dt><a href="#" target="_blank">今日新加入购买商品(200)</a></dt>
+          </dl>   
+                
+        </div>
+    </div>
+
+</div>
+        </div>
+        <table class="cart hydd">
+        		<tr>
+                  <th>用户昵称</th>
+                  <th>用户联系方式</th>
+                  <th>业务类型</th>
+                  <th>商品编码</th>
+                  <th>商品简称</th>
+                  <th>商品现价</th>
+                  <th>加入购买时间  <a class="<if condition="( 1 eq $sort )">px_up<else/>px_down </if>" href='javascript:void()' id='sort_cart' >排序</a> </th>
+                  <input type='hidden' name='sort' id='sort' value='{$sort}'>
+                  <th>操作</th>
+                </tr>
+              <foreach name='carts' item='val'>
+              <tr>
+                  <td><a style="cursor:pointer" onclick="showCartUser({$val.user_id});">{$val.userName}</a></td>
+                  <td>{$val.phone}</td>
+                  <td><if condition="( 0 eq $val.type )"> 组合商品 </if>
+                  <if condition="( 38 eq $val.type )"> 商标服务 </if>
+                  <if condition="( 5 eq $val.type )"> 专利服务 </if>
+                  <if condition="( 6 eq $val.type )"> 版权服务 </if>
+                  </td>
+                  <td>{$val.code}</td>
+                  <td>{$val.short_title}</td>
+                  <td>{$val.now_price}</td>
+                  <td>{$val.addtime|date='Y-m-d H:i:s',###}</td>
+                  <td><a style="cursor:pointer" onclick="showCartInfo({$val.id},{$val.user_id},{$val.now_price},{$val.addtime});">查看详情</a></td>
+              
+                </tr>
+                 
+              </foreach>
+             <!--   <if condition="!empty($carts)">
+               	<tr>
+           	<td class="hj"  colspan="8">商品总数：<span>{$count}</span>&nbsp;&nbsp;&nbsp;&nbsp;  订单总额：<span>￥{$money}</span>  </td> 
+           		</tr>
+              </if>-->
+       		
+        </table>	
+        <!--table end-->
+        </div>
+    <!--right_inner end-->
+    <!--添加商品 开始-->
+    <div class="add detail" id='adddetail' style='display:none'>
+    	<div class="backcolor">
+        	
+               <h3>购物车商品详情    <span class ='guanbi' onclick='guanbi();' >X</span></h3>
+	           <div class="jb_info" id= 'jb_info'>
+
+	           </div>
+	               
+            	<table id ='con' class="con cart">
+            	
+            	</table>
+        </div>
+    </div>
+
+    <!--添加商品 结束-->
+    </div><!--wapper-right end-->
+</div><!--wapper end-->
+     {$pages}
+    	</form>
+    
+         <div id="bg"></div>
+   
+<!--头部 开始-->
+</body>
+</html>
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}cart.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}Calendar1.js"></script>

@@ -1,0 +1,61 @@
+<div class="topnav-box">
+	<div class="container">
+    	<ul class="topnav">
+            <li style="margin-right:30px;">
+            
+           <if condition="($Think.session.user.user_name !='')">
+              
+               <span> {$Think.session.user.user_name},</span>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" id='logout' class="a-red">退出</a>
+                <else/>
+               <a href="javascript:void(0);" id='login' class="a-red">登录</a>&nbsp;&nbsp;&nbsp;
+                 <a href="http://www.gbicom.cn/passport/register?ref=http%3A%2F%2Fshop.gbicom.cn%2F" id='regs' target='_black' class="a-red">注册</a>
+                </if>
+            </li>
+          <li  class="font-size14">
+            	<div class="top_members" onMouseOut="this.className='top_members'" onMouseOver="this.className='top_members active_top_members'"> 
+                <p> 
+                 <a href="javascript:void(0)"  onclick="CheckLogin('userhome')">个人中心</a>
+                </p>  
+                <ul class="top_members_ct"> 
+                	<li><a href="javascript:void(0)" onClick="CheckLogin('allorder')">我的订单</a></li>
+                    <li><a href="javascript:void(0)" onClick="CheckLogin('userhome')">个人资料</a></li>
+                    <li><a href="javascript:void(0)" onClick="CheckLogin('safetypage')">安全设置</a></li>
+                </ul> 
+              </div>
+
+            </li>
+            
+           <li style="float:right; padding-right:15px;">
+            	<a href="/index.php/Home/Article/detialarticle"  class="a-red">购物帮助</a>
+            </li>
+            <li style="float:right; margin-right:20px;">
+            	<span class="color9">全国统一咨询热线：</span>&nbsp;&nbsp;
+                <b class="font-size14" style="color:#bb0000">400-700-0065</b>
+            </li>
+           
+            <div style="clear:both;"></div>
+        </ul>
+    </div>
+</div>
+<div class="loginbox" style='display:none' id='loginDiv'>
+    
+    <iframe id='popIframe' class='popIframe' frameborder='0' ></iframe>
+    <div id="popDiv" class="mydiv login_box" > 
+        <div class="login_bg" id='error_msg4'>
+            <p class="text-center"  id='error_msg1'></p>
+           <p><input class="type_text1" type="text" name='user_name' placeholder="用户名/手机号"/></p>
+            <p><input class="type_text2"  type="password" name='password' id='password' placeholder="密码"  /></p>
+             <p><input type="checkbox" id='checkboxID'/> 记住我一周</p>
+            <p><input class="button_login" type="button"  id='login_user' value="登录" />  <a href="http://www.gbicom.cn/passport/register?ref=http%3A%2F%2Fwww.gbicom.cn%2F">注册</a></p>
+        </div>
+         <div class="login_bg"  id='error_msg3' style="display:none;">
+            <p class="text-center"  >登录成功</p>
+           
+           
+        </div>
+        <a class="close" style="cursor:pointer" id='close_log'>X </a>            
+    </div>
+    <div id="bg" class="bg" style="display:none;"></div>
+
+
+</div>

@@ -1,0 +1,274 @@
+<include file="Public/header" />
+<script language="javascript" src="{$Think.HOME_JS}ucenter/json2.js"></script>
+<script language="javascript" src="{$Think.HOME_JS}ucenter/allorder.js"></script>
+
+<!--个人中心 安全中心 所有订单 开始-->
+<div class="container">
+	<div class="crumbs">
+    	您的位置：
+        <a href="{$Think.DOMAIN}">中细软服务商城</a>&gt;
+        <a href="{$Think.DOMAIN}Home/User/allorder">订单管理</a>&gt;
+        <a href="javascript:void()">我的订单</a>
+    </div>
+	<include file="Public/ucenter_left"/>
+    <div class="members_right  allorder  float-right">
+    	<p class="members_right_title">我的订单</p>
+        <table>
+        	<tr>
+            	<th width="44%">商品</th>
+                <th width="21%">单价（元）</th>
+                <th width="21%">交易状态</th>
+                <th width="14%">交易操作</th>
+            </tr>
+        <foreach name="orderinfo" item="val">
+            <tr>
+            	<td class="borderno" colspan="4"></td>
+            </tr>
+            <if condition="!empty($val['order'][0])">
+            
+            <tr>
+            	<td class="td_bg" colspan="4">  订单号：{$val['order_card']} <p style="float:right;" class="change_order">
+                <span style="float:left;margin-right: 80px;color:black;">
+                	商品数量：{$val.goods_number} 优惠券金额 ：￥ <if condition="(isset($val['onsale_money']))">{$val.onsale_money}<else/>0</if> &nbsp;&nbsp;&nbsp;&nbsp;订单支付时间：<php>echo date('Y-m-d H:i:s',$val['pay_time']);</php></span><font color="red" style="float:left">订单总额：￥{$val['totalprice']}&nbsp;&nbsp;</font></p></td>
+            </tr>
+            <foreach name="val['order']" item="info">
+                
+            <tr>
+                <if condition="$info['is_gift'] eq 1">
+                    <td class="text-left"><a href="/Home/Goods/gooddetails/id/{$info['goods_id']}" target="_blank"><img src="{$current|current_cdn_img}{$info['thumb']}" height="80px" width="140px"/><span style="color:red; font-size: 14px; font-weight: bolder">&nbsp;&nbsp;赠</span>
+                <else />
+                <td class="text-left"><a href="/Home/Goods/gooddetails/id/{$info['goods_id']}" target="_blank"><img src="{$current|current_cdn_img}{$info['thumb']}" height="80px" width="140px"/>    
+                </if>
+                <p>{$info['short_title']} <br />商品编码：{$info['goods_code']}</p></a></td>
+                <td><font>￥{$info['now_price']}</font></td>
+                
+                <if condition="$info['is_wan'] eq 1">
+                <td><if condition="$info['order_status'] eq 0">已支付<elseif condition="$info['order_status'] eq 6"/>已结束<else />已开始</if></td>
+                <td class="perfect_order">
+                    <if condition="$info['type'] eq 'T001'">
+                    <a href="javascript:showDivT001({$info['goods_id']},{$val['order_id']})">完善订单</a>
+                    <elseif condition="$info['type'] eq 'T002'"/>
+                    <a href="javascript:showDivT002({$info['goods_id']},{$val['order_id']})">完善订单</a>
+                    <elseif condition="$info['type'] eq 'T003'"/>
+                    <a href="javascript:showDivT003({$info['goods_id']},{$val['order_id']})">完善订单</a>
+                    </if>
+                </td>
+                <elseif condition="$info['is_wan'] eq 2"/>
+                <td><if condition="$info['order_status'] eq 0">已支付<elseif condition="$info['order_status'] eq 6"/>已结束<else />已开始</if></td>
+                <td class="change_order">
+                    <if condition="$info['type'] eq 'T001'">
+                    <a href="javascript:showDivT001({$info['goods_id']},{$val['order_id']})">修改订单</a>
+                    <elseif condition="$info['type'] eq 'T002'"/>
+                    <a href="javascript:showDivT002({$info['goods_id']},{$val['order_id']})">修改订单</a>
+                    <elseif condition="$info['type'] eq 'T003'"/>
+                    <a href="javascript:showDivT003({$info['goods_id']},{$val['order_id']})">修改订单</a>
+                    </if>
+                </td>
+                <else />
+                <td><if condition="$info['order_status'] eq 0">已支付<elseif condition="$info['order_status'] eq 6"/>已结束<else />已开始</if></td>
+                <td class="check_order">
+                    <a href="/home/User/lookorder/order_id/{$val['order_id']}/id/{$info['goods_id']}">查看订单</a>
+                </td>
+                </if>
+                
+            </tr>
+            
+        </foreach>
+            </if>
+         </foreach>       
+</table>
+        
+    
+    </div>
+	<div style="clear:both;"></div> 
+
+</div>
+
+
+<!--个人中心 安全中心 所有订单结束-->
+<include file="Public/footer" />
+<!--- ---------------------注册完善信息弹出----------------------------- -->
+<div id="popDivZhu" class="mydiv popup" style="display:none;">  
+<form action="updatemessage" method="post">
+<input type="hidden" name="id" id="z_id">
+<input type="hidden" name="order_id" id="z_order_id"> 
+<input type="hidden" name="short_title" id="z_short_title">
+<input type="hidden" name="act" id="z_act"> 
+<table>
+    <tr>
+        <th colspan="2">完善订单信息</th>
+    </tr>
+
+    <tr>
+        <td class="text-right"><span style="color:red">*</span>申请人信息：</td>
+        <td class="text-left">
+            <select style=" float:left;"  class="padding_l20" id="z_j_info" name="j_info" >
+                <foreach name="usrinfo" item="val">
+                <option value="{$val}">{$val}</option>
+                </foreach>
+            </select>
+            <a href='/Home/User/showadddealinfo' style='color:red; position:inherit; margin-left:10px; float:left;'><img src="{$Think.HOME_IMAGES}add_48.png"></a>
+            </td>
+    </tr>
+     <tr>
+        <td class="text-right"><span style="color:red">*</span>商标名称：</td>
+        <td class="text-left"><input class="lineheight29" type="text"  id="z_name" name="name"/></td>
+    </tr>
+     <tr>
+        <td class="text-right"><span style="color:red">*</span>商品分类：</td>
+        <td class="text-left">
+            <select class="padding_l20" id="z_style" name="style" > 
+                <foreach name="style" item="val">
+                <option value="{$val}">{$val}</option>
+                </foreach>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td class="text-right"><span style="color:red">*</span>产品经营范围：</td>
+        <td class="text-left">
+            <textarea id="z_text" name="text" placeholder='请输入200字以内的需求描述'></textarea>
+            <p id="messa"></p>
+           <!-- <input class="lineheight29" type="text" size="50" id="z_text" name="text"/>-->
+        </td>
+    </tr>
+     <tr>
+        <td class="text-right"><span style="color:red">*</span>收货人地址：</td>
+        <td class="text-left" >
+            <select style=" float:left;"  class="padding_l20" id="z_address" name="address">
+                <foreach name="resinfo" item="vals">
+                <option value="{$vals}">{$vals}</option>
+                </foreach>
+            </select>
+            <a href='/Home/User/shipadresslist' style='color:red; position:inherit; margin-left:10px; float:left;'><img src="{$Think.HOME_IMAGES}add_48.png"></a>
+        </td>
+        
+    </tr>
+    <tr>
+        <td></td>
+        <td class="padding_bottom30 text-left"><input class="button_save" type="submit" value="保存"></td>
+    </tr>
+</table>
+</form>
+<a class="btn_close" href="javascript:CloseAll()">关闭</a>
+
+</div>
+<!--- ---------------------版权完善信息弹出----------------------------- -->
+<div id="popDivBan" class="mydiv popup" style="display:none;">
+<form action="updatemessage" method="post">
+<input type="hidden" name="id" id="b_id">
+<input type="hidden" name="order_id" id="b_order_id">
+<input type="hidden" name="short_title" id="b_short_title">
+<input type="hidden" name="act" id="b_act">
+<table>
+    <tr>
+        <th colspan="2">完善订单信息</th>
+    </tr>
+
+    <tr>
+        <td class="text-right"><span style="color:red">*</span>申请人信息：</td>
+        <td class="text-left">
+            <select style=" float:left;" class="padding_l20" id="b_j_info" name="j_info" width="315px">
+                <foreach name="usrinfo" item="val">
+                <option value="{$val}">{$val}</option>
+                </foreach>
+            </select>
+            <a href='/Home/User/showadddealinfo' style='color:red; position:inherit; margin-left:10px; float:left;'><img src="{$Think.HOME_IMAGES}add_48.png"></a>
+            </td>
+    </tr>
+    <tr>
+        <td class="text-right"><span style="color:red">*</span>需求描述：</td>
+        <td class="text-left">
+            
+            <!--<input class="lineheight29" type="text" size="50" id="b_text" name="text"/>-->
+            <textarea id="b_text" name="text"></textarea>
+            <p id="messb"></p>
+        </td>
+    </tr>
+     <tr>
+        <td class="text-right"><span style="color:red">*</span>收货人地址：</td>
+        <td class="text-left">
+            <select style=" float:left;" class="padding_l20" id="b_address" name="address">
+                <foreach name="resinfo" item="vals">
+                <option value="{$vals}">{$vals}</option>
+                </foreach>
+            </select>
+            <a href='/Home/User/shipadresslist' style='color:red; position:inherit; margin-left:10px; float:left;'><img src="{$Think.HOME_IMAGES}add_48.png"></a>
+        </td>
+        
+    </tr>
+    <tr>
+        <td></td>
+        <td class="padding_bottom30 text-left"><input class="button_save" type="submit" value="保存"></td>
+    </tr>
+</table>
+</form>
+<a class="btn_close" href="javascript:CloseAll()">关闭</a>
+
+</div>
+<!--- ---------------------专利完善信息弹出----------------------------- -->
+<div id="popDivZhuan" class="mydiv popup" style="display:none;">
+<form action="updatemessage" method="post">
+<input type="hidden" name="id" id="zh_id">
+<input type="hidden" name="order_id" id="zh_order_id">
+<input type="hidden" name="short_title" id="zh_short_title">
+<input type="hidden" name="act" id="zh_act">
+<table>
+    <tr>
+        <th colspan="2">完善订单信息</th>
+    </tr>
+
+    <tr>
+        <td class="text-right"><span style="color:red">*</span>申请人信息：</td>
+        <td class="text-left">
+            <select style=" float:left;"  class="padding_l20" id="zh_j_info" name="j_info">
+                <foreach name="usrinfo" item="val">
+                <option value="{$val}">{$val}</option>
+                </foreach>
+            </select>
+            <a href='/Home/User/showadddealinfo' style='color:red; position:inherit; margin-left:10px; float:left;'><img src="{$Think.HOME_IMAGES}add_48.png"></a>
+        </td>
+    </tr>
+     <tr>
+        <td class="text-right"><span style="color:red">*</span>专利名称：</td>
+        <td class="text-left"><input class="lineheight29" type="text" size="50" id="zh_name" name="name"/></td>
+    </tr>
+    <tr>
+        <td class="text-right"><span style="color:red">*</span>行业类型：</td>
+        <td class="text-left">
+            <input type="radio" name="styles" value="科技文化业">科技文化业
+            <input type="radio" name="styles" value="商贸业">商贸业
+            <input type="radio" name="styles" value="服务业">服务业
+            <input type="radio" name="styles" value="制造业">制造业
+            <input type="radio" name="styles" value="其他">其他
+        </td>
+    </tr>
+    
+    <tr>
+        <td class="text-right"><span style="color:red">*</span>产品经营范围：</td>
+        <td class="text-left">
+            <!--<input class="lineheight29" type="text" size="50" id="zh_text" name="text"/>-->
+            <textarea id="zh_text" name="text" placeholder='请输入200字以内的需求描述'></textarea>
+            <p id="messc"></p>
+            </td>
+    </tr>
+     <tr>
+        <td class="text-right"><span style="color:red">*</span>收货人地址：</td>
+        <td class="text-left">
+            <select  style=" float:left;"  class="padding_l20" id="zh_address" name="address">
+                <foreach name="resinfo" item="vals">
+                <option value="{$vals}">{$vals}</option>
+                </foreach>
+            </select>
+            <a href='/Home/User/shipadresslist' style='color:red; position:inherit; margin-left:10px; float:left;'><img src="{$Think.HOME_IMAGES}add_48.png"></a>
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td class="padding_bottom30 text-left"><input class="button_save" type="submit" value="保存"></td>
+    </tr>
+</table>
+</form>
+<a class="btn_close" href="javascript:CloseAll()">关闭</a>
+
+</div>

@@ -1,0 +1,60 @@
+<link href="{$Think.ADMIN_CSS}style.css" rel="stylesheet" type="text/css">
+<div class="wapper">
+    <div class="wapper-right">
+    	<div class="right_inner">
+    		<div class="path">您的位置：<a href="#">工作台</a>》<a href="#">修改密码</a></div>
+			 <!--修改密码 开始-->
+     <form action="/Admin/Index/up_pws" method="post" onsubmit="return up_Pass()">
+        	<h3 class="xgmm">修改密码</h3>
+            <table class="xgmm_bg">
+            	<tr>
+                	<td><span>旧密码:</span><input type="password" name="old" id="old"/></td>
+                </tr>
+                <tr>
+                	<td ><span>输入新密码:</span><input type="password" name="new" id="new"/></td>
+                </tr>
+                <tr>
+                	<td><span>重新输入新密码:</span><input type="password" name="renew" id="renew"/></td>
+                </tr>
+                <tr>
+                	<td><input type="submit" value="确定" /></td>
+                </tr>
+            </table> 
+       
+       </form> 
+     <!--修改密码 结束-->
+                    	
+    	</div>
+    </div>
+</div>
+
+</body>
+</html>
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script>
+	function up_Pass()
+	{
+		var new_pass   = $("#new").val();
+		var new_repass = $("#renew").val();
+                var old_pwd = $("#old").val();
+                if(new_pass.length != 0 && old_pwd.length != 0)
+                {
+                    if(new_pass != new_repass)
+                    {
+                            alert("两次密码输入不一致");
+                            return false;
+                    }else{
+                            return true;
+                    }
+                }else{
+                    alert("不能为空");
+                    return false;
+                }
+		
+	}
+</script>
+
+
+ 
+ 
+ 

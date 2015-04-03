@@ -1,0 +1,170 @@
+<link href="{$Think.ADMIN_CSS}style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+
+<script type="text/javascript">
+function is_indexorhot(goods_id,val,field){
+    
+    if( goods_id ){
+        $.ajax({
+          type: 'POST',
+          url:"__URL__/is_index", 
+          data:{"type":"is_indexorhot","goods_id":goods_id,"val":val,"field":field},
+
+          success: function(result){
+              
+                 if(result=='1' && val=='1' && field=='is_index' ){
+                     $("#in_"+goods_id).attr('class','yesno_zz no');
+                    
+                 }
+                 if(result=='1' && val=='0' && field=='is_index'  ){
+                     $("#in_"+goods_id).attr('class','yesno_zz yes');
+                 }
+                 
+                 if(result=='1' && val=='1' && field=='is_hot' ){
+                     $("#ho_"+goods_id).attr('class','yesno_zz no');
+                    
+                 }
+                 if(result=='1' && val=='0' && field=='is_hot'  ){
+                     $("#ho_"+goods_id).attr('class','yesno_zz yes');
+                 }
+             }
+         });
+    }
+}
+
+   function spanhide(id){
+        
+        $("#span"+id).hide();
+        $("#input"+id).show();
+    }
+    function inputhide(id){
+      var orderid = $("#input"+id).val();
+      if(orderid==0){
+        alert('序列从1开始');
+        return false;
+      }
+      $.ajax({
+        url:"__URL__/editGoodorderid",
+        type:'post',
+        data:{"orderid":orderid,"id":id},
+        success:function(msg){
+          if(msg!=0){
+            $("#span"+id).html(msg);
+          }
+          
+        }
+    })
+    $("#span"+id).show();
+    $("#input"+id).hide();
+  }
+  
+     function showspanhide(id){
+        
+        $("#serv"+id).hide();
+        $("#serinput"+id).show();
+    }
+    function updatehide(id){
+      var orderid = $("#serinput"+id).val();
+      if(orderid==0){
+        alert('序列从1开始');
+        return false;
+      }
+      $.ajax({
+        url:"__URL__/editServerid",
+        type:'post',
+        data:{"orderid":orderid,"id":id},
+        success:function(msg){
+          if(msg!=0){
+            $("#serv"+id).html(msg);
+          }
+          
+        }
+    })
+    $("#serv"+id).show();
+    $("#serinput"+id).hide();
+  }
+</script>
+
+<div class="wapper">
+    
+
+    <!--right_inner begin-->
+    <div class="wapper-right">
+    	<div class="right_inner">
+    		<div class="path">您的位置：<a  href="/index.php/Admin/Index/main">工作台</a>》<a  href="__URL__/goods">页面设置</a>》<a href="__URL__/goods">商品服务优先级设置</a></div>
+        	<div class="search">
+            <form action="__URL__/goods" method="post" name="search" >
+            	<div class="spfw_31">
+                	<p><span>业务类型：</span>
+                    <select name="ywlx">
+                        <option id='c_0' value='0'>请选择业务类型</option>
+                        <?php 
+                        if( $cat ){
+                            foreach( $cat as $val ){
+                        ?>
+                        <option id="c_<?php echo $val['id'];?>" value="<?php echo $val['id'];?>" <?php if( $tid==$val['id'] ){ ?> selected="selected" <?php }?> ><?php echo $val['server_name'];?></option>
+                	<?php }} ?>
+                	 
+                    </select>
+<!--                            <span>关键词：</span><input name="keywords" type="text" value="<?php if($keyword){ echo $keyword;}?>" placeholder="请输入搜索关键字" size="30" maxlength="20" />-->
+                        </p><p><input name="input" type="submit" value="搜索" /></p>
+                </div>
+
+	  </form>
+            </div>
+            <p class="sbyw"><?php echo $tname;?>&nbsp;&nbsp;&nbsp;&nbsp;首页序列:
+                <span ondblclick="showspanhide(<?php echo $tid;?>)" id="serv<?php echo $tid;?>"> <?php echo $torderid;?> </span><input type="text" value="<?php echo $torderid;?>" style="height:20px;width:40px;display:none" onblur="updatehide(<?php echo $tid;?>)" id="serinput<?php echo $tid;?>">
+            </p>
+            <table class="ddlc">
+            	<tr>
+                  <th class="col_01">商品简称</th>
+                  <th class="col_02">现价</th>
+                  <th class="col_03">序号</th>
+                  <th class="col_04">是否首页推广</th>
+                  <th class="col_05">是否热门推荐</th>
+                  <th class="col_06">操作</th>
+                </tr>
+                <?php
+                if( $Twocat ){
+                    foreach( $Twocat as $val ){           
+                ?>
+                <tr class="regester">
+                  <td ><span class="first"><?php echo $val['server_name'];?></span></td>
+                  <td >&nbsp;</td>
+<!--                  <td ><?php echo $val['id'];?></td>-->
+
+                  <td ondblclick="showspanhide(<?php echo $val['id'];?>)"><span  id="serv<?php echo $val['id'];?>"> <?php echo $val['orderid'];?> </span><input type="text" value="<?php echo $val['orderid'];?>" style="height:20px;width:40px;display:none" onblur="updatehide(<?php echo $val['id'];?>)" id="serinput<?php echo $val['id'];?>"></td>
+                  <td colspan="3">&nbsp;</td>
+
+                </tr>
+                <?php
+                
+                if( $val['goods']){
+                    foreach( $val['goods'] as $vv ){
+                ?>
+                <tr>
+                  <td><?php echo $vv['short_title']; ?></td>
+                  <td>￥<?php echo $vv['now_price']; ?></td>
+<!--                  <td><?php echo $vv['index_order']; ?></td>-->
+                  <td ondblclick="spanhide(<?php echo $vv['goods_id'];?>)"><span  id="span<?php echo $vv['goods_id'];?>"> <?php echo $vv['index_order'];?> </span><input type="text" value="<?php echo $vv['index_order'];?>" style="height:20px;width:40px;display:none" onblur="inputhide(<?php echo $vv['goods_id'];?>)" id="input<?php echo $vv['goods_id'];?>"></td>
+                  <td><div  class="yesno"><span onclick="is_indexorhot(<?php echo $vv['goods_id'];?>,'0','is_index');">是</span>&nbsp;&nbsp;&nbsp;&nbsp;<span onclick="is_indexorhot(<?php echo $vv['goods_id'];?>,'1','is_index');">否</span><div id="in_<?php echo $vv['goods_id'];?>" <?php if( $vv['is_index']=='1'){ ?>class="yesno_zz no" <?php } if( $vv['is_index']=='0' ){?> class="yesno_zz yes" <?php }?> ></div></div></td>
+                  <td><div  class="yesno"><span onclick="is_indexorhot(<?php echo $vv['goods_id'];?>,'0','is_hot');">是</span>&nbsp;&nbsp;&nbsp;&nbsp;<span onclick="is_indexorhot(<?php echo $vv['goods_id'];?>,'1','is_hot');">否</span><div id="ho_<?php echo $vv['goods_id'];?>" <?php if( $vv['is_hot']=='1'){ ?>class="yesno_zz no" <?php } if( $vv['is_hot']=='0' ){?> class="yesno_zz yes" <?php }?> ></div></div></td>
+                  <td><a href="/index.php/Admin/Goods/Goods_listUp/goods_id/<?php echo $vv['goods_id'];?>"><img alt="修改" title="修改" src="{$Think.ADMIN_IMAGES}1_05.png" /></a></td>
+                </tr>
+                <?php }}}} ?>
+                
+            </table>
+
+            <div class="clear"></div>
+		</div>
+            
+        </div>
+   
+    </div>
+
+    <!--wapper-right end-->
+</div><!--wapper end-->
+<!--头部 开始-->
+
+</body>
+</html>

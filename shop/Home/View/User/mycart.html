@@ -1,0 +1,80 @@
+<include file="Public/header" />
+<script language="javascript" src="{$Think.HOME_JS}ucenter/mycart.js"></script>
+<!--个人中心 安全中心 我的购物车 开始-->
+<div class="container">
+	<div class="crumbs">
+    	您的位置：
+        <a href="{$Think.DOMAIN}">中细软服务商城</a>&gt;
+        <a href="{$Think.DOMAIN}Home/User/allorder">订单管理</a>&gt;
+        <a href="javascript:void()">我的购物车</a>
+    </div>
+	<include file="Public/ucenter_left"/>
+    <div class="members_right  mycart  float-right">
+    	<p class="members_right_title">
+        	<span class="float-left">我的购物车 &nbsp;&nbsp;<a href="#">全部商品</a></span>
+            <a class="float-right go_clearing" href="javascript:void(0)" onclick="return SubmitCart()">去结算</a>
+            <span class="float-right">已选商品（不含优惠）:<font id="AllPrice">￥0.00</font></span>
+        </p> 
+     
+        <table>
+            <tr>
+                <th width="7%"><input type="checkbox" onclick="CheckAllOne()" id="QueryAllA"/> 全选</th>
+                <th width="53%">商品</th>
+                <th width="27%">价格</th>
+                <th width="13%">操作</th>
+            </tr>
+            <foreach name="cartinfo" item="val" key="k">
+                <tr>
+                	<td colspan="4" class="td_bg">{$val['username']}</td>
+                    <php>unset($val['username']);</php>
+                </tr>
+                   
+                    <if condition="$k eq package">
+                    <foreach name="val" item="v">
+                    <tr id="delnode{$v['id']}">
+                    	<td><input  type="checkbox" name="check" id="check{$v['id']}" onclick="CheckSelf()" value="{$v['id']}"/></td>
+                        <td class="text-left"><a href="/Home/package/details/id/{$v['package_id']}" target="_blank"><img src="{$current|current_cdn_img}{$v['thumb']}" height="80px" width="140px"/> <p>{$v['short_title']}</p></a></td>
+                        <input type="hidden" value="{$v['now_price']}" id="price{$v['id']}">
+                        <input type="hidden" value="p{$v['package_id']}" id="good{$v['id']}">
+                        <td>￥{$v['now_price']}</td>
+                        <td onclick="DelSelf({$v['id']})" style="cursor:pointer">删除</td>
+                    </tr>
+                     <tr id="delnodes{$v['id']}">
+                    	<td class="borderno" colspan="4"></td>
+                    </tr>
+                    </foreach>
+                    <else />
+                    <foreach name="val" item="g">
+                    <tr id="delnode{$g['id']}">
+                        <td><input  type="checkbox" name="check" id="check{$g['id']}" onclick="CheckSelf()" value="{$g['id']}"/></td>
+                        <td class="text-left"><a href="/Home/Goods/gooddetails/id/{$g['goods_id']}" target="_blank"><img src="{$current|current_cdn_img}{$g['thumb']}" height="80px" width="140px"/> <p>{$g['short_title']}</p></a></td>
+                        <input type="hidden" value="{$g['now_price']}" id="price{$g['id']}">
+                        <input type="hidden" value="g{$g['goods_id']}" id="good{$g['id']}">
+                        <td>￥{$g['now_price']}</td>
+                        <td onclick="DelSelf({$g['id']})" style="cursor:pointer">删除</td>
+                    </tr>
+                     <tr id="delnodes{$g['id']}">
+                        <td class="borderno" colspan="4"></td>
+                    </tr>
+                    </foreach>
+                    </if>
+                    
+            </foreach>
+            <tr>
+            	<td class="go_account" colspan="4">
+                	<span class="float-left">
+              <input  type="checkbox" onclick="CheckAllTwo()" id="QueryAllB"/> 全选&nbsp;&nbsp;
+              <a class="delete" href="javascript:void(0)" onclick="DelPitch()">删除选中商品</a>&nbsp;&nbsp;
+              <a class="go_on" href="__APP__">继续购物</a>             
+            </span>
+            <a class="float-right" href="javascript:void(0)" onclick="return SubmitCart()">去结算</a>
+            <span class="float-right">已选商品 <font id="numb">0</font> 件       合计<font id="AllPriceb">￥0.00</font></span>  
+                </td>
+            </tr>
+           
+        </table>    
+    </div>
+    <div style="clear:both;"></div>
+</div>
+<!--个人中心 安全中心 我的购物车 结束-->
+<include file="Public/footer"/>

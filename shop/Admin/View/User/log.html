@@ -1,0 +1,61 @@
+<link href="{$Think.ADMIN_CSS}style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}Calendar1.js"></script>
+
+<div class="wapper">
+
+    <div class="wapper-right">
+    <div class="right_inner">
+    	<div class="path">您的位置：<a href="/index.php/Admin/Index/main">工作台</a>》<a href="/index.php/Admin/User/log">系统管理</a>》<a href="/index.php/Admin/User/log">操作日志</a></div>
+        <div class="search_dh">
+            <form action="__URL__/log" method="post" name="search">
+                	<div class="czrz_key"><span>
+                            关键字：</span><input name="keywords" type="text" value="<?php if( $map['keywords']){ echo $map['keywords']; }?>" placeholder="请输入用户名、操作描述进行查询" size="30" maxlength="20" /></div><div class="czsj_xq"><span>操作时间：</span><input type="text" name="start" onclick="SelectDate(this,'yyyy-MM-dd hh:mm:ss')" value="<?php if( $map['start']){ echo $map['start']; }?>"/>&nbsp;&nbsp;至&nbsp;&nbsp;<input type="text" name="end" onclick="SelectDate(this,'yyyy-MM-dd hh:mm:ss')" value="<?php if( $map['end']){ echo $map['end']; }?>"/>
+                    </div>
+                    
+		      		<div class="search_btn"><input name="input" type="submit" value="搜索" /></div>
+                    
+            </form>
+        </div>
+        <div class="clear"></div>
+
+        <div class="neir">
+        <table class="ddlc jsgl">
+            <tr>
+            	<th  class="col_01">序号</th>
+                <th  class="jsql_col_03">用户名</th>
+                <th  class="jsql_col_04">操作</th>
+                <th  class="col_05">描述</th>
+                <th  class="col_06">IP</th>
+                <th  class="col_06">操作时间</th>
+            </tr>
+            <?php
+            if( $loginfo ){
+                $i = 1;
+                foreach( $loginfo as $vv){
+            ?>
+            <tr <?php if($i%2==0){ ?> class="tr_bgcolor" <?php }?> >
+              <td><?php echo $vv['id'];?></td> 
+                <td><?php echo $vv['user_name'];?></td>
+                <td  class="jsql_add"><?php echo $vv['action'];?></td>
+                <td class="pic_op"><?php echo $vv['description'];?></td>
+                <td><?php echo $vv['IP'];?></td>
+                <td><?php echo date('Y-m-d H:i:s',$vv['createtime']);?></td>
+            </tr>
+            <?php 
+                $i++;
+            }} ?>
+           
+        </table>
+            
+            <?php echo $page;?>
+    </div>	
+        <!--table end-->
+        </div>
+    <!--right_inner end-->
+
+    </div><!--wapper-right end-->
+</div><!--wapper end-->
+<!--头部 开始-->
+</body>
+</html>

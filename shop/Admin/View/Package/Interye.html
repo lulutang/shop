@@ -1,0 +1,25 @@
+<table>
+	<tr>
+		<th class="col_01"><input type="checkbox" name="top" id="childtop" onclick="Opt('top')"></th>
+		<th class="col_02">商品编码</th>
+		<th class="col_03">商品简称</th>
+		<th class="col_04">业务类型</th>
+		<th class="col_05">现价</th>
+	</tr>
+	<volist name="Goods_arr" id="Gsa">
+		<tr>
+			<td>
+			<if condition="in_array($Gsa['goods_id'] , $zu_goodsarr)">
+				<input type="checkbox" name="child" value="{$Gsa['goods_id']}" checked onclick="Case({$Gsa['goods_id']})">
+				<else/>
+				<input type="checkbox" name="child" value="{$Gsa['goods_id']}">
+			</if>
+			</td>
+			<td>{$Gsa["goods_code"]}</td>
+			<td>{$Gsa["short_title"]}</td>
+			<td>{$Gsa["now_servername"]}</td>
+			<td>{$Gsa["now_price"]}</td>
+		</tr>
+	</volist>
+	</table>
+	<input type="hidden" id="gid" value="{$zu_goods}" >

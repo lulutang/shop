@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>跑堂-张三峰个人详情</title>
+    <link href="{$Think.ADMIN_CSS}global.css" rel="stylesheet" type="text/css">
+    <link href="{$Think.ADMIN_CSS}g_style.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="{$Think.ADMIN_JS}waiter.js?a=<?php echo mt_rand(10000000,99999999);?>"></script>
+</head>
+<body>
+<div class="content_right">
+    <div class="indent"></div>
+    <div class="link_path">您所在的位置：<a href="javascript:void(0)">跑堂管理</a>&nbsp;>&nbsp;<a href="javascript:void(0)">现有跑堂</a>&nbsp;>&nbsp;<a href="javascript:void(0)">张三峰</a></div>
+    
+	<div id="g1" class="g1_inf"><span>TA的信息</span></div>
+	<div id="g2" class="g2_div">
+		<div id="g3" class="g3_form">
+			<img align="right" id="g3_img" class="gw_img " src="{$data.thumb}"/>
+		</div>
+                
+		<div id="g4" class="g4_text">
+			<span class="gs_sign">店铺招牌：{$data.shopsign}</span>
+			<div id="g5" class="g5_text">
+				<div id="g6" class="g6_detail">
+					<p><b>姓名：</b><span>{$data.truename}</span></p>
+					<p><b>性别：</b><span><if condition="$data.sex eq 1 ">男</if><if condition="$data.sex eq 2 ">女</if></span></p>
+					<p><b>联系方式：</b><span>{$data.mobile}</span></p>
+					<p><b>证件类型：</b><span><if condition="$data.identitytype eq 1 ">身份证</if><if condition="$data.identitytype eq 2 ">军官证</if></span></p>
+					<p><b>Email：</b><span>{$data.email}</span></p>
+				</div>
+				<div id="g7" class="g7_detail">
+					<p><b>职 称： </b><span>跑堂</span></p>
+					<p><b>工 号： </b><span>{$data.card}</span></p>
+                                        <p><b>出生日期：</b><span><notempty name="data.birth">{$data.birth|date='Y-m-d',###}</notempty></span></p>
+					<p><b>证件号码：</b><span>{$data.IDnum}</span></p>
+					<p><b>注册时间：</b><span><notempty name="data.addtime">{$data.addtime|date='Y-m-d',###}</notempty></span></p>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+		<div class="clear"></div>
+	</div>
+	
+	<div id="g1" class="g1_inf"><span>TA的客官</span></div>
+
+	<div class="g8_div">
+		<select nanme="changeWaiter" id="changeWaiter" class="g8_select">
+			<option value="">批量更替跑堂</option>
+                        <foreach name="waiters" item="v" >
+                            <option value="{$v.id}"> ---{$v.truename}</option>
+                        </foreach>
+		</select>
+            <button class="g8_btn" onclick="changeWaiter()">确定</button>
+		<div class="g9_div">
+			<table>
+				<tr>
+                                    <th width="8%"><input type="checkbox" id="chk_all" onclick="invertSelectType()"/>&nbsp;全选</th>
+					<th width="5%">序列</th>
+					<th width="12%">客官头像</th>
+					<th width="10%">客官昵称</th>
+					<th width="10%">客官姓名</th>
+					<th width="10%">级别</th>
+					<th width="11%">手机号码</th>
+					<th width="14%">Email</th>
+					<th width="10%">详情</th>
+					
+				</tr>
+                                <foreach name="members" item="vo" >
+				<tr <if condition="$key % 2 "> class="tr_bgc2" <else /> class="tr_bgc1" </if> >
+                                    <td><input id="chk_list_1" type="checkbox" name='user_id' value="{$vo.user_id}"></td>
+					<td>{$vo.user_id}</td>
+                                        <td><img src="{$Think.ADMIN_IMAGES}u55.png" width="100px" height="100px"></img></td>
+					<td>{$vo.user_name}</td>
+					<td>{$vo.truename}</td>
+					<td>白金会员</td>
+					<td>{$vo.mobile_phone}</td>
+					<td>{$vo.email}</td>
+					<td><a href="Admin/Guest/detail/uid/{$vo.user_id}">查看详情</a></td>
+					
+				</tr>
+                                </foreach>
+				
+			</table>
+		</div>
+	</div>
+        
+	<div class="pageNew">
+            {$page}
+         </div>
+
+</div>
+
+</script>
+</body>
+</html>

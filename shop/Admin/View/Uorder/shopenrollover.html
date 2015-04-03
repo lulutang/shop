@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>工作台</title>
+<link href="{$Think.ADMIN_CSS}s_style.css" rel="stylesheet" type="text/css">
+<link href="{$Think.ADMIN_CSS}global.css" rel="stylesheet" type="text/css">
+<link href="{$Think.ADMIN_CSS}m_style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <div class="content_right">
+      <form method="post" action="/admin/Uorder/trademark/ordergid/{$orderGoods['id']}" enctype="multipart/form-data">
+    <div class="indent"  onclick="changeWin()"></div>
+    <div class="link_path">您所在的位置：<a href="/Admin/Uorder/ordergoods">服务管理</a>&nbsp;>&nbsp;{$orderGoods["bargain"]}</div>
+    <ul class="s_state_link clearfix">
+      <li class="s_stated">
+        <p class="p1"><span>下单时间</span></p>
+        <p class="p2">{$orderGoods["addtime"]|date="Y-m-d",###}<br>{$orderGoods["addtime"]|date="H:i:s",###}<br>{$orderGoods["user_name"]}</p>
+      </li>
+      <foreach name="goodsflow" item="gf">
+          <if condition="$gf['flowstatus'] eq 6 && !empty($gf['numtime'])">
+                <li class="s_stated last">
+            <else/>
+              <li class="{$gf['flowcolor']}">
+        </if>
+          <p class="p1"><span>{$gf[0]}</span></p>
+          <if condition="!empty($gf['numtime'])">
+          <p class="p2">{$gf["numtime"]|date="Y-m-d",###}<br>{$gf["numtime"]|date="H:i:s",###}<br>{$gf['uname']}</p>
+          </if>
+        </li>
+      </foreach>
+    </ul>
+    <div class="s_detail">
+       <div class="s_title">
+        <p class="s_pcaseid">订单编号：{$orderGoods["order_code"]}<a href="/admin/Uorder/orderdetailed/orderid/{$orderGoods['order_id']}">查看</a></p>
+        <p class="s_pcasestate">合同编号：{$orderGoods["bargain"]}<a href="/admin/Uorder/ordergoodsdetail/ordergid/{$orderGoods['id']}">查看</a></p>
+        <p class="s_pgoods">商品信息：{$orderGoods["erji"]}[￥{$orderGoods["goods_price"]}]</p>
+        <p class="s_pprice">服务价：￥{$orderGoods["service_price"]}<a href="/admin/Uorder/ordergoodsdetail/ordergid/{$orderGoods['id']}" class="f90" id="up">返回</a> </p>
+      </div>
+      <div class="s_content">
+        
+        <a href="javascript:void(0)" class="s_a_sqs" style="top: -35px;left: 50%;">申请书</a>
+        <a href="javascript:void(0)" class="s_a_wts" style="top: -20px;left: 50%;">委托书</a>
+        <div class="s_dtr">
+          <p class="s_pn"><span>*</span>商标名称：</p>
+          <p class="s_pd"><input type="text" value="{$orderGoods['message']['name']}" name='goods_name'/></p>
+        </div>
+        <div class="s_dtr">
+          <p class="s_pn"><span>*</span>商标类别：</p>
+          <p class="s_pd">
+              <select id="oneSelect" name="style_name" onchange="editSB()">
+                  <foreach name='style' item='sy'>
+                      <if condition="$orderGoods['message']['style'] eq $sy">
+                    <option value='{$sy}' selected>{$sy}</option>
+                    <else/>
+                    <option value='{$sy}'>{$sy}</option>
+                    </if>
+                  </foreach>
+              </select></p>
+        </div>
+        <div class="s_dtr" style="height:65px;">
+          <p class="s_pn"><span>*</span>商品/服务项目：</p>
+          <p class="s_pd">
+              <textarea id="ser_subd" disabled>{$orderGoods["subd"]} </textarea>
+              <input type="hidden" name="subd" id="hid_subd" value="{$orderGoods['subd']}">
+              <input type="hidden" name="twosmall" id="twoone">
+          </p>
+        </div>
+        <div class="s_dtr" style="height:120px;">
+          <p class="s_pn">商标申请声明：</p>
+          <p class="s_pd">
+            <label>
+                <input type="checkbox" name="apply[]" value="1" <if condition='in_array(1,$traderfind["apply"])'>checked</if>/>
+                集体商标</label>
+            <label>
+                <input type="checkbox" name="apply[]" value="2" <if condition='in_array(2,$traderfind["apply"])'>checked</if>/>
+                证明商标</label><br>            
+            <label>
+                <input type="checkbox" name="apply[]" value="3" <if condition='in_array(3,$traderfind["apply"])'>checked</if>/>
+                以三维标志申请商标注册</label><br>
+            <label>
+                <input type="checkbox" name="apply[]" value="4" <if condition='in_array(4,$traderfind["apply"])'>checked</if>/>
+                以颜色组合申请商标注册</label><br>
+            <label>
+                <input type="checkbox" name="apply[]" value="5" <if condition='in_array(5,$traderfind["apply"])'>checked</if>/>
+                以声音标志申请商标注册</label><br>
+            <label>
+                <input type="checkbox" name="apply[]" value="6" <if condition='in_array(6,$traderfind["apply"])'>checked</if>/>
+                两个以上申请人共同申请注册同一商标</label>
+          </p>       
+        </div>
+        <div class="s_dtr">
+          <p class="s_pn">要求优先权声明：</p>
+          <p class="s_pd">
+            <label><input type="checkbox" name="priority[]" value="1" <if condition='in_array(1,$traderfind["priority"])'>checked</if>/>基于第一次申请的优先权</label>
+            <label><input type="checkbox" name="priority[]" value="2" <if condition='in_array(2,$traderfind["priority"])'>checked</if>/>基于展会的优先权</label>            
+            <label><input type="checkbox" name="priority[]" value="3" <if condition='in_array(3,$traderfind["priority"])'>checked</if>/>优先权证明文件后补</label>
+          </p>
+        </div>
+        <div class="s_dtr"><p class="s_pn">申请/展出国家/地区：</p><p class="s_pd"><input type="text" value='{$traderfind["applyshowstate"]}' name='applyshowstate'/></p></div>
+        <div class="s_dtr"><p class="s_pn">申请/展出日期：</p><p class="s_pd">
+                <if condition="!empty($traderfind['applyshowtime'])">
+                    <input type="text" class="input_d" name="applyshowtime"  value='{$traderfind["applyshowtime"]|date="Y-m-d H:i:s",###}' onclick="SelectDate(this,'yyyy-MM-dd hh:mm:ss')" id="sstarttime"/>
+                    <else/>
+                    <input type="text" class="input_d" name="applyshowtime"  value='' onclick="SelectDate(this,'yyyy-MM-dd hh:mm:ss')" id="sstarttime"/>
+                </if>
+            </p></div>
+        <div class="s_dtr"><p class="s_pn">申请号：</p><p class="s_pd"><input type="text" value='{$traderfind["applynum"]}' name="applynum"/></p></div>
+        <div class="s_dtr"><p class="s_pn">商标申请人：</p><p class="s_pd">
+                <select name="trader_name">
+                    <foreach name="traderall" item="tal"></foreach>
+                    <if condition="$tal['trader_name'] eq $traderfind['trader_name']">
+                        <option value="{$tal['trader_name']}" selected>{$tal["trader_name"]}</option>
+                        <else/>
+                        <option value="{$tal['trader_name']}">{$tal["trader_name"]}</option>
+                    </if>
+                    
+                </select>
+            </p></div>
+        <div class="s_dtr" style="height:160px">
+          <p class="s_pn"><span>*</span>商标图样：</p>
+          <p class="s_pd">
+                <span class="preview" id="preview2">
+                    <if condition='!empty($orderGoods["enroll"])'>
+                        <img id="imghead2" src="{$orderGoods['enroll']}" width=155 height=155 id="picsm">
+                        <else/><!--{$current|current_cdn_img}-->
+                        <img id="imghead2" src="{$Think.ADMIN_IMAGES}w_icon02.png" width=155 height=155 id="picsm">
+                    </if>
+                    
+                </span>
+                <input id="inp2" type="file" onchange="previewImage(this ,2)" name="enroll" accept="image/*"/>
+          </p>
+        </div>
+    
+      </div>
+    </div>
+    <div class="s_btns">
+      <input type="submit" value='保存' class="s_btn_save"  style="cursor:Pointer">
+      <a href="/admin/Uorder/ordergoodsdetail/ordergid/{$orderGoods['id']}" class="s_return">返回</a>
+    </div>
+    </form>
+  </div>
+    
+    
+    
+    
+    
+    
+<!--商标类别二级三级弹框开始-->
+<div class="alertW hide">
+    <div class="alertW_box">
+        <div class="alertw_box_title"><span class="span">第25类 服装鞋帽</span><input type="hidden" class="spanid" /><a class="close" href="javascript:void(0)" onclick="closeAlertWBtn()"></a></div>
+        <div class="alertW_box_content">
+            <div class="alertW_box_content_t">
+                <div class="alertW_box_content_left">
+                    <p class="alertW_box_name">群类</p>
+                    <input type="text" class="alertW_box_input" placeholder="请输入群组关键词" onkeyup="twoerji(this)" id="twoId"/>
+                    <div id="twoSBObjParent"></div>
+                </div>
+                <div class="alertW_box_content_right">
+                    <p class="alertW_box_name">类别</p>
+                    <input type="text" class="alertW_box_input" placeholder="请输入类别关键词" onkeyup="threecategroy(this)" id="threeId"/>
+                    <div id="threeSBObjParent"></div>
+                </div>
+            </div>
+        </div>
+        <div class="alertW_box_other">已选择群组<span class="span1"></span><input class="btn_confirm" type="button" value="确 认" style="float: right;font-size: 16px;height: 36px;line-height: 36px;width: 100px;" onclick="sureAlertWBtn()"></div>
+    </div>
+    <span id="smallcate" style="display:none"></span>
+    <span id="numbude" style="display:none">{$orderGoods['subd_num']}</span>
+</div>
+<!--商标类别二级三级弹框结束-->
+
+
+
+
+
+
+</body> 
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}Calendar1.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}order.js"></script>
+
+

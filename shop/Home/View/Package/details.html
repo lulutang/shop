@@ -1,0 +1,169 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>优惠商品</title>
+
+</head>
+
+<body>
+
+<!--顶部导航 开始-->
+<include file="Public/header" />
+<!--顶部导航 结束-->
+
+<!--主要内容 开始-->
+<div class="mainbody" style=" margin-bottom:120px;">
+    <div class="container">
+    	<!--消息提示 开始-->
+        <p class="main-info">
+                   您的位置：<a href="{$Think.DOMAIN}">中细软服务商城</a><a href="{$Think.DOMAIN}/home/package/lists">>享优惠</a><a href="javascript:void();">>{$short_title}</a>
+        </p>
+        <!--消息提示 结束-->
+        
+    	<!--优惠选择 开始-->
+    	<foreach name='lists' item='val'>
+    	<div class="bigbox">
+            <div class="preferential-banner">
+            	<img src="<if condition="($val.pic eq '')">{$Think.HOME_IMAGES}preferential-banner01.png<else/>{$current|current_cdn_img}{$val.pic}</if>" height="375px" width="566px">
+        <!--         <div class="preferential-bannerOne" style="display:none;">
+                	<h3>商标注册</h3>
+                    <p>国内商标注册&nbsp;&nbsp;国际商标注册&nbsp;&nbsp;商标案件<br>商标续展》</p>
+                </div>
+                <div class="preferential-bannerTwo"  <if condition="(2 eq count($val['goods']) )"><else/>style="display:none;"</if>>
+                	<h3>商标注册</h3>
+                    <p>国内商标注册&nbsp;&nbsp;国际商标注册&nbsp;&nbsp;商标案件<br>商标续展》</p>
+                    <h4>代办营业执照</h4>
+                </div>
+                <ul class="preferential-bannerThree" <if condition="(3 eq count($val['goods']) )"><else/>style="display:none;"</if>>
+                	<li>
+                        <h3>商标注册</h3>
+                        <p>国内商标注册<br>国际商标注册<br>商标案件<br>商标续展》</p>
+                    </li>
+                    <li>
+                        <h3>代办<br>营业执照</h3>
+                        
+                    </li>
+                    <li>
+                        <h3>商标注册</h3>
+                        <p>国内商标注册<br>国际商标注册<br>商标案件<br>商标续展》</p>
+                    </li>
+                </ul> -->
+            </div>
+            <div class="preferential-info">
+            	<h3>{$val.short_title}</h3>
+                <h4>编码：<span>{$val.package_code}</span></h4>
+				<h4> {$val['description']}</h4>
+                <div class="preferential-choose">
+                	<p style="margin-bottom:5px; display:inline; float:left; width:220px;">优惠价：<b>￥{$val.now_price}</b></p>
+                    <p style=" float:left;">原&nbsp;&nbsp;&nbsp;价：<s>￥{$val.old_price}</s></p>
+                    <div style="clear:both; height:0;"></div>
+                    <p>销售量：{$val.sales}</p>
+                </div>
+                <ul class="preferential-icon">
+               
+                      <if condition="(time() gt $val['endtime'] || $val['status'] neq 1) ">
+                 	 	   <li><a href="javascript:void(0)" class="button"><img src="{$Think.HOME_IMAGES}button_end.png"></a></li>              
+                  	  <else/>
+                  		   <li><a href="/home/order/packageInfo/id/{$val.package_id}" class="button button08">立即购买</a></li>
+                  	  </if>          
+
+                    <li><a  target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=2355928254&site=qq&menu=yes" style="cursor:pointer" class="button button09">点我咨询</a></li>
+                    <div style="clear:both"></div>
+                </ul>
+            	<div style="clear:both"></div>
+            </div>
+        </div> 
+         
+      	<!--优惠选择 结束-->
+      	
+        <!--优惠套餐 开始-->
+        <div class="preferential-package" style="margin-top:35px;">
+            <ul class="preferential-packagebox favorable">
+                <li class='pp_package'><a href="">优惠套餐</a></li>
+                
+                <div style="clear:both"></div>
+            </ul>
+            <div class="pref-pkg-bigbox">
+                
+                <div class="prefdetail-smallbox">
+                  <if condition="(5 lt count($val['goods']) )">
+                    <a class="prefdetail-smallboxleft" href=""><img src="{$Think.HOME_IMAGES}icon18.png"/></a>
+                    <a class="prefdetail-smallboxright" href=""><img src="{$Think.HOME_IMAGES}icon19.png"/></a>  
+				  </if>
+                
+                	<ul>
+                	   <foreach name="val.goods" item ='value' key='key'>
+                	   <li>
+                	   		<a href="/Home/Goods/gooddetails/id/{$value.goods_id}"><img width='290px' height='165px' src="<if condition="($value.thumb eq '')">{$Think.HOME_IMAGES}photo20.png<else/>{$current|current_cdn_img}{$value.thumb}</if>"/></a>
+                            <h3>{$value.short_title}</h3>
+                            <p><span>￥{$value.now_price}</span>
+                            <a href="/Home/Goods/gooddetails/id/{$value.goods_id}" class="prefdetail-icon button button10">查看详情</a>
+                            </p>
+						 </li>
+                        </foreach>
+                    </ul>
+                
+                </div>
+            </div>
+            
+        </div>
+        <!--优惠套餐 结束-->
+        </foreach>
+        <!--活动说明 用户评论 开始-->
+         <if condition="((isset($val['coupon']) && $val.coupon neq '') || (isset($val['ask']) && $val.ask neq '') || (isset($val['case']) && $val.case neq ''))">
+        <foreach name='lists' item='val'>
+        <div class="preferential-package" style="margin-top:15px;">
+            <ul class="preferential-packagebox">
+            <if condition="(isset($val['coupon']) && $val.coupon neq '')"><li class='pp_package' id ="shuoming" ><a href="javascript:void(0)" >活动说明</a></li></if>
+            <if condition="(isset($val['ask']) && $val.ask neq '')"><li id ="pinglun"><a  href="javascript:void(0)" <if condition="(!isset($val['coupon']))"> class='pp_package'</if> >用户评论<span class="a-red"></span></a></li></if>
+            <if condition="(isset($val['case']) && $val.case neq '')"><li id ="anli"><a  href="javascript:void(0)" <if condition="(!isset($val['ask']))"> class='pp_package'</if>>成功案例</a></li></if>
+   
+                <div style="clear:both"></div>
+            </ul>
+            <div class="pref-pkg-bigbox no_padding">
+            	<!--活动说明 开始-->
+            		
+            		<div class="activity-explain" id='shuoming_1'  <if condition="(!isset($val['coupon']) )"> style ='display:none'</if> >
+                       {$val.coupon}
+                    </div>
+                    <div class="activity-explain" id='pinglun_1' <if condition="(isset($val['coupon']) )"> style ='display:none'</if> >
+                       {$val.ask}
+                    </div>
+                    <div class="activity-explain" id='pinglun_2' <if condition="(isset($val['ask']))"> style ='display:none'</if> >
+                       {$val.case}
+                    </div>
+                <!--活动说明 结束-->
+            
+           
+            </div>
+            
+            
+        </div>
+        <!--活动说明 用户评论 结束-->
+        
+      	<!--成功案例 开始-->
+      	<!--  <div class="preferential-package" style="margin-top:15px;">
+            <ul class="preferential-packagebox">
+                <li><a >成功案例</a></li>
+                <div style="clear:both"></div>
+            </ul>
+            <div class="pref-pkg-bigbox" >
+            	{$val.case}
+                
+            </div>
+        </div>   --> 
+         </foreach>
+         </if>
+        <!--成功案例 结束-->
+    </div>    
+</div>
+<!--主要内容 结束-->
+
+<!--页脚 开始-->
+<include file="Public/footer" />
+
+<!--页脚 结束-->
+
+</body>
+</html>

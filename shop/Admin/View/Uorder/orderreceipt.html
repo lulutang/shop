@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>发票管理</title>
+<link href="{$Think.ADMIN_CSS}s_style.css" rel="stylesheet" type="text/css">
+<link href="{$Think.ADMIN_CSS}global.css" rel="stylesheet" type="text/css">
+<link href="{$Think.ADMIN_CSS}m_style.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+<div class="content_right have_invoice_day">
+     <div id="indent" class="indent" onClick="changeWin()"></div>
+     <div class="link_path">您所在的位置：发票 &nbsp; &gt; &nbsp;
+         
+            <a href="/Admin/Uorder/orderreceipt/invoile/{$num}">
+                <if condition="$num eq 0">
+                    未开发票
+                <else/>
+                 已开发票
+                 </if>
+            </a>&nbsp; &gt; &nbsp;
+            <if condition="$crumbs[$daytime] eq null">
+                全部
+                <else/>
+                {$crumbs[$daytime]}
+            </if>
+            
+     </div>
+     <div class="table_list casePay">
+        <ul class="tab_list">
+            <if condition="$daytime eq null">
+             <li class="hover"><a href="/Admin/Uorder/orderreceipt/invoile/{$num}">全部</a></li>
+            <else/>
+             <li><a href="/Admin/Uorder/orderreceipt/invoile/{$num}">全部</a></li>
+            </if>
+            <if condition="$daytime eq 1">
+             <li class="hover"><a href="/Admin/Uorder/orderreceipt/invoile/{$num}/daytime/1">当天</a></li>
+          <else/>
+             <li><a href="/Admin/Uorder/orderreceipt/invoile/{$num}/daytime/1">当天</a></li>
+          </if>
+          <if condition="$daytime eq 7">
+            <li class='hover'><a href="/Admin/Uorder/orderreceipt/invoile/{$num}/daytime/7">一周</a></li>
+          <else/>
+            <li><a href="/Admin/Uorder/orderreceipt/invoile/{$num}/daytime/7">一周</a></li>
+          </if>
+          <if condition="$daytime eq m">
+             <li class='hover'><a href="/Admin/Uorder/orderreceipt/invoile/{$num}/daytime/m">一个月</a></li>
+        <else/>
+             <li><a href="/Admin/Uorder/orderreceipt/invoile/{$num}/daytime/m">一个月</a></li> 
+          </if>
+        </ul>    
+         <div class="download">
+             <if condition="empty($daytime)">
+                <a href="/Admin/Uorder/downnovile/invoile/{$num}/daytime/all/starttime/{$get['starttime']}/endtime/{$get['endtime']}">
+                    <else/>
+                <a href="/Admin/Uorder/downnovile/invoile/{$num}/daytime/{$daytime}/starttime/{$get['starttime']}/endtime/{$get['endtime']}">   
+             </if>下载excel账单</a></div>
+        <div class="search">
+            <form method="get" action="/Admin/Uorder/orderreceipt/invoile/{$num}">
+        	支付时间：<input type="text" class="input_d" name="starttime" value="" onclick="SelectDate(this,'yyyy-MM-dd hh:mm:ss')" id="sstarttime"/>&nbsp;至&nbsp;
+            <input type="text" class="input_d" name="endtime" value="" onclick="SelectDate(this,'yyyy-MM-dd hh:mm:ss')" id="sstarttime"/>
+                    <input type="text" class="text200" placeholder="请输入订单号" name="order_card" />
+                    <input type="hidden" name="daytime" value="{$daytime}">
+                    <input type="hidden" name="ordertime" value="pay_time">
+                    <input name="input" type="submit" value="搜索" class="search_btn" />
+            </form>
+        </div>
+        <table class="spffxx">
+        	<tr>
+            	<th width="7%">日期</th>
+                <th width="16%">订单号</th>
+                <th width="9%">合同编号</th>
+                <th width="6%">用户名</th>
+                <th width="16%">支付方式</th>
+                <th width="7%">商品类型</th>
+                <th width="8%">成本价</th>
+                <th width="7%">盈利额</th>
+                <th width="6%">服务转态</th>
+                <th width="5%">业务员</th>
+                <th width="6%">总价</th>
+                <th width="7%">发票状态</th>
+            </tr>
+            <foreach name="orderall" item="oda">
+                <tr class="{$oda['trcolor']}">
+                    <td rowspan="{$oda['count']}">{$oda["createtime"]|date="Y-m-d",###}<br> {$oda["createtime"]|date="H:i:s",###}</td>
+                    <td rowspan="{$oda['count']}"><a class="col06c" href="/admin/Uorder/orderdetailed/pay/1/orderid/{$oda['order_id']}">{$oda["order_card"]}</a></td>
+                    <td>{$oda['orderfind']["bargain"]}</td>
+                    <td rowspan="{$oda['count']}">{$oda["user_name"]}</td>
+                    <td rowspan="{$oda['count']}">
+                        <if condition="$oda['pay_type'] eq 0">线下</if>
+                        <if condition="$oda['pay_type'] eq 1">财付通</if>
+                        <if condition="$oda['pay_type'] eq 2">银联</if>
+                        <if condition="$oda['pay_type'] eq 3">支付宝</if>
+                    </td>
+                    <td><a href="/Home/Goods/gooddetails/id/{$oda['orderfind']['goods_id']}" target="_blank">{$oda['orderfind']["message"]["short_title"]}<br>{$oda['orderfind']["goods_price"]}</a></td>
+                    <td style="text-align: right"> ￥{$oda['orderfind']["cost"]}</td>
+                    <td style="text-align: right"> <font class="colf00">￥{$oda['orderfind']["service_price"]-$oda['orderfind']["cost"]}</font></td>
+                    <td  class='{$oda["orderfind"]["color"]}'> {$oda['orderfind']["brandStatus"]}</td>
+                    <td rowspan="{$oda['count']}">{$oda["salesman"]}</td>
+                    <td rowspan="{$oda['count']}">￥{$oda["totalprice"]}</td>
+                    <td rowspan="{$oda['count']}">
+                        <if condition="$oda['bill_status'] eq 0">
+                            <p>未开发票</p>
+                            <p><a class="btn_haveinvoice" href="/admin/Uorder/receiptdetailed/receiptid/{$oda['order_id']}">开票</a></p>
+                        <else/>
+                            <p>已开票</p>
+                            <p><a class="btn_haveinvoicedetail" href="/admin/Uorder/receiptdetailed/receiptid/{$oda['order_id']}">详情</a></p>
+                        </if>
+                    </td>
+                </tr>
+                <foreach name="oda['orderg']" item="oog" >
+			 <tr class="{$oda['trcolor']}">
+                             <td>{$oog['bargain']}</td>
+                            <td><a href="/Home/Goods/gooddetails/id/{$oog['goods_id']}" target="_blank">{$oog["message"]["short_title"]}<br>{$oog["goods_price"]}</a></td>
+                            <td style="text-align: right">￥{$oog["cost"]}</td>
+                            <td style="text-align: right"><if condition="0 lt $oog['subd_num']">
+                                       <b class="add">增+{$oog['subd_num']}</b>
+                                </if><font class="colf00">￥{$oog["service_price"]-$oog["cost"]}</font></td>
+                            <td class='{$oog["color"]}'>{$oog["brandStatus"]}</td>
+			</tr>
+		</foreach>
+                
+            </foreach>
+           
+        </table>
+      </div>
+      
+      <div class="pageNew">
+          <form method='get' action='/Admin/Uorder/orderreceipt/invoile/{$num}'>
+              {$pages}
+          </form>
+    </div>
+     
+</div>
+
+
+</body>
+</html>
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}Calendar1.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}order.js"></script>

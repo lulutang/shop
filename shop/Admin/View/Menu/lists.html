@@ -1,0 +1,109 @@
+<link href="{$Think.ADMIN_CSS}style.css" rel="stylesheet" type="text/css">
+<div class="wapper">
+    <div class="wapper-right">
+    <div class="right_inner">
+    	<div class="path">您的位置：<a href="/Admin/Index/main">工作台</a>》<a href="/Admin/Menu/lists">菜单管理</a></div>
+
+
+       	<div class="operation">
+        	<div id="systembox">
+
+    <div id="systembtn" class="systembtn">
+        <a href="javaScript:void(0)" id ='add_menu' value='0' class="abtn"><span>增加一级菜单</span></a>
+    </div>
+
+</div>
+		 
+			<div class="clear"></div>
+        </div>
+        <div class="neir">
+        <table class="ddlc jsgl">
+        	<tr>
+            	
+                <th class="col_02">序号</th>
+                <th  class="col_03">一级菜单名称</th>
+                <th  class="col_03">二级菜单名称</th>
+                <th  class="col_04">二级菜单路径</th>
+           
+                <th  class="col_06">操作</th>
+            </tr>
+           
+            <foreach name='menuInfo' item='info' key='key'>
+           
+         			 <foreach name='info' item='info1' key='key1'>
+         			 
+         			 <if condition="$key eq $info1['id']">
+         			  <tr>
+         			    <td>{$info1.id}</td>
+         			     <td colspan="3" style='text-align:left;padding-left:55px'><b>{$info1.mname}</b></td>
+         			     <td><a onclick="add_menu_zi({$info1['id']});"  id="add_menu_zi_{$info1['id']}" name="{$info1.mname}" value="{$info1['id']}" >增加</a> | 
+         			      <a onclick="del_menu_zi({$info1['id']});"  id="del_menu_zi_{$info1['id']}" value="{$info1['id']}" >删除</a>
+         			     </td>
+         			  </tr>
+         			 <else/>
+         			  <tr>
+         			 <td>{$info1.id}</td>
+         			 <td></td>
+         			 <td>{$info1.mname}</td>
+         			 <td>{$info1.url}</td>
+         			 <td><a onclick="update_menu_zi({$info1['id']});"  id="update_menu_zi_{$info1['id']}" name="{$info1.mname}" url ="{$info1.url}" value="{$info1['id']}" >修改</a> |  
+         			 <a onclick="del_menu_zi({$info1['id']});"  id="del_menu_zi_{$info1['id']}" value="{$info1['id']}" >删除</a></td>
+         			 </tr>
+         			 </if>
+         			 </foreach>
+           </foreach>
+        </table>
+    </div>	
+        <!--table end-->
+        </div>
+    <!--right_inner end-->
+ 
+    </div><!--wapper-right end-->
+</div><!--wapper end-->
+     <div id="bg"></div>
+
+    <div class="add delete" id ='showBigPic' name ="showBigPic" style="display:none;">
+    <form action="/admin/menu/addMenu" method='get'>
+    	<div class="backcolor">
+        	<h3>增加菜单    <span id="guanbi" class="guanbi">X</span></h3>
+            <table>
+            <tr>
+                <td >菜单名称</td>
+                <td ><input type='text' value='' name='name'></td>
+            </tr>
+             <tr>
+                <td >菜单url</td>
+                <td ><input type='text'value='' name='url'></td>
+            </tr>
+            <tr>
+                <td colspan='2'><input type='submit' value='确定'></td>
+            </tr>
+            <input type='hidden' value='' name='pid' id='pid'>
+            </table> 
+        </div>
+        </form>
+    </div>
+        <div class="add delete" id ='showBig' name ="showBig" style="display:none;">
+    	<div class="backcolor">
+        	<h3>菜单    <span id="guanbi_zi" class="guanbi">X</span></h3>
+            <table>
+            <tr>
+                <td >二级菜单名称</td>
+                <td ><input type='text' id='erji' value=''></td>
+            </tr>
+             <tr>
+                <td >菜单url</td>
+                <td ><input type='text' id='url' value=''></td>
+            </tr>
+            <tr>
+                <input type='hidden' value='' name='yiji_id' id='yiji_id'>
+                <td colspan='2'><input onclick ='tijiao_yiji();' type='button' value='确定'></td>
+            </tr>
+            </table> 
+        </div>
+    </div>
+<!--头部 开始-->
+</body>
+</html>
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}menu.js"></script>

@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>会员管理</title>
+    <link href="{$Think.ADMIN_CSS}global.css" rel="stylesheet" type="text/css">
+    <link href="{$Think.ADMIN_CSS}h_style.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+</head>
+<body>
+<div class="content_right">
+    <div class="indent"></div>
+    <div class="link_path">您所在的位置：<a href="/Admin/Guest/lists">客官管理</a>&nbsp;>&nbsp;<a href="javascript:void(0)">个人详情</a></div>
+    <div class="members_details">
+        <div class="mem_det_nav">
+        <dl>
+            <dt><img src="{$Think.ADMIN_IMAGES}nav1.png" alt="注册时间"/></dt>
+            <dd>注册时间</dd>
+            <dd class="date"><if condition="$data.reg_time gt 0 ">{$data.reg_time|date='Y-m-d H:i:s',###}<else />--</if></dd>
+        </dl>
+        <dl>
+            <dt><img src="{$Think.ADMIN_IMAGES}nav2.png" alt="首次登陆"/></dt>
+            <dd>首次登陆</dd>
+            <dd class="date"><if condition="$data.reg_time gt 0 ">{$data.reg_time|date='Y-m-d H:i:s',###}<else />--</if></dd>
+        </dl>
+        <dl>
+            <dt><img src="{$Think.ADMIN_IMAGES}nav3.png" alt="首次下单"/></dt>
+            <dd>首次下单</dd>
+            <dd class="date">2014-12-01<span>09:22:56</span></dd>
+        </dl>
+        <dl>
+            <dt><img src="{$Think.ADMIN_IMAGES}nav4.png" alt="铜牌会员"/></dt>
+            <dd>铜牌会员</dd>
+            <dd class="date">2014-12-01<span>09:22:56</span></dd>
+        </dl>
+        <dl>
+            <dt><img src="{$Think.ADMIN_IMAGES}nav5.png" alt="银牌会员"/></dt>
+            <dd>银牌会员</dd>
+            <dd class="date">2014-12-01<span>09:22:56</span></dd>
+        </dl>
+        <dl>
+            <dt><img src="{$Think.ADMIN_IMAGES}nav6.png" alt="金牌会员"/></dt>
+            <dd>金牌会员</dd>
+            <dd class="date">2014-12-01<span>09:22:56</span></dd>
+        </dl>
+        <dl class="cur">
+            <dt><img src="{$Think.ADMIN_IMAGES}nav7.png" alt="蓝钻会员"/></dt>
+            <dd>蓝钻会员</dd>
+            <dd class="date"></dd>
+        </dl>
+        <dl>
+            <dt><img src="{$Think.ADMIN_IMAGES}nav8.png" alt="双钻会员"/></dt>
+            <dd>双钻会员</dd>
+            <dd class="date"></dd>
+        </dl>
+        <dl>
+            <dt><img src="{$Think.ADMIN_IMAGES}nav9.png" alt="勋章会员"/></dt>
+            <dd>勋章会员</dd>
+            <dd class="date"></dd>
+        </dl>
+    </div>
+    </div>
+
+    <div class="m_info">
+        <div class="m_info_l">
+            <div class="m_tx"><img src="{$Think.ADMIN_IMAGES}m_icon01.png" /><p class="m_name"><span>客官昵称：</span>{$data.user_name}</p><p class="m_money"><span >可用盘缠：</span><if condition="$data.coil gt 0 ">{$data.coil}<else />0</if>盘缠</p></div>
+            <div class="m_level_bz"><img src="{$Think.ADMIN_IMAGES}m_icon02.png" /></div>
+        </div>
+        <table class="m_info_r">
+            <tr>
+                <td><span>客官姓名：</span>{$data.truename}</td>
+                <td><span>手机号码：</span>{$data.mobile_phone}</td>
+                <td class="m_info_qq"><span>QQ：</span>{$data.qq}</td>
+            </tr>
+            <tr>
+                <td><span>注册时间：</span><if condition="$data.reg_time gt 0 ">{$data.reg_time|date='Y-m-d H:i:s',###}<else />--</if></td>
+                <td><span>注册类型：</span><empty name="$data.creatorid">自主注册<else />系统注册</empty></td>
+                <td><span>创建人：</span>{$data.creator}</td>
+            </tr>
+            <tr>
+                <td class="m_padding10"><span>登录次数：</span>93次</td>
+                <td class="m_padding10"><span>最后登录时间：</span><if condition="$data.last_login gt 0 ">{$data.last_login|date='Y-m-d H:i:s',###}<else />--</if></td>
+                <td class="m_padding10"><span>所属人：</span><div class="data">215151515</div><a href="#" class="belong"><img src="{$Think.ADMIN_IMAGES}m_icon04.png" /></a></td>
+            </tr>
+            <tr >
+                <td class="m_line"><span>购物车商品：</span>{$cartsnum}个</td>
+                <td class="m_line"><span>未支付订单：</span>3个</td>
+                <td class="m_line"><span></span></td>
+            </tr>
+            <tr>
+                <td><span>已支付订单：</span>3个</td>
+                <td><span>商品服务总数：</span>3个</td>
+                <td><span>消费总额（元）：</span>￥{$data.user_money}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="chooseNavbox">
+        <ul class="choosebox">
+            <li class="chooseNav01">
+                <p>购物车商品</p>
+            </li>
+            <li class="chooseNav02">
+                <p>未支付订单</p>
+            </li>
+            <li class="chooseNav03">
+                <p>已支付订单</p>
+            </li>
+            <li class="chooseNav04">
+                <p>交易人</p>
+            </li>
+            <li class="chooseNav04">
+                <p>收货人</p>
+            </li>
+            <li class="chooseNav04">
+                <p>优惠券</p>
+            </li>
+            <div style="clear:both;"></div>
+        </ul>
+        <ul class="chooseInfo">
+            <li >
+                <table class="spffxx">
+                    <tbody>
+                    <tr>
+                        <th width="15%">加入时间</th>
+                        <th width="11%">加入人</th>
+                        <th width="21%">商品信息</th>
+                        <th width="15%">服务详情</th>
+                        <th width="10%">商品个数</th>
+                        <th width="14%">应付额（元）</th>
+                        <th width="12%">操作</th>
+                    </tr>
+                    <foreach name="carts" item="vo" >
+                        <tr class="tr_bgc1">
+                            <td>{$vo.addtime|date='Y-m-d H:i:s',###}</td>
+                            <td>{$vo.creator}</td>
+                            <td><a href="javascript:void(0)">{$vo.short_title}[￥{$vo.now_price}]</a></td>
+                            <td><a href="javascript:void(0)">{$vo.type}</a></td>
+                            <td>1</td>
+                            <td class="price"><b class="add">增+1</b>￥3200.00</td>
+                            <td><a href="#">修改</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="">删除</a></td>
+                        </tr>
+                    </foreach>
+                   
+                    <tr class="tr_bgc1 m_total_money">
+                        <td colspan="7"><a href="../customer/addProducts.html" title="添加购物车商品"><img src="{$Think.ADMIN_IMAGES}m_icon08.png" /></a><a href="#"  title="短信提醒会员支付"><img src="{$Think.ADMIN_IMAGES}m_icon07.png" /></a>总额：<span>￥5790.00</span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </li>
+            <li class="partner" style="display:none;">
+                <table class="spffxx">
+                    <tbody>
+                    <tr>
+                        <th width="13%">下单时间</th>
+                        <th width="20%">订单编号</th>
+                        <th width="19%">商品信息</th>
+                        <th width="12%">服务详情</th>
+                        <th width="10%">服务价（元）</th>
+                        <th width="10%">应付款（元）</th>
+                    </tr>
+
+                    <tr class="">
+                        <td rowspan="2">2015-02-12 10:02:03</td>
+                        <td rowspan="2" class="cd"><a href="../case/casePayDetail.html" target="main">ZXRSB00000022888488488488</a></td>
+                        <td><a href="javascript:void(0)">商标注册申请代理服务[￥1590.00]</a></td>
+                        <td>韩馥【45类】</td>
+                        <td class="price">￥3200.00</td>
+                        <td class="price1"> ￥3200.00</td>
+                    </tr>
+                    <tr class="">
+                        <td><a href="javascript:void(0)">商标注册申请代理服务[￥1590.00]</a></td>
+                        <td>韩馥【45类】</td>
+                        <td class="price">￥3200.00</td>
+                        <td class="price1"> ￥3200.00</td>
+                    </tr>
+                    <tr class="tr_bgc1">
+                        <td>2015-02-12 10:02:03</td>
+                        <td class="cd"><a href="../case/casePayDetail.html" target="main">ZXRSB00000022888488488488</a></td>
+                        <td><a href="javascript:void(0)">商标注册申请代理服务[￥1590.00]</a></td>
+                        <td>韩馥【45类】</td>
+                        <td class="price">￥3200.00</td>
+                        <td class="price1" >￥3200.00</td>
+                    </tr>
+                    <tr class="">
+                        <td rowspan="3">2015-02-12 10:02:03</td>
+                        <td rowspan="3" class="cd"><a href="../case/casePayDetail.html" target="main">ZXRSB00000022888488488488</a></td>
+                        <td><a href="javascript:void(0)">商标注册申请代理服务[￥1590.00]</a></td>
+                        <td>韩馥【45类】</td>
+                        <td class="price">￥3200.00</td>
+                        <td rowspan="3" class="m_yfk"> ￥3200.00</td>
+                    </tr>
+                    <tr class="">
+                        <td><a href="javascript:void(0)">商标注册申请代理服务[￥1590.00]</a></td>
+                        <td>韩馥【45类】</td>
+                        <td class="price">￥3200.00</td>
+                    </tr>
+                    <tr class="">
+                        <td><a href="javascript:void(0)">商标注册申请代理服务[￥1590.00]</a></td>
+                        <td>韩馥【45类】</td>
+                        <td class="price">￥3200.00</td>
+                    </tr>
+                    <tr class="tr_bgc1 m_total_money">
+                        <td colspan="7"><a href="#"  title="短信提醒会员支付"><img src="{$Think.ADMIN_IMAGES}m_icon07.png" /></a>应付总额（元）：<span>￥5790.00</span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </li>
+            <li class="qualifications" style="display:none;">
+                <table class="spffxx">
+                    <tbody>
+                    <tr>
+                        <th width="12.4%">支付时间</th>
+                        <th width="18%">订单编号</th>
+                        <th width="13%">商品信息</th>
+                        <th width="12.4%">服务详情</th>
+                        <th width="10%">状态</th>
+                        <th width="10%">服务价（元）</th>
+                        <th width="12.4%">类型及应付额（元）</th>
+                    </tr>
+
+                    <tr class="">
+                        <td rowspan="2">2015-02-12 10:02:03</td>
+                        <td rowspan="2" class="cd"><a href="../case/casePayDetail.html" target="main">ZXRSB00000022888488488488</a></td>
+                        <td>商标注册申请代理服务</td>
+                        <td>韩馥【45类】</td>
+                        <td>已支付</td>
+                        <td class="price">￥3200.00</td>
+                        <td class="price1" rowspan="2">￥3200.00</td>
+                    </tr>
+                    <tr class="">
+                        <td>商标注册申请代理服务</td>
+                        <td>韩馥【45类】</td>
+                        <td class="m_state">服务开始<a href="../service/serviceDetailWCS_edit.html"><img src="{$Think.ADMIN_IMAGES}m_icon10.png"></a></td>
+                        <td class="price"> ￥3200.00</td>
+                    </tr>
+                    <tr class="tr_bgc1">
+                        <td>2015-02-12 10:02:03</td>
+                        <td class="cd"><a href="../case/casePayDetail.html" target="main">ZXRSB00000022888488488488</a></td>
+                        <td>商标注册申请代理服务</td>
+                        <td>韩馥【45类】</td>
+                        <td>服务结束</td>
+                        <td class="price">￥3200.00</td>
+                        <td class="price1" >￥3200.00</td>
+                    </tr>
+                    <tr class="">
+                        <td rowspan="3">2015-02-12 10:02:03</td>
+                        <td rowspan="3" class="cd"><a href="../case/casePayDetail.html" target="main">ZXRSB00000022888488488488</a></td>
+                        <td>商标注册申请代理服务</td>
+                        <td>韩馥【45类】</td>
+                        <td>编修审核</td>
+                        <td class="price">￥3200.00</td>
+                        <td rowspan="3" class="m_yfk"> ￥3200.00</td>
+                    </tr>
+                    <tr class="">
+                        <td>商标注册申请代理服务</td>
+                        <td>韩馥【45类】</td>
+                        <td>下发受理</td>
+                        <td class="price">￥3200.00</td>
+                    </tr>
+                    <tr class="">
+                        <td>商标注册申请代理服务</td>
+                        <td>韩馥【45类】</td>
+                        <td>报件</td>
+                        <td class="price">￥3200.00</td>
+                    </tr>
+                    <tr class="tr_bgc1 m_total_money m_yzf">
+                        <td colspan="7">应付总额（元）：￥5790.00<br />优惠：套餐-500.00 盘缠-5.0 优惠券-100<br />应付总额（元）：<span>￥3059.00</span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </li>
+            <li class="public" style="display:none;">
+                <table class="m_jyr">
+                    <tr>
+                        <td width="6%">个人</td>
+                        <td width="94%">
+                            <table class="spffxx">
+                                <tbody>
+                                <tr>
+                                    <th width="13%">真实姓名（中文）</th>
+                                    <th width="13%">真实姓名（英文）</th>
+                                    <th width="12%">国籍</th>
+                                    <th width="16%">身份证号码</th>
+                                    <th width="12%">地址（中文）</th>
+                                    <th width="15%">地址（英文）</th>
+                                    <th width="7%">邮编</th>
+                                    <th width="10%">查看</th>
+                                </tr>
+
+                                <tr class="">
+                                    <td >张某耨</td>
+                                    <td >zhangjiongji</td>
+                                    <td>中国</td>
+                                    <td>1002935221215151515</td>
+                                    <td>北京市海淀区</td>
+                                    <td>beijingshihaidianqu</td>
+                                    <td>123456</td>
+                                    <td ><a href="#">身份证</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">执照</a></td>
+                                </tr>
+                                <tr class="">
+                                    <td >张某耨</td>
+                                    <td >zhangjiongji</td>
+                                    <td>中国</td>
+                                    <td>1002935221215151515</td>
+                                    <td>北京市海淀区</td>
+                                    <td>beijingshihaidianqu</td>
+                                    <td>123456</td>
+                                    <td ><a href="#">身份证</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">执照</a></td>
+                                </tr>
+                                <tr class="">
+                                    <td >张某耨</td>
+                                    <td >zhangjiongji</td>
+                                    <td>中国</td>
+                                    <td>1002935221215151515</td>
+                                    <td>北京市海淀区</td>
+                                    <td>beijingshihaidianqu</td>
+                                    <td>123456</td>
+                                    <td ><a href="#">身份证</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">执照</a></td>
+                                </tr>
+                                <tr class="">
+                                    <td >张某耨</td>
+                                    <td >zhangjiongji</td>
+                                    <td>中国</td>
+                                    <td>1002935221215151515</td>
+                                    <td>北京市海淀区</td>
+                                    <td>beijingshihaidianqu</td>
+                                    <td>123456</td>
+                                    <td ><a href="#">身份证</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">执照</a></td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>企业</td>
+                        <td>
+                            <table class="spffxx">
+                                <tbody>
+                                <tr>
+                                    <th width="16%">真实姓名（中文）</th>
+                                    <th width="16%">真实姓名（英文）</th>
+                                    <th width="16%">国籍</th>
+                                    <th width="16%">地址（中文）</th>
+                                    <th width="16%">地址（英文）</th>
+                                    <th width="8%">邮编</th>
+                                    <th width="10%">查看</th>
+                                </tr>
+
+                                <tr class="">
+                                    <td >张某耨</td>
+                                    <td >zhangjiongji</td>
+                                    <td>中国</td>
+                                    <td>北京市海淀区</td>
+                                    <td>beijingshihaidianqu</td>
+                                    <td>123456</td>
+                                    <td ><a href="#">执照</a></td>
+                                </tr>
+                                <tr class="">
+                                    <td >张某耨</td>
+                                    <td >zhangjiongji</td>
+                                    <td>中国</td>
+                                    <td>北京市海淀区</td>
+                                    <td>beijingshihaidianqu</td>
+                                    <td>123456</td>
+                                    <td ><a href="#">执照</a></td>
+                                </tr>
+                                <tr class="">
+                                    <td >张某耨</td>
+                                    <td >zhangjiongji</td>
+                                    <td>中国</td>
+                                    <td>北京市海淀区</td>
+                                    <td>beijingshihaidianqu</td>
+                                    <td>123456</td>
+                                    <td ><a href="#">执照</a></td>
+                                </tr>
+                                <tr class="">
+                                    <td >张某耨</td>
+                                    <td >zhangjiongji</td>
+                                    <td>中国</td>
+                                    <td>北京市海淀区</td>
+                                    <td>beijingshihaidianqu</td>
+                                    <td>123456</td>
+                                    <td ><a href="#">执照</a></td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </li>
+            <li class="public" style="display:none;">
+                <table class="spffxx">
+                    <tbody>
+                    <tr>
+                        <th width="33.2%">真实姓名</th>
+                        <th width="33.2%">收货人地址</th>
+                        <th width="33.2%">收货人联系方式</th>
+
+                    </tr>
+                    <tr class="">
+                        <td class="m_mraddress">张某耨</td>
+                        <td>北京市房山区长阳一村长阳家园</td>
+                        <td>12456258954</td>
+
+                    </tr>
+                    <tr class="tr_bgc1">
+                        <td class="m_mraddress">张某耨</td>
+                        <td>北京市房山区长阳一村长阳家园</td>
+                        <td>12456258954</td>
+
+                    </tr>
+                    <tr class="">
+                        <td class="m_mraddress">张某耨</td>
+                        <td>北京市房山区长阳一村长阳家园</td>
+                        <td>12456258954</td>
+
+                    </tr>
+                    <tr class="tr_bgc1">
+                        <td class="m_mraddress">张某耨</td>
+                        <td>北京市房山区长阳一村长阳家园</td>
+                        <td>12456258954</td>
+
+                    </tr>
+
+                    </tbody>
+                </table>
+            </li>
+            <li class="m_yhq" style="display:none;">
+                <p class="m_yhq_title">【商标注册优惠券】</p>
+                <ul>
+                    <li class="yhj2">
+                        <a>
+                            <div class="con1">
+                                <b class="b1"></b><b class="b2"></b>
+                                <p class="p1">￥100<span>元</span></p>
+                                <p class="p2">
+                                    <span class="span1">发行商：</span>
+                                    <span class="span2">中细软集团</span>
+                                </p>
+                                <p class="p2">
+                                    <span class="span1">使用条件：</span>
+                                    <span class="span2"></span>
+                                </p>
+                                <p class="p2">
+                                    <span class="span1">有效时间：</span>
+                                    <span class="span2">2014-11-05 至 2014-11-30</span>
+                                </p>
+                            </div>
+                            <div class="con2"></div>
+                        </a>
+                    </li>
+                    <li class="yhj2">
+                        <a>
+                            <div class="con1">
+                                <b class="b1"></b><b class="b2"></b>
+                                <p class="p1">￥200<span>元</span></p>
+                                <p class="p2">
+                                    <span class="span1">发行商：</span>
+                                    <span class="span2">中细软集团</span>
+                                </p>
+                                <p class="p2">
+                                    <span class="span1">使用条件：</span>
+                                    <span class="span2"></span>
+                                </p>
+                                <p class="p2">
+                                    <span class="span1">有效时间：</span>
+                                    <span class="span2">2014-11-05 至 2014-11-30</span>
+                                </p>
+                            </div>
+                            <div class="con2"></div>
+                        </a>
+                    </li>
+                    <li class="yhj2">
+                        <a>
+                            <div class="con1">
+                                <b class="b1"></b><b class="b2"></b>
+                                <p class="p1">￥300<span>元</span></p>
+                                <p class="p2">
+                                    <span class="span1">发行商：</span>
+                                    <span class="span2">中细软集团</span>
+                                </p>
+                                <p class="p2">
+                                    <span class="span1">使用条件：</span>
+                                    <span class="span2"></span>
+                                </p>
+                                <p class="p2">
+                                    <span class="span1">有效时间：</span>
+                                    <span class="span2">2014-11-05 至 2014-11-30</span>
+                                </p>
+                            </div>
+                            <div class="con2"></div>
+                        </a>
+                    </li>
+                    <li class="yhj2">
+                        <a>
+                            <div class="con1">
+                                <b class="b1"></b><b class="b2"></b>
+                                <p class="p1">￥400<span>元</span></p>
+                                <p class="p2">
+                                    <span class="span1">发行商：</span>
+                                    <span class="span2">中细软集团</span>
+                                </p>
+                                <p class="p2">
+                                    <span class="span1">使用条件：</span>
+                                    <span class="span2"></span>
+                                </p>
+                                <p class="p2">
+                                    <span class="span1">有效时间：</span>
+                                    <span class="span2">2014-11-05 至 2014-11-30</span>
+                                </p>
+                            </div>
+                            <div class="con2"></div>
+                        </a>
+                    </li>
+                </ul>
+                <p class="m_yhq_title">【商标设计优惠券】</p>
+                <ul>
+                    <li class="yhj1">
+                        <a>
+                            <div class="con1">
+                                <b class="b1"></b><b class="b2"></b>
+                                <p class="p1">￥100<span>元</span></p>
+                                <p class="p2">
+                                    <span class="span1">发行商：</span>
+                                    <span class="span2">中细软集团</span>
+                                </p>
+                                <p class="p2">
+                                    <span class="span1">使用条件：</span>
+                                    <span class="span2"></span>
+                                </p>
+                                <p class="p2">
+                                    <span class="span1">有效时间：</span>
+                                    <span class="span2">2014-11-05 至 2014-11-30</span>
+                                </p>
+                            </div>
+                            <div class="con2"></div>
+                        </a>
+                    </li>
+                    <li class="yhj1">
+                        <a>
+                            <div class="con1">
+                                <b class="b1"></b><b class="b2"></b>
+                                <p class="p1">￥200<span>元</span></p>
+                                <p class="p2">
+                                    <span class="span1">发行商：</span>
+                                    <span class="span2">中细软集团</span>
+                                </p>
+                                <p class="p2">
+                                    <span class="span1">使用条件：</span>
+                                    <span class="span2"></span>
+                                </p>
+                                <p class="p2">
+                                    <span class="span1">有效时间：</span>
+                                    <span class="span2">2014-11-05 至 2014-11-30</span>
+                                </p>
+                            </div>
+                            <div class="con2"></div>
+                        </a>
+                    </li>
+                    <li class="yhj1">
+                        <a>
+                            <div class="con1">
+                                <b class="b1"></b><b class="b2"></b>
+                                <p class="p1">￥300<span>元</span></p>
+                                <p class="p2">
+                                    <span class="span1">发行商：</span>
+                                    <span class="span2">中细软集团</span>
+                                </p>
+                                <p class="p2">
+                                    <span class="span1">使用条件：</span>
+                                    <span class="span2"></span>
+                                </p>
+                                <p class="p2">
+                                    <span class="span1">有效时间：</span>
+                                    <span class="span2">2014-11-05 至 2014-11-30</span>
+                                </p>
+                            </div>
+                            <div class="con2"></div>
+                        </a>
+                    </li>
+                    <li class="yhj1">
+                        <a>
+                            <div class="con1">
+                                <b class="b1"></b><b class="b2"></b>
+                                <p class="p1">￥400<span>元</span></p>
+                                <p class="p2">
+                                    <span class="span1">发行商：</span>
+                                    <span class="span2">中细软集团</span>
+                                </p>
+                                <p class="p2">
+                                    <span class="span1">使用条件：</span>
+                                    <span class="span2"></span>
+                                </p>
+                                <p class="p2">
+                                    <span class="span1">有效时间：</span>
+                                    <span class="span2">2014-11-05 至 2014-11-30</span>
+                                </p>
+                            </div>
+                            <div class="con2"></div>
+                        </a>
+                    </li>
+                </ul>
+                <p class="m_yhq_title">【商标案件优惠券】</p>
+                <ul>
+                    <li class="yhj3">
+                        <a>
+                            <div class="con1">
+                                <b class="b1"></b><b class="b2"></b>
+                                <p class="p1">￥100<span>元</span></p>
+                                <p class="p2">
+                                    <span class="span1">发行商：</span>
+                                    <span class="span2">中细软集团</span>
+                                </p>
+                                <p class="p2">
+                                    <span class="span1">使用条件：</span>
+                                    <span class="span2"></span>
+                                </p>
+                                <p class="p2">
+                                    <span class="span1">有效时间：</span>
+                                    <span class="span2">2014-11-05 至 2014-11-30</span>
+                                </p>
+                            </div>
+                            <div class="con2"></div>
+                        </a>
+                    </li>
+                    <li class="yhj3">
+                        <a>
+                            <div class="con1">
+                                <b class="b1"></b><b class="b2"></b>
+                                <p class="p1">￥200<span>元</span></p>
+                                <p class="p2">
+                                    <span class="span1">发行商：</span>
+                                    <span class="span2">中细软集团</span>
+                                </p>
+                                <p class="p2">
+                                    <span class="span1">使用条件：</span>
+                                    <span class="span2"></span>
+                                </p>
+                                <p class="p2">
+                                    <span class="span1">有效时间：</span>
+                                    <span class="span2">2014-11-05 至 2014-11-30</span>
+                                </p>
+                            </div>
+                            <div class="con2"></div>
+                        </a>
+                    </li>
+                    <li class="yhj3">
+                        <a>
+                            <div class="con1">
+                                <b class="b1"></b><b class="b2"></b>
+                                <p class="p1">￥300<span>元</span></p>
+                                <p class="p2">
+                                    <span class="span1">发行商：</span>
+                                    <span class="span2">中细软集团</span>
+                                </p>
+                                <p class="p2">
+                                    <span class="span1">使用条件：</span>
+                                    <span class="span2"></span>
+                                </p>
+                                <p class="p2">
+                                    <span class="span1">有效时间：</span>
+                                    <span class="span2">2014-11-05 至 2014-11-30</span>
+                                </p>
+                            </div>
+                            <div class="con2"></div>
+                        </a>
+                    </li>
+                    <li class="yhj3">
+                        <a>
+                            <div class="con1">
+                                <b class="b1"></b><b class="b2"></b>
+                                <p class="p1">￥400<span>元</span></p>
+                                <p class="p2">
+                                    <span class="span1">发行商：</span>
+                                    <span class="span2">中细软集团</span>
+                                </p>
+                                <p class="p2">
+                                    <span class="span1">使用条件：</span>
+                                    <span class="span2"></span>
+                                </p>
+                                <p class="p2">
+                                    <span class="span1">有效时间：</span>
+                                    <span class="span2">2014-11-05 至 2014-11-30</span>
+                                </p>
+                            </div>
+                            <div class="con2"></div>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+</div>
+<script type="text/javascript">
+    //菜单缩放
+    openclose=true;
+    function changeWin(){
+        parent.bodyFrame.cols =openclose?"1,*":"210,*";//这句话有报错
+        $(".indent").toggleClass('ind');
+        openclose=!openclose;
+    }
+
+</script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}memberDetail.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>优惠券信息</title>
+<link href="{$Think.ADMIN_CSS}global.css" rel="stylesheet" type="text/css">
+<link href="{$Think.ADMIN_CSS}g_style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+    <div class="content_right">
+     <div id="indent" class="indent" onClick="changeWin()"></div>
+		<div class="link_path">您所在的位置：<a href="/Admin/Operation/coupon">运营管理</a>&nbsp;>&nbsp;<a href="/Admin/Operation/coupon">优惠券</a>&nbsp;>&nbsp;<a href="javascript:void(0)">优惠券信息</a></div>
+		<div class="promotion"><b>优惠券信息</b></div>
+		<form action="/admin/operation/updateCoupon" method="get" onsubmit="return validate_form(this)" name="search" >
+		
+		<div class="gc_update">
+			<ul class="gcu_ul">
+			        
+			
+				<li class="gcu_li1">
+					<div class="gcu_div">
+						<div class="top"></div>
+						<div class="middle">
+							<p class="g_p"><span class="sp0">￥</span><span class="sp1">{$info.money|number_format=0}</span><span class="sp2">元</span></p>
+							<p class="g_p1">{$info.faxing}</p>
+							<p>使用类型：
+							   <if condition="('1' eq $info['use'])">全场 </if>
+							    <if condition="('2' eq $info['use'])">商标服务 </if>
+							     <if condition="('3' eq $info['use'])">专利服务 </if>
+							      <if condition="('4' eq $info['use'])">版权服务 </if>
+							       <if condition="('5' eq $info['use'])">其他 </if>
+							</p>
+							<p >使用条件：<b id='shiyong'>{$info.sale_where}</b></p>
+							<p>有效时间：{$info.sale_startTime|date='Y-m-d',###} 至 {$info.sale_endTime|date='Y-m-d',###}</p>
+						</div>
+						<!-- <div class="bottom"></div> -->
+<!-- 						<div class="multiple"><input type="checkbox"/></div>
+ -->					</div>
+				</li>
+				<!-- <li class="gcu_li2">
+					<div class="gcu_div">
+						<div class="top top2"></div>
+						<div class="middle middle2">
+							<p class="g_p"><span class="sp0">￥</span><span class="sp1">200</span><span class="sp2">元</span></p>
+							<p class="g_p1">中细软集团</p>
+							<p>使用类型：</p>
+							<p>使用条件：</p>
+							<p>有效时间：</p>
+						</div>
+						<div class="bottom bottom2"></div>
+						<div class="multiple"><input type="checkbox"/></div>
+					</div>
+				</li>
+				<li class="gcu_li3">
+					<div class="gcu_div">
+						<div class="top top3"></div>
+						<div class="middle middle3">
+							<p class="g_p"><span class="sp0">￥</span><span class="sp1">200</span><span class="sp2">元</span></p>
+							<p class="g_p1">中细软集团</p>
+							<p>使用类型：</p>
+							<p>使用条件：</p>
+							<p>有效时间：</p>
+						</div>
+						<div class="bottom bottom3"></div>
+						<div class="multiple"><input type="checkbox"/></div>
+					</div>
+				</li> -->
+				<div class="clear"></div>
+			</ul>
+			<div class="gcd_div">
+			<table class="gcd_table">
+				<tr><td class="gt_left">活动名称：</td><td class="gt_right"><input readonly type="text" value="{$info.name}" class="text"/></td></tr>
+				<tr><td class="gt_left">优惠面额：</td><td class="gt_right"><input  type="text" name='money' id="money" value="{$info.money}" class="text"/></td></tr>
+				<tr><td class="gt_left">使用类型：</td><td class="gt_right"><select name="use" id='use'>
+                	<option value='0'  >请选择</option>
+                    <option value='1' <if condition="('1' eq $info['use'])">selected="selected" </if> >全场</option>
+                    <option value='2' <if condition="('2' eq $info['use'])">selected="selected" </if> >商标服务</option>
+                    <option value='3' <if condition="('3' eq $info['use'])">selected="selected" </if> >专利服务</option>
+                    <option value='4' <if condition="('4' eq $info['use'])">selected="selected" </if> >版权服务</option>
+                    <option value='5' <if condition="('5' eq $info['use'])">selected="selected" </if> >其他</option>
+                </select></td></tr>
+				<tr><td class="gt_left">活动有效期：</td><td class="gt_right"><input type="text" class="start" name ="sale_startTime" id='sale_startTime' value="{$info.sale_startTime|date='Y-m-d',###}" onclick="SelectDate(this,'yyyy-MM-dd')" readonly="readonly"/>&nbsp;至&nbsp;<input type="text" class="end" id="sale_endTime" name="sale_endTime" value="{$info.sale_endTime|date='Y-m-d',###}" onclick="SelectDate(this,'yyyy-MM-dd')" readonly="readonly"/></td></tr>
+				<tr><td class="gt_left">使用条件：</td><td class="gt_right"><input  type="text" id="sale_where" name = "sale_where" value="{$info.sale_where}" class="text"/></td></tr>
+			</table>
+		</div>
+		</div>
+		
+		<input type='hidden' name='id' value='{$id}'>
+	</div>
+	<div class="gc_foot">
+		<input type='submit' id='submit_info' class="btn_save" value='确认'>
+	</div>
+	</form>
+	<input type='hidden' id='money_y' value='{$info.money}'>
+	<input type='hidden' id='sale_where_y' value='{$info.sale_where}'>
+</body>
+</html>
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}Calendar1.js"></script>
+<script type="text/javascript">
+$(function(){
+	  $('#sale_where').blur(function(){
+			 var val = $(this).val().replace(/\ +/g,"");
+			 if(isNaN(val) || val.length <=0){
+				 $(this).attr('value',$('#sale_where_y').val())
+				 alert('请输入有效数字')
+			 }else{
+				 val = parseInt(val).toFixed(2)
+				 $('#shiyong').html(val);
+			 }
+		   
+	  });
+	
+	  $('#money').blur(function(){
+			 var val = $(this).val().replace(/\ +/g,"");
+			 if(isNaN(val) || val.length <=0){
+				 $(this).attr('value',$('#money_y').val())
+				 alert('请输入有效数字')
+			 }else{
+				// val = parseInt(val).toFixed(2)
+				 $('.sp1').html(val);
+			 }
+		    
+	  });
+	  $('#use').change(function(){
+		  var val = $(this).val();
+			 if(val==0){
+				 alert('请选择正确的使用范围')
+			 } 
+	  });
+	 
+	 
+	
+});
+//菜单缩放
+  openclose=true;
+  function changeWin(){ 
+      parent.bodyFrame.cols =openclose?"1,*":"210,*";//这句话有报错
+      $(".indent").toggleClass('ind');
+      openclose=!openclose;
+  }
+  function CurentTime()
+  { 
+      var now = new Date();
+      var year = now.getFullYear();       //年
+      var month = now.getMonth() + 1;     //月
+      var day = now.getDate();            //日
+     
+      var hh = now.getHours();            //时
+      var mm = now.getMinutes();          //分
+      var clock = year + "-";
+  
+      if(month < 10)
+          clock += "0";
+     
+      clock += month + "-";
+     
+      if(day < 10)
+          clock += "0";
+         
+      clock += day + " ";
+     
+      if(hh < 10)
+          clock += "0";
+         
+      clock += hh + ":";
+      if (mm < 10) clock += '0'; 
+      clock += mm; 
+      return(clock); 
+  } 
+  function validate_form(){
+	  time = CurentTime();
+	 
+
+	  $('#sale_where').blur(function(){
+			 var val = $(this).val().replace(/\ +/g,"");
+			 if(isNaN(val) || val.length <=0){
+				 $(this).attr('value',$('#sale_where_y').val())
+				 alert('请输入有效数字')
+			 }
+		   
+	  });
+	
+	  $('#money').blur(function(){
+			 var val = $(this).val().replace(/\ +/g,"");
+			 if(isNaN(val) || val.length <=0){
+				 $(this).attr('value',$('#money_y').val())
+				 alert('请输入有效数字')
+			 } 
+		    
+	  });
+	  $('#use').change(function(){
+		  var val = $(this).val();
+			 if(val==0){
+				 alert('请选择正确的使用范围')
+			 } 
+	  });
+
+		 var sale_startTime = $('#sale_startTime').val().replace(/\ +/g,"");
+		 if(val.length <=0) {
+		    alert('请输入优惠卷开始使用时间')
+		    return false;
+		 }
+		 var sale_endTime = $('#sale_endTime').val().replace(/\ +/g,"");
+		 if(val.length <=0) {
+		    alert('请输入优惠卷使用结束时间')
+		    return false;
+		 }
+		 if(sale_endTime<=sale_startTime){
+			 alert('优惠卷使用时间错误')
+			    return false;
+		 }
+		 if(sale_endTime <= time){
+			 alert('优惠卷使用结束时间小于当前时间')
+			  return false;
+		 }
+		document.search.submit();
+  }
+</script>

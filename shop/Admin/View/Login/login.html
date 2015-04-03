@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>登录</title>
+<link href="{$Think.ADMIN_CSS}login_style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body onkeydown="keyLogin(event)">
+<div class="loginbg">
+	<div class="login-title">
+    	<h3>中细软&nbsp;&nbsp;-&nbsp;&nbsp;服务商城</h3>
+        <p>欢迎登录&nbsp;&nbsp;中细软服务商城后台管理系统</p>
+    </div>
+    <div class="loginbox">
+    	<div class="login-text">
+        	<ul class="login-row">
+			<form method="post" action="/Admin/Login/login_Do">
+                <li><span>员工号：</span><input name="username" class="login-input01 login-input02 login-erro" type="text" placeholder="请输入员工号" onBlur="cue(1,this)" id="uname"/></li>
+                <li>
+                    <span class="login_t">
+                        <img id="img1" style="display:none">
+                    </span>
+                </li>
+            </ul>
+            <ul class="login-row">
+                <li><span>密&nbsp;&nbsp;码：</span><input name="password" class="login-input01 login-input03 " type="password" placeholder="请输入密码" onBlur="cue(2,this)" id="pass"/></li>
+                <li>
+                    <span class="login_t">
+                        <img id="img2" style="display:none">
+                    </span>
+                </li>
+            </ul>
+            <ul class="login-row">
+                <li><span>验证码：</span><input name="yzm" class="login-input04 login-erro" type="text" placeholder="验证码" onBlur="cue(3,this)" id="syzm"/></li>
+                <li class="yzm">
+                	<a href="#"></a><img src='/Admin/Login/Verify' width=120 height=40 id="yzm">
+                </li>
+                <li>
+                	<a class="a-red" href="javascript:;" onClick="Veryzm()">看不清</a>
+                </li>
+                <li>
+                    <span class="login_t">
+                        <img id="img3" style="display:none">
+                    </span>
+                </li>
+            </ul>
+			<p id="point"></p>
+            	
+            <div><a class="loginButton" href="javascript:;" onclick='log()'>登&nbsp;录</a><!--<input type="submit" value="登录" class="button loginButton">--></div>
+			</form>
+        </div>
+    </div>
+    <div class="intro">
+        注：此后台系统暂时适用于谷歌、火狐浏览器
+    </div>
+</div>
+
+</div>
+</body>
+</html>
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script>
+$(function(){
+	$(".login-row input").click(function(){
+		$('.login-row input').removeClass('loginActive');
+		$(this).addClass("loginActive")	
+		
+		})	
+})
+
+    function keyLogin(event){
+		if(event.keyCode==13){
+			log();
+		}
+	}
+	//切换验证码
+	function Veryzm()
+	{
+		var timenow = new Date().getTime();
+		$("#yzm").attr("src","/Admin/Login/Verify/"+timenow);
+	}
+	//验证为空
+	function cue(num,selfd)
+	{
+		var zhi = $(selfd).val();
+		if(zhi == '')
+		{
+			if(num == 1){
+				$("#point").html("员工工不能为空");
+                                $("#img1").show();
+				$("#img1").attr("src","{$Think.LOGIN_IMAGES}/icon30.png");
+			}else if(num == 2) {
+				$("#point").html("密码不能为空");
+                                 $("#img2").show();
+				$("#img2").attr("src","{$Think.LOGIN_IMAGES}/icon30.png");
+			}else if(num == 3) {
+				$("#point").html("验证码不能为空");
+                                 $("#img3").show();
+				$("#img3").attr("src","{$Think.LOGIN_IMAGES}/icon30.png");
+			}else{
+				$("#point").empty();
+                                 $("#img"+num).show();
+				$("#img"+num).attr("src","{$Think.LOGIN_IMAGES}/icon31.png");
+                                
+			}
+		}else{
+			$("#point").empty();
+			$("#img"+num).attr("src","{$Think.LOGIN_IMAGES}/icon31.png");
+		}
+	}
+        //登录
+        function log()
+        {
+            var user = $("#uname").val();
+            var pass = $("#pass").val();
+            var yzm = $("#syzm").val();
+            if(user.length != 0 && pass.length != 0 && yzm.length != 0)
+            {
+                $.ajax({
+                    url:"/Admin/Login/login_Do",
+                    type:"post",
+                    data:{"yzm":yzm,"username":user,"password":pass},
+                    success:function(e){
+                        var o = eval("("+e+")");
+                        if(o["code"] == 1)
+                        {
+                            location.href='/Admin/Index/index'
+                        }else{
+                             $("#point").html(o["data"]);
+                             var timenow = new Date().getTime();
+                            $("#yzm").attr("src","/Admin/Login/Verify/"+timenow);
+                        }
+                    }
+                });
+            }else{
+                var timenow = new Date().getTime();
+                $("#yzm").attr("src","/Admin/Login/Verify/"+timenow);
+                if(user.length == 0)
+                {
+                    $("#point").html("请输入员工工号");
+                    return false;
+                }
+                if(pass.length == 0){
+                    $("#point").html("请输入密码");
+                     return false;
+                }
+                if(yzm.length == 0){
+                    $("#point").html("请输入验证码");
+                     return false;
+                }
+                
+            }
+        }
+</script>

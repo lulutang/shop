@@ -1,0 +1,64 @@
+<link href="{$Think.ADMIN_CSS}style.css" rel="stylesheet" type="text/css">
+
+<body>
+<div class="wapper">
+  <div class="wapper-right">
+    <div class="right_inner">
+      <div class="path">您的位置：<a href="#">工作台</a>》<a href="/Admin/Activity/activitylist">促销管理</a></div>
+<!--      <div class="search_dh">
+        <form action="" method="post" name="search" >
+            <div>
+                活动名称：
+                <input name="keywords" type="text"  size="30" maxlength="20" placeholder="请输入活动名称进行查询" />
+                操作时间：<input type="text"  /> 至 <input type="text" />
+                <input name="input" type="submit" value="搜索" /> 
+            </div>
+       
+        </form>
+      </div>-->
+      <div class="clear"></div>
+      <div class="neir">
+        <p class="tjyjyw"><a href="/Admin/Activity/activitysave">创建促销</a></p>
+        <table class="ddlc jsgl">
+          <tr>
+            <th>序号</th>
+            <th>活动名称</th>
+            <th>活动类型</th>
+            <th>预计活动时间</th>
+            <th>实际活动时间</th>
+            <th>状态</th>
+            <th>创建人</th>
+            <th>创建时间</th>
+            <th>操作</th>
+          </tr>
+          
+          <foreach name="data" item="vo" >
+             
+          <tr>
+            <td>{$vo.act_id}</td>
+            <td>{$vo.act_name}</td>
+            <td><if condition="($vo.act_type eq 1) "> 商品服务买赠<elseif condition="$vo.act_type eq 2"/>单品促销</if></td>
+            <td>{$vo.act_starttime|date='Y-m-d H:i:s',###}至{$vo.act_endtime|date='Y-m-d H:i:s',###}</td>
+            <td>{$vo.act_starttime|date='Y-m-d H:i:s',###}至<if condition="($vo.act_realendtime lt 0) ">{$vo.act_realendtime|date='Y-m-d H:i:s',###}</if></td>
+          <td><if condition="($vo.act_starttime gt $nowtime) ">未开始</if><if condition="( $vo.act_starttime lt $nowtime ) AND ( $vo.act_endtime gt $nowtime  ) ">进行中</if><if condition="( $vo.act_realendtime ) OR ( $vo.act_endtime lt $nowtime  ) ">结束</if> </td>
+            <td>{$vo.act_createuser}</td>
+            <td>{$vo.act_addtime|date='Y-m-d H:i:s',###}</td>
+            <td><a href='/Admin/Activity/activityedit/id/{$vo.act_id}'>编辑</a> | <a href='/Admin/Activity/activitydel/id/{$vo.act_id}'>删除</a></td>
+          </tr>
+          
+          </foreach>
+
+        </table>
+        {$page}
+      </div>
+      <!--table end--> 
+    </div>
+    <!--right_inner end--> 
+    
+  </div>
+  <!--wapper-right end--> 
+</div>
+<!--wapper end--> 
+<!--头部 开始-->
+</body>
+</html>

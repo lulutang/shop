@@ -1,0 +1,652 @@
+<link href="{$Think.ADMIN_CSS}style.css" rel="stylesheet" type="text/css">
+<div class="wapper">
+<form method="post" action="/Admin/Goods/Addorup" enctype="multipart/form-data" onsubmit="return Goodsadd()">
+    <div class="wapper-right">
+    <div class="right_inner">
+    	<div class="path">您的位置：<a href="#">工作台</a>》<a href="#">商品服务管理</a>》<a href="#">商品管理</a>》<a href="#">添加商品</a></div>
+        <div class="tjsp_con">
+   
+            <div class="spyw">
+            	<div class="xuanx" id="select" style="float: left;">
+                	请选择商品业务类型：
+				<select name="serveris_1" id="serveris_{$pid}" onChange="change('serveris_{$pid}');">
+					<option value="qing">请选择</option>
+					 <volist name="server_arr" id="ra">
+					<option value="{$ra['id']}">{$ra['server_name']}</option>
+				</volist>
+				</select>
+            	</div>
+                <div class="qued" style="float: left;">
+				<input type="button" value="确定" id="require" onclick="Get_attr()" style="display:none">
+				<input type="hidden" name="server_id" id="server_id" value="">
+				</div>
+			  </div>
+           </div>
+            <div style="clear: both;"></div>
+			 <div class="menu_sx" id="have_no" style="display:none">
+                    <ul>
+                        <li id="hone1" onclick="have_attr(1)" >有属性</li>
+                        <li id="hone2" onclick="have_attr(2)" style="background-color:#cbcbcb">无属性</li>
+                    </ul>
+                </div>
+            <!--属性规格--><div class="" id="attr" style="display:none">
+			
+			</div>
+
+    <div  id="main_goods" style="display:none">
+			<div class="jbxx">
+           	  <h4>基本信息</h4>
+              <table>
+              	<tr>
+                	<td  class="spbm"><span class="xing">*</span><span class="add_name">商品编码&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;：</span><input type="text" name="goods_code" id="sgoods_code" onblur="godcode()"></td>
+                    <td><span class="xing">*</span><span class="add_name">商品简称：</span><input type="text" name="short_title" id="sshort_title"></td>
+                </tr>
+                <tr>
+                	<td colspan="2"  class="spxxqc" ><span  class="xing">*</span><span class="add_name">商品详细全称：</span><input type="text" name="titl" id="stitle"></td>
+                </tr>
+                <tr>
+                	<td colspan="2"><span class="xing">*</span><span class="add_name">商品标题描述：</span><textarea name="description" rows="3" id="sdescription" placeholder="请输入75字以内的描述" maxlength="75"></textarea></td>
+                </tr>
+                <tr>
+                	<td colspan="2"  class="jiage"><span>*</span>现价:&nbsp;&nbsp;<input type="text" name="now_price" id="snow_price" >&nbsp;&nbsp;元&nbsp;&nbsp;&nbsp;&nbsp;原价:&nbsp;&nbsp;<input type="text" name="old_price" id="sold_price">元&nbsp;&nbsp;&nbsp;&nbsp;成本价:&nbsp;&nbsp;<input type="text" name="cost" id="scost">元&nbsp;&nbsp;&nbsp;&nbsp;默认销售量:&nbsp;&nbsp;<input type="text" name="number" id="snumber" pattern="[0-9]{0,}">&nbsp;&nbsp;个&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                </tr>
+                <tr>
+                	<td  colspan="2" class="tjj" id="tt"><span></span>
+					<label>
+                	    <input type="checkbox" name="status" value="1" id="" />
+                	    立即上架</label>
+                	  <label>
+                	    <input type="checkbox" name="is_index" value="1" id="" />
+                	    首页推广</label>
+                	
+                	  <label>
+                	    <input type="checkbox" name="is_hot" value="1" id="" />
+                	   热门推荐</label>
+                	  
+                	  <label>
+                	    <input type="checkbox" name="is_gift" value="1" id="" />
+                	    赠品</label>
+					<label>
+                	    <input type="checkbox" name="is_lim" value="1" id="is" onclick='is_limito(this)'/>
+                	    是否限购</label>
+						<label><font id="splim" style='display:none'>&nbsp;&nbsp;限购个数:<input type="text" name="limit_num" id="slimit_num" pattern="[0-9]{0,}" style="width:80px"/>&nbsp;&nbsp;</font></label>
+                	
+              	  </td>
+                </tr>
+              </table>     
+         
+			</div>
+            <div class="shop_pic">
+                	<h4>商品图片</h4>
+                    <ul>
+                    	<li class="slt">
+                        	<p>
+							<span class="preview" id="preview1">
+							<img id="imghead1" src="{$Think.ADMIN_IMAGES}shop_img.png" width=120 height=96>
+							</span>
+							</p>
+                           <input id="inp1" type="file" onchange="previewImage(this ,1)" name="thumb" id="thusm" accept="image/*"/>
+                        </li>
+                        <li>
+                        	<p>
+							<span class="preview" id="preview2"><img id="imghead2" src="{$Think.ADMIN_IMAGES}shop_img.png" width=300 height=190 id="picsm"></span>
+							</p>
+							<input id="inp2" type="file" onchange="previewImage(this ,2)" name="goods_pic" accept="image/*"/>
+                        </li>
+                        <div class="clear"></div>
+                    </ul>
+                </div>
+
+               <div class="spjs">
+                	<div class="tab1" id="tab1">
+		  	<div class="menu">
+		  	<ul>
+			<li id="one1" onclick="setTab(1)" style="background-color:#C4C4C4">商品介绍</li>
+			<li id="one2" onclick="setTab(2)">攻略问答</li>
+			<li id="one3" onclick="setTab(3)">成功案例</li>
+			</ul>
+		  </div>
+		  	<div class="menudiv">
+			  <div id="con1" height="300">
+        	  	  <textarea name="content" id="scontent"></textarea>
+        	  </div>
+			  <div id="con2" style="display:none;">
+        		  <textarea name="answer" rows="5" cols="10" id="sanswer"></textarea>
+        	  </div>
+			  <div id="con3" style="display:none;">
+        	  	  <textarea name="success" rows="5" cols="10" id="ssuccess"></textarea>
+        	  </div>
+		  </div>
+		  </div>
+
+             </div>  
+				<div class="anniu" align="center">
+                			<input type="submit" name="save" value="保存">
+                </div>
+			</div>
+       
+		
+	 </div>
+
+        </div>
+		<!--隐藏文本框-->
+		<input type="hidden" id="Attr_c" name="Attr_count" value="">
+		<input type="hidden" id="Gid" name="goods_id" value="{$Goods_desting['goods_id']}">
+		<input type="hidden" id="Aiv" name="attrID_val" value="{$attrID_val}">
+		<!--结束隐藏文本框-->
+    <!--right_inner end-->
+    </div><!--wapper-right end-->
+	</form>
+</div><!--wapper end-->
+
+<!--头部 开始-->
+</body>
+</html>
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script src="{$Think.ADMIN_JS}ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}Calendar1.js"></script>
+<script src="{$Think.ADMIN_JS}tab02.js" type="text/javascript"></script>
+<script src="{$Think.ADMIN_JS}ckeditor/ckeditor.js"></script>
+<script src="{$Think.ADMIN_JS}ckeditor/ckfinder.js"></script>
+<style type="text/css">
+.preview{width:100px;height:100px;overflow:hidden;border:}
+#imghead1{filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=image);}
+#imghead2{filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=image);}
+</style>
+<script>
+var ceditor = CKEDITOR.replace( 'content', {
+        filebrowserBrowseUrl        : '{$Think.ADMIN_JS}ckfinder/ckfinder.html',
+        filebrowserImageBrowseUrl   : '{$Think.ADMIN_JS}ckfinder/ckfinder.html?Type=Images',
+        filebrowserFlashBrowseUrl   : '{$Think.ADMIN_JS}ckfinder/ckfinder.html?Type=Flash',
+        filebrowserUploadUrl		: '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+        filebrowserImageUploadUrl   : '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
+        filebrowserFlashUploadUrl   : '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
+    });
+var aeditor = CKEDITOR.replace( 'answer', {
+        filebrowserBrowseUrl        : '{$Think.ADMIN_JS}ckfinder/ckfinder.html',
+        filebrowserImageBrowseUrl   : '{$Think.ADMIN_JS}ckfinder/ckfinder.html?Type=Images',
+        filebrowserFlashBrowseUrl   : '{$Think.ADMIN_JS}ckfinder/ckfinder.html?Type=Flash',
+        filebrowserUploadUrl		: '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+        filebrowserImageUploadUrl   : '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
+        filebrowserFlashUploadUrl   : '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
+    });
+var seditor = CKEDITOR.replace( 'success', {
+        filebrowserBrowseUrl        : '{$Think.ADMIN_JS}ckfinder/ckfinder.html',
+        filebrowserImageBrowseUrl   : '{$Think.ADMIN_JS}ckfinder/ckfinder.html?Type=Images',
+        filebrowserFlashBrowseUrl   : '{$Think.ADMIN_JS}ckfinder/ckfinder.html?Type=Flash',
+        filebrowserUploadUrl		: '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+        filebrowserImageUploadUrl   : '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
+        filebrowserFlashUploadUrl   : '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
+    });
+
+        function godcode()
+        {
+            var code = $("#sgoods_code").val();
+            var p = $("#Gid").val();
+             $.ajax({
+                    url:"/Admin/Goods/Codeno",
+                    type:"get",
+                    data:{"code":code,"pid":p},
+                    success:function(e){
+                       var o = eval("("+e+")");
+                       if(o["data"] == '@')
+                       {
+                         alert("编码已存在"); 
+                         $("#sgoods_code").val("");
+                       }
+                    }
+                });
+        }
+	function Goodsadd()
+	{
+		var code = $("#sgoods_code").val();
+		var short_title = $("#sshort_title").val();
+		var title = $("#stitle").val();
+		var descript = $("#sdescription").val();
+                if(parseInt(descript.length) > parseInt(75))
+                {
+                    alert("商品描述不能超过75个字");
+                    return false;
+                }
+		var now_price = $("#snow_price").val();
+		var old_price = $("#sold_price").val();
+                var thumbs = $("#imghead1").attr("src");
+                var pic = $("#imghead2").attr("src");
+                var t='';
+                var p='';
+		if(parseInt(now_price) > parseInt(old_price))
+		{
+			alert("现价不能大于原价");
+			return false;
+		}
+		if(code.length == 0 || short_title.length == 0 || title.length == 0 || descript.length == 0 || now_price.length == 0)
+		{
+			alert("请将带有*的信息输入完成");
+			return false;
+		}else{
+                        return true;
+		}
+	}
+
+	//是否限量
+	function is_limito(num)
+	{
+		var is_limitnum = $(num).attr("checked");
+		if(is_limitnum == "checked")
+		{
+			$("#splim").show();
+		}else {
+			$("#splim").hide();
+			$("#slimit_num").val("");
+		}
+		
+	}
+ //有属性和无属性
+	function have_attr(num)
+	{
+		var radio = radio_val().split(",");
+		for(var i=0 ;i<radio.length ;i++)
+		{
+			$("#"+radio[i]).removeAttr("checked");
+		}
+		if(num == 1)
+		{
+			$("#attr").show();
+			$("#hone1").attr("style" , "background-color:#cbcbcb");
+			$("#hone2").removeAttr("style");
+			$("#Gid").val("");
+			$("#Aiv").val("");
+			$("#Attr_c").val("");
+			$("#sgoods_code").val("");
+			$("#sshort_title").val("");
+			$("#stitle").val("");
+			$("#sdescription").val("");
+			$("#snow_price").val("");
+			$("#sold_price").val("");
+			$("#scost").val("");
+			$("#snumber").val("");
+			$("#slimit_num").val("");
+			$("#imghead1").attr("src" , "{$Think.ADMIN_IMAGES}shop_img.png");
+			$("#imghead2").attr("src" , "{$Think.ADMIN_IMAGES}shop_img.png");
+			$("#inp1").val("");
+			$("#inp2").val("");
+			ceditor.setData("");
+			aeditor.setData("");
+			seditor.setData("");
+			string ='<label><input type="checkbox" name="status" value="1" id="" />立即上架</label> <label><input type="checkbox" name="is_index" value="1" id="" />首页推广</label><label> <input type="checkbox" name="is_hot" value="1" id="" />热门推荐</label><label> <input type="checkbox" name="is_gift" value="1" id="" />赠品</label>';
+			$("#tt").html(string);
+			
+		}else if (num == 2)
+		{
+			$("#attr").hide();
+			$("#hone1").removeAttr("style");
+			$("#hone2").attr("style" , "background-color:#cbcbcb");
+			$("#Gid").val("");
+			$("#Aiv").val("");
+			$("#sgoods_code").val("");
+			$("#sshort_title").val("");
+			$("#stitle").val("");
+			$("#sdescription").val("");
+			$("#snow_price").val("");
+			$("#sold_price").val("");
+			$("#scost").val("");
+			$("#snumber").val("");
+			$("#slimit_num").val("");
+			$("#imghead1").attr("src" , "{$Think.ADMIN_IMAGES}shop_img.png");
+			$("#imghead2").attr("src" , "{$Think.ADMIN_IMAGES}shop_img.png");
+			$("#inp1").val("");
+			$("#Attr_c").val("");
+			$("#inp2").val("");
+			ceditor.setData("");
+			aeditor.setData("");
+			seditor.setData("");
+			string ='<label><input type="checkbox" name="status" value="1" id="" />立即上架</label> <label><input type="checkbox" name="is_index" value="1" id="" />首页推广</label><label> <input type="checkbox" name="is_hot" value="1" id="" />热门推荐</label><label> <input type="checkbox" name="is_gift" value="1" id="" />赠品</label>';
+			$("#tt").html(string);
+		}
+		
+	}
+ 
+                //图片上传预览    IE是用了滤镜。
+        function previewImage(file , id)
+        {
+          var MAXWIDTH  = 500;
+          var MAXHEIGHT = 200;
+          var div = document.getElementById('preview'+id);
+          if (file.files && file.files[0])
+          {
+			 
+			  if(id == 1)
+			  {
+			    div.innerHTML ='<img id=imghead'+id+' width=120 height=96>';
+			  }
+			  if(id == 2){
+				div.innerHTML ='<img id=imghead'+id+' width=300 height=190>';
+			  }
+              var img = document.getElementById('imghead'+id);
+              img.onload = function(){
+                var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+                img.width  =  rect.width;
+                img.height =  rect.height;
+//                 img.style.marginLeft = rect.left+'px';
+                img.style.marginTop = rect.top+'px';
+              }
+              var reader = new FileReader();
+              reader.onload = function(evt){
+                  if(evt.target.result . substring(5 , evt.target.result.indexOf("/")) != 'image'){
+                    alert("不是图片请选择图片格式");
+                } 
+                  img.src = evt.target.result;
+              }
+              reader.readAsDataURL(file.files[0]);
+          }
+          else //兼容IE
+          {
+            var sFilter='filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src="';
+            file.select();
+            var src = document.selection.createRange().text;
+            div.innerHTML = '<img id=imghead'+id+'>';
+            var img = document.getElementById('imghead'+id);
+            img.filters.item('DXImageTransform.Microsoft.AlphaImageLoader').src = src;
+            var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+            status =('rect:'+rect.top+','+rect.left+','+rect.width+','+rect.height);
+            div.innerHTML = "<div id=divhead style='width:"+rect.width+"px;height:"+rect.height+"px;margin-top:"+rect.top+"px;"+sFilter+src+"\"'></div>";
+          }
+        }
+        function clacImgZoomParam( maxWidth, maxHeight, width, height ){
+            var param = {top:0, left:0, width:width, height:height};
+            if( width>maxWidth || height>maxHeight )
+            {
+                rateWidth = width / maxWidth;
+                rateHeight = height / maxHeight;
+                 
+                if( rateWidth > rateHeight )
+                {
+                    param.width =  maxWidth;
+                    param.height = Math.round(height / rateWidth);
+                }else
+                {
+                    param.width = Math.round(width / rateHeight);
+                    param.height = maxHeight;
+                }
+            }
+             
+            param.left = Math.round((maxWidth - param.width) / 2);
+            param.top = Math.round((maxHeight - param.height) / 2);
+            return param;
+        }
+
+function delmor(stat)
+{
+	if(stat == 1)
+	{
+		$("#del").show();
+	}else {
+		$("del").val();
+		$("#del").hide();
+	}
+}
+//获取下一级业务
+function change(val)
+{
+        var serv = $("#server_id").val();
+        if(serv.length != 0 && val == 'serveris_0')
+        {
+            location.href='/Admin/Goods/Goods_add';
+        }else{
+	$("#imghead1").attr("src" , "{$Think.ADMIN_IMAGES}shop_img.png");
+	$("#imghead2").attr("src" , "{$Think.ADMIN_IMAGES}shop_img.png");
+	$("#inp1").val("");
+	$("#inp2").val("");
+	var str = val; //select的id
+		var num; //当前级数
+		var id; // 分类id
+		num = str.substr(9,10);
+		//alert(num);
+		var nownum = parseInt(num)+1; // 将字符串转换为数字
+		id = $("#"+str).val();
+		if(id == 'qing')
+		{
+			$("#require").hide();
+		}
+		//alert(id);
+		var r = /^[1-9]+[0-9]*]*$/;　//正整数
+		if (!r.test(id)) {
+			//清空过时的选项
+			$("select").each(function(index){
+				
+				if(index+1 > num+1) {
+					$("#require").hide();
+					$(this).remove();
+				}
+			})
+
+			return false;
+		}
+
+		$.ajax({
+			type: "get",
+			url:"__APP__/Admin/Goods/Next_server",
+			data:{"id":id},
+			success: function(result){
+				var special=result.split("@");
+				if ( result != 1 && special[1] != '#') { 
+					//清空过时的选项
+					$("select").each(function(index){
+						//alert(index+1);
+						if(index+1 > num+1) {
+							$(this).remove();
+							
+						}
+					})
+
+					$("#select").append(result);
+				} else{
+					$("#require").show();
+					$("#server_id").val(special[0]);
+				}
+				//alert(result);
+			},
+			error: false
+		});
+              }
+
+	}
+	
+	/*
+		* 根据业务类型ID获取属性
+	*/
+	function Get_attr()
+	{
+		var service_id=$("#server_id").val();
+		$.ajax({
+			url:"__APP__/Admin/Goods/Ajaxattr_val",
+			type:"get",
+			data:{"service_id":service_id},
+			success:function(e)
+			{
+				if(e != '')
+				{
+					$("#have_no").show();
+				}else{
+					$("#have_no").hide();
+				}
+				$("#attr").html(e);
+			}
+		});
+		$("#main_goods").show();
+		$("#Gid").val("");
+		$("#Aiv").val("");
+		$("#sgoods_code").val("");
+		$("#sshort_title").val("");
+		$("#stitle").val("");
+		$("#sdescription").val("");
+		$("#snow_price").val("");
+		$("#sold_price").val("");
+		$("#scost").val("");
+		$("#snumber").val("");
+		$("#slimit_num").val("");
+		$("#Attr_c").val("");
+		$("#imghead1").attr("src" , "{$Think.ADMIN_IMAGES}shop_img.png");
+		$("#imghead2").attr("src" , "{$Think.ADMIN_IMAGES}shop_img.png");
+		$("#inp1").val("");
+		$("#inp2").val("");
+		ceditor.setData("");
+		aeditor.setData("");
+		seditor.setData("");
+		string ='<label><input type="checkbox" name="status" value="1" id="" />立即上架</label> <label><input type="checkbox" name="is_index" value="1" id="" />首页推广</label><label> <input type="checkbox" name="is_hot" value="1" id="" />热门推荐</label><label> <input type="checkbox" name="is_gift" value="1" id="" />赠品</label><label><input type="checkbox" name="is_lim" value="1" id="is" onclick="is_limito(this)"/>是否限购</label><label><font id="splim" style="display:none">&nbsp;&nbsp;限购个数:<input type="text" name="limit_num" id="slimit_num" pattern="[0-9]{0,}" style="width:80px"/>&nbsp;&nbsp;</font></label>';
+		$("#tt").html(string);
+	}
+
+	/*
+		* 根据属性值匹配相对应的商品
+	*/
+	function Attr_val(attr_count) {
+		var string = '<span></span>';
+		var attrID_val = radio_val();
+		$.ajax({
+			url:"__APP__/Admin/Goods/Ajaxattr_goods",
+			type:"get",
+			data:{"attrID_val":attrID_val , "attr_count":attr_count},
+			success:function(e)
+			{
+				var str = eval("("+e+")");
+				if(str["code"] == 1)
+				{
+					$("#Attr_c").val(str["data"]["Attr_count"]);
+					$("#Gid").val("");
+					$("#Aiv").val("");
+					$("#sgoods_code").val("");
+					$("#sshort_title").val("");
+					$("#stitle").val("");
+					$("#sdescription").val("");
+					$("#snow_price").val("");
+					$("#sold_price").val("");
+					$("#scost").val("");
+					$("#snumber").val("");
+					$("#slimit_num").val("");
+					$("#Attr_c").val("");
+					$("#imghead1").attr("src" , "{$Think.ADMIN_IMAGES}shop_img.png");
+					$("#imghead2").attr("src" , "{$Think.ADMIN_IMAGES}shop_img.png");
+					$("#inp1").val("");
+					$("#inp2").val("");
+					ceditor.setData("");
+					aeditor.setData("");
+					seditor.setData("");
+					string +='<label><input type="checkbox" name="status" value="1" id="" />立即上架&nbsp;&nbsp;</label> <label><input type="checkbox" name="is_index" value="1" id="" />首页推广&nbsp;&nbsp;</label><label> <input type="checkbox" name="is_hot" value="1" id="" />热门推荐&nbsp;&nbsp;</label><label> <input type="checkbox" name="is_gift" value="1" id="" />赠品&nbsp;&nbsp;</label><label><input type="checkbox" name="is_lim" value="1" id="is" onclick="is_limito(this)"/>是否限购&nbsp;&nbsp;</label><label><font id="splim" style="display:none">&nbsp;&nbsp;限购个数:<input type="text" name="limit_num" id="slimit_num" pattern="[0-9]{0,}" style="width:80px"/>&nbsp;&nbsp;</font></label>';
+				}else{
+					$("#Attr_c").val(str["data"]["Attr_count"]); //属性总数
+					$("#Gid").val(str["data"]["Goods_desting"]["goods_id"]);
+					$("#Aiv").val(str["data"]["attrID_val"]);
+					$("#sgoods_code").val(str["data"]["Goods_desting"]["goods_code"]);
+					$("#sshort_title").val(str["data"]["Goods_desting"]["short_title"]);
+					$("#stitle").val(str["data"]["Goods_desting"]["title"]);
+					$("#sdescription").val(str["data"]["Goods_desting"]["description"]);
+					$("#snow_price").val(str["data"]["Goods_desting"]["now_price"]);
+					$("#sold_price").val(str["data"]["Goods_desting"]["old_price"]);
+					$("#scost").val(str["data"]["Goods_desting"]["cost"]);
+					$("#snumber").val(str["data"]["Goods_desting"]["number"]);
+					$("#slimit_num").val(str["data"]["Goods_desting"]["limit_num"]);
+					$("#imghead1").attr("src" , str['data']['Goods_desting']['thumb']);
+					$("#imghead2").attr("src" , str['data']['Goods_desting']['goods_pic']);
+					$("#inp1").val("");
+					$("#inp2").val("");
+					ceditor.setData(str["data"]["Goods_desting"]["content"]);
+					aeditor.setData(str["data"]["Goods_desting"]["answer"]);
+					seditor.setData(str["data"]["Goods_desting"]["success"]);				
+					if(str["data"]["Goods_desting"]["status"] == 1)
+					{
+						string +='<label><input type="checkbox" name="status" value="1" id="" checked/>立即上架&nbsp;&nbsp;</label>';
+					}else{
+						string +='<label><input type="checkbox" name="status" value="1" id=""/>立即上架&nbsp;&nbsp;</label>';
+					}
+					if(str["data"]["Goods_desting"]["is_index"] == 1)
+					{
+						string +='<label><input type="checkbox" name="is_index" value="1" id="" checked/>首页推广&nbsp;&nbsp;</label>';
+					}else{
+						string +='<label><input type="checkbox" name="is_index" value="1" id=""/>首页推广&nbsp;&nbsp;</label>';
+					}
+					if(str["data"]["Goods_desting"]["is_hot"] == 1)
+					{
+						string +='<label><input type="checkbox" name="is_hot" value="1" id="" checked/>热门推荐&nbsp;&nbsp;</label>';
+					}else{
+						string +='<label><input type="checkbox" name="is_hot" value="1" id=""/>热门推荐&nbsp;&nbsp;</label>';
+					}
+					if(str["data"]["Goods_desting"]["is_gift"] == 1)
+					{
+						string +='<label><input type="checkbox" name="is_gift" value="1" id="" checked/>赠品&nbsp;&nbsp;</label>';
+					}else{
+						string +='<label><input type="checkbox" name="is_gift" value="1" id="" />赠品&nbsp;&nbsp;</label>';
+					}
+					if(str["data"]["Goods_desting"]["is_limit"] == 1)
+					{
+						string +='<label><input type="checkbox" name="is_lim" value="1" id="is" checked onclick="is_limito(this)"/>是否限购&nbsp;&nbsp;</label><label><font id="splim">&nbsp;&nbsp;限购个数:<input type="text" style="width:80px" name="limit_num" id="slimit_num" pattern="[0-9]{0,}" value='+str["data"]["Goods_desting"]["limit_num"]+'>&nbsp;&nbsp;</font></label>';
+						$("#splim").show();
+						$("#is").attr("checked","checked");
+						$("#no").removeAttr("checked");
+						$("#slimit_num").val(str['data']['Goods_desting']['limit_num']);
+
+					}else{
+						string +='<label><input type="checkbox" name="is_lim" value="1" id="is" onclick="is_limito(this)"/>是否限购&nbsp;&nbsp;</label><label><font id="splim" style="display:none">&nbsp;&nbsp;限购个数:<input type="text" style="width:80px" name="limit_num" id="slimit_num" pattern="[0-9]{0,}"/>&nbsp;&nbsp;</font></label>';
+						$("#splim").hide();
+						$("#is").removeAttr("checked");
+						$("#no").attr("checked","checked");
+					}
+					
+				}
+				$("#tt").html(string);
+					
+				
+			}
+		});
+	}             	  
+	/*
+		* 获取选中单选按钮的值
+	*/
+	function radio_val()
+	{
+		var string = '';
+		var inps = document.getElementsByTagName('input');
+		for(var i = 0 ; i < inps.length ; i++)
+		{
+			if(inps[i].type == 'radio' && inps[i].name != "is_lim")
+			{
+				if(inps[i].checked)
+				{
+					string += inps[i].value + ',';
+				} 
+			}
+		}
+		return string;
+	}
+
+	function setTab(num)
+	{
+		if(num == 1)
+		{
+			$("#con1").show();
+			$("#con2").hide();
+			$("#con3").hide();
+			$("#one1").attr("style" , "background-color:#C4C4C4;");
+			$("#one2").removeAttr("style");
+			$("#one3").removeAttr("style");
+
+		}else if(num ==2)
+		{
+			$("#con1").hide();
+			$("#con2").show();
+			$("#con3").hide();
+			$("#one2").attr("style" , "background-color:#C4C4C4;");
+			$("#one1").removeAttr("style");
+			$("#one3").removeAttr("style");
+		}else if(num ==3)
+		{
+			$("#con1").hide();
+			$("#con2").hide();
+			$("#con3").show();
+			$("#one3").attr("style" , "background-color:#C4C4C4;");
+			$("#one1").removeAttr("style");
+			$("#one2").removeAttr("style");
+		}
+	}
+	
+</script>

@@ -1,0 +1,194 @@
+<link href="{$Think.ADMIN_CSS}style.css" rel="stylesheet" type="text/css">
+
+<div class="wapper">
+
+    <div class="wapper-right">
+    <div class="right_inner cart">
+    	<div class="path">您的位置：<a href="/Admin/Index/main">工作台</a> 》<a href="">促销管理</a> 》 <a href="__URL__/lists/">订单优惠</a></div>     
+    	
+       	<div class="operation">
+        	<div id="systembox">
+
+    <div id="systembtn" class="systembtn">
+        <a href="javaScript:void(0)" id ='submit_add_youhui' class="abtn"><span>新增优惠数据</span></a>
+    </div>
+
+</div>
+		 
+			<div class="clear"></div>
+        </div>
+        <table class="cart hydd">
+        	<tr>
+            	<th  class="col_12">活动编号</th>
+                <th  class="col_12">活动名称称</th>
+                <th  class="col_12">满足金额</th>
+                <th  class="col_12">优惠金额</th>
+                <th  class="col_12">优惠类型</th>
+                <th  class="col_12">使用范围 </th>
+                <th  class="col_13">开始时间</th>
+                <th  class="col_13">结束时间</th>
+                <th  class="col_13">创建时间 </th>
+                <th  class="col_13">优惠卷使用条件</th>
+                <th  class="col_13">优惠卷使用范围</th>
+                <th  class="col_13">优惠卷开始时间</th>
+                <th  class="col_13">优惠卷结束时间</th>
+                <th  class="col_13">操作</th>
+            </tr>
+            <foreach name='data' item='val' key = 'key'>
+              <tr id='del_{$val.id}' <if condition="$key%2 neq 0">class="tr_bgcolor" </if>>
+
+                  <td>{$val.id}</td>
+                  <td>{$val.name}</td>
+                  <td>{$val.sale}</td>
+                  <td>{$val.money}</td>
+                  <td><if condition="($val.type eq 1)">订单满增优惠卷<else/>未知</if></td>
+                  <td><if condition="($val.use eq 1)">全场<else/>未知</if> </td>
+                  <td>{$val.startTime|date='Y-m-d H:i:s',###} </td>
+                  <td>{$val.endTime|date='Y-m-d H:i:s',###}</td>
+                  <td>{$val.createTime|date='Y-m-d H:i:s',###}</td>
+                  <td>{$val.sale_where}</td>
+                  <td><if condition="($val.sale_use eq 1)">全场<else/>未知</if></td>
+                  <td>{$val.sale_startTime|date='Y-m-d H:i:s',###} </td>
+                  <td>{$val.sale_endTime|date='Y-m-d H:i:s',###}</td>
+                  
+                  <td><a style="cursor:pointer" onclick="javaScript:editOnsale({$val.id})">编辑</a>
+                  <a style="cursor:pointer" onclick="javaScript:delOnsale({$val.id})">删除</a>
+              
+                  </td>
+              
+                </tr>
+              </foreach>
+          <if condition="!empty($orders)">
+            <tr>
+            	<td class="hj" colspan="10">商品总数：<span>{$goods_number}</span>&nbsp;&nbsp;&nbsp;&nbsp;  订单总额：<span>￥{$sum}</span></td>
+            </tr>
+            </if>
+             
+            
+           
+        </table>	
+        <!--table end-->
+        </div>
+        {$pages}
+    <!--right_inner end-->
+     <div id="bg"></div>
+    <!--弹出二 开始-->
+    <div class="addmain" id = 'add_youhui' style="display:none;top:4%" draggable="true">
+    	<div class="backcolor">
+        	<h3>增加优惠               <span onclick='guanbi_youhui();' class="guanbi">X</span></h3>
+             <form action="/Admin/OnSale/addOnSale" method="get" id='OnSale'name="addddlc" >
+        	<table class="lmgl">
+                        <tbody><tr>
+                    	<td><p><span>活动名称：</span><input name="name" id ='name' value="" size="20" maxlength="20" id="user_name" type="text"></p></td>
+                        </tr>
+                           <tr>
+                    	<td><span>优惠类型：</span><select name='type' ><option value=1>订单满赠优惠券</option></select></td>
+                        </tr>
+                	<tr>
+                    	<td><p><span>满足条件：</span><input name="sale" id='sale' value="" size="20" maxlength="20" type="text"></p></td>
+                        </tr>
+                        <tr>
+                    	<td><p><span>优惠金额：</span><input name="money" id="money" value="" size="20" maxlength="20"  type="text"></p></td>
+                        </tr>
+                      
+                          <tr>
+                    	<td><span>使用范围：</span><select name='use'  ><option value=1>全场</option></select></td>
+                        </tr>
+                          <tr>
+                    	<td><p><span>开始时间：</span><input name="startTime" value="" size="20" maxlength="20" onclick="SelectDate(this,'yyyy-MM-dd hh:mm')" type="text"></p></td>
+                        </tr>
+                          <tr>
+                    	<td><p><span>结束时间：</span><input name="endTime" value="" size="20" maxlength="20" onclick="SelectDate(this,'yyyy-MM-dd hh:mm')" type="text"></p></td>
+                        </tr>
+                          <tr>
+                    	<td>——————优惠券使用条件—————————
+                    	</td>
+                        </tr>
+                         <tr>
+                    	<td><span>使用条件：</span><input name="sale_where" id = "sale_where" value="" size="20" maxlength="20"  type="text"></td>
+                        </tr>
+                         <tr>
+                    	<td><span>使用范围：</span><select name='sale_use' ><option value=1>全场</option></select></td>
+                        </tr>
+                          <tr>
+                    	<td><p><span>开始时间：</span><input name="sale_startTime" id = "sale_startTime" value="" size="20" maxlength="20" onclick="SelectDate(this,'yyyy-MM-dd hh:mm')" type="text"></p></td>
+                        </tr>
+                          <tr>
+                    	<td><p><span>结束时间：</span><input name="sale_endTime" id = "sale_endTime" value="" size="20" maxlength="20" onclick="SelectDate(this,'yyyy-MM-dd hh:mm')" type="text"></p></td>
+                        </tr>
+            		<tr>
+                    	<td class="lmgl_qd"><input value="提交" type="submit" onclick="return CheckSaveYouhui()">
+                        </td>
+                        </tr>
+                </tbody></table>
+                </form>
+                
+        </div>
+    </div>
+    <!--弹出二 结束-->
+    <!--delete 开始-->
+    <div class="addmain" id = 'edit_youhui' style="display:none;top:4%" draggable="true">
+    	<div class="backcolor">
+        	<h3>增加优惠               <span onclick='guanbi_youhui();' class="guanbi">X</span></h3>
+             <form action="/Admin/OnSale/editOnSale" method="get"  name="addddlc" >
+        	<table class="lmgl">
+                        <tbody><tr>
+                    	<td><p><span>活动名称：</span><input name="name" id ='name' class='name' value="" size="20" maxlength="20" id="user_name" type="text"></p></td>
+                        </tr>
+                           <tr>
+                    	<td><span>优惠类型：</span><select name='type' ><option value=1>订单满赠优惠券</option></select></td>
+                        </tr>
+                	<tr>
+                    	<td><p><span>满足条件：</span><input name="sale" id='sale' class='sale' value="" size="20" maxlength="20" type="text"></p></td>
+                        </tr>
+                        <tr>
+                    	<td><p><span>优惠金额：</span><input name="money" id="money" class="money"value="" size="20" maxlength="20"  type="text"></p></td>
+                        </tr>
+                      
+                          <tr>
+                    	<td><span>使用范围：</span><select name='use'  ><option value=1>全场</option></select></td>
+                        </tr>
+                          <tr>
+                    	<td><p><span>开始时间：</span><input name="startTime" class="startTime" value="" size="20" maxlength="20" onclick="SelectDate(this,'yyyy-MM-dd hh:mm')" type="text"></p></td>
+                        </tr>
+                          <tr>
+                    	<td><p><span>结束时间：</span><input name="endTime" class="endTime" value="" size="20" maxlength="20" onclick="SelectDate(this,'yyyy-MM-dd hh:mm')" type="text"></p></td>
+                        </tr>
+                          <tr>
+                    	<td>——————优惠券使用条件—————————
+                    	</td>
+                        </tr>
+                         <tr>
+                    	<td><span>使用条件：</span><input name="sale_where" class='sale_where' id = "sale_where" value="" size="20" maxlength="20"  type="text"></td>
+                        </tr>
+                         <tr>
+                    	<td><span>使用范围：</span><select name='sale_use' ><option value=1>全场</option></select></td>
+                        </tr>
+                          <tr>
+                    	<td><p><span>开始时间：</span><input name="sale_startTime" class='sale_startTime' id = "sale_startTime" value="" size="20" maxlength="20" onclick="SelectDate(this,'yyyy-MM-dd hh:mm')" type="text"></p></td>
+                        </tr>
+                          <tr>
+                    	<td><p><span>结束时间：</span><input name="sale_endTime" class='sale_endTime' id = "sale_endTime" value="" size="20" maxlength="20" onclick="SelectDate(this,'yyyy-MM-dd hh:mm')" type="text"></p></td>
+                        </tr>
+            		<tr>
+                    	<td class="lmgl_qd"><input value="提交" type="submit" onclick="return CheckeditYouhui()">
+                        </td>
+                        </tr>
+                </tbody></table>
+                <input type='hidden' id='edit_id' value='' name='edit_id'>
+                </form>
+                
+        </div>
+    </div>
+    
+    
+    <!--delete 结束-->
+    </div><!--wapper-right end-->
+</div><!--wapper end-->
+<!--头部 开始-->
+</body>
+</html>
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}cart.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}Calendar1.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}ZeroClipboard.js"></script>

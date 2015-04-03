@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>单品促销通用设置</title>
+<link href="{$Think.ADMIN_CSS}global.css" rel="stylesheet" type="text/css">
+<link href="{$Think.ADMIN_CSS}m_style1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+<div class="content_right common_set">
+     <div id="indent" class="indent" onclick="javascript:changeWin();"></div>
+     <div class="link_path">您所在的位置：<a href="/Admin/Operation/coupon">运营管理</a>&nbsp; &gt; &nbsp;<a href="/Admin/Operation/coupon">单品促销</a>&nbsp; &gt; &nbsp;<a href="javascript:void(0)">通用设置</a></div>
+     <div class="title">单品促销</div>
+     <div class="activity_list_title">单品促销通用设置</div>
+     <div class="set_activity01">
+     	<p>活动名称：<input type="text" class="text300" /> 发行商：<input type="text" class="text300" /></p>
+        <p>有效时间：<input type="text" class="text150" onclick="SelectDate(this,'yyyy-MM-dd hh:mm')" readonly="readonly" /> 至 <input type="text" onclick="SelectDate(this,'yyyy-MM-dd hh:mm')" class="text150" readonly="readonly" /></p>
+     </div>
+     <div class="activity_list_title">优惠券设置</div>
+     <div  class="set_activity02">
+     	<ul class="activity_list">
+        	<li>
+              <div class="list_info info1">
+				<div class="text"><span class="size46"> ￥</span><input type="text" class="text150" /><span class="size30">元</span></div>
+                <p class="size14">中细软集团</p>
+                <p>使用条件：商标注册</p>
+                <p>有效时间：2014年12月22日 至 2015年10月12日</p>
+              </div>
+              <div class="list_edit">
+              	<input type="checkbox" />
+                <select class="select200">
+                	<option>—请选择价钱—</option>
+                    <option>￥300.00</option>
+                    <option>￥200.00</option>
+                    <option>￥100.00</option>
+                </select>
+              </div>
+              <p class="size14">使用条件：</p>
+              <p><textarea class="condition"></textarea></p>
+          </li>
+          <li>
+              <div class="list_info info2">
+				<div class="text"><span class="size46"> ￥</span><input type="text" class="text150" /><span class="size30">元</span></div>
+                <p class="size14">中细软集团</p>
+                <p>使用条件：商标注册</p>
+                <p>有效时间：2014年12月22日 至 2015年10月12日</p>
+              </div>
+              <div class="list_edit">
+              	<input type="checkbox" />
+                <select class="select200">
+                	<option>—请选择价钱—</option>
+                    <option>￥300.00</option>
+                    <option>￥200.00</option>
+                    <option>￥100.00</option>
+                </select>
+              </div>
+              <p class="size14">使用条件：</p>
+              <p><textarea class="condition"></textarea></p>
+          </li>
+          <li>
+              <div class="list_info info4">
+				<div class="text"><span class="size46"> ￥</span><input type="text" class="text150" /><span class="size30">元</span></div>
+                <p class="size14">中细软集团</p>
+                <p>使用条件：商标注册</p>
+                <p>有效时间：2014年12月22日 至 2015年10月12日</p>
+              </div>
+              <div class="list_edit">
+              	<input type="checkbox" />
+                <select class="select200">
+                	<option>—请选择价钱—</option>
+                    <option>￥300.00</option>
+                    <option>￥200.00</option>
+                    <option>￥100.00</option>
+                </select>
+              </div>
+              <p class="size14">使用条件：</p>
+              <p><textarea class="condition"></textarea></p>
+          </li>
+        </ul>
+        <p class="condition02">使用类型：<input type="text" class="text300" /></p>
+        <p class="condition03">有效时间：<input type="text" class="text150" readonly="readonly" /> 至 <input type="text" class="text150" readonly="readonly" /></p>
+     </div>
+     <div class="bor_bottom"></div>
+     <div class="activity_list_title">虚拟币通用设置</div>
+     <div  class="set_activity03">
+     	<p>赠送中细软-盘缠：<input type="text" class="text200" /> <span class="colea8b0f">注：活动盘缠总额</span></p>
+        <p class="divide"><input type="radio" name="divide" /> 平均分到各个商品中 <input type="radio" name="divide" /> 平均分到各个商品中</p>     
+     </div>
+     <div class="bor_bottom"></div>
+     <div class="btn1"><a class="btn_save" href="confirmActivity.html">发布</a></div>
+     
+</div>
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+
+<script type="text/javascript">
+//菜单缩放
+  openclose=true;
+  function changeWin(){ 
+      parent.bodyFrame.cols =openclose?"1,*":"210,*";//这句话有报错
+      $(".indent").toggleClass('ind');
+      openclose=!openclose;
+  }
+</script>
+</body>
+</html>
+<script type="text/javascript" src="{$Think.ADMIN_JS}Calendar1.js"></script>

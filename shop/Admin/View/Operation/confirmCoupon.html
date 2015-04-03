@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>活动核对</title>
+<link href="{$Think.ADMIN_CSS}global.css" rel="stylesheet" type="text/css">
+<link href="{$Think.ADMIN_CSS}m_style1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<div class="content_right confirm_activity">
+     <div id="indent" class="indent" onClick="changeWin()"></div>
+     <div class="link_path">您所在的位置：<a href="/Admin/Operation/coupon">运营管理 </a>&nbsp; &gt; &nbsp;<a href="/Admin/Operation/coupon">优惠券促销 </a>&nbsp; &gt; &nbsp;<a href="javascript:void(0)">优惠券核对</a></div>
+     <div class="title">优惠券促销</div>
+     <div class="activity_info">
+        <if condition="('2' neq $get['type'])">
+     	<p>亲您好！目前有<span class="colf00" id='colf00'> {$count}</span> 件商品参与活动</p>
+     	</if>
+        <p>活动标题为<span class="colf00 size24">“{$get['name']}”</span></p>
+        <p>活动起止时间为<span class="colf00 size16">{$get['startTime']|date='Y-m-d',###}</span>至<span class="colf00  size16">{$get['endTime']|date='Y-m-d',###}</span></p>
+     </div>
+     
+     <if condition="('2' neq $get['type'])">
+         <div class="activity_list_title">活动商品展示 <a class="add" href="##">添加优惠商品</a></div>
+     </if>
+     <ul class="activity_list">
+        <foreach name="goodsList" item='val' key = 'key'>
+	     	<li id='show_{$val.id}'>
+	            <div class="list_info info1">
+	              <ul class="products_box">
+	              	 <li class="products_img"><img src='{$val.thumb}'></li>
+	                 <li class="products_name">
+	                 	<p  class="size14">商品名称：{$val.short_title}</p>
+	                    <p  class="size14">商品 I  D：{$val.goods_code}</p>
+	                 </li>
+	              </ul>
+	              <p class="size14">优惠券：￥{$val.money}</p>
+	              <p>使用条件： <if condition="('1' eq $val['use'])">全场 </if>
+							    <if condition="('2' eq $val['use'])">商标服务 </if>
+							     <if condition="('3' eq $val['use'])">专利服务 </if>
+							      <if condition="('4' eq $val['use'])">版权服务 </if>
+							       <if condition="('5' eq $val['use'])">其他 </if></p>
+	              <p>有效时间：{$val.sale_startTime|date='Y-m-d',###} 至 {$val.sale_endTime|date='Y-m-d',###}</p>
+	            </div>
+	            <div class="list_edit"> <a href="/admin/operation/coupon_update/id/{$val.id}"><img src="{$Think.ADMIN_IMAGES}w_edit.png" /></a> <a  href="javascript:del({$val.id});" id="del_{$val.id}" ><img src="{$Think.ADMIN_IMAGES}w_delete.png" /></a></div>
+	        </li>
+        </foreach>
+	<input type='hidden' name='saleId' id='saleId' value='{$saleId}'>
+	<input type='hidden' name='goods_id' id='goods_id' value=''>
+     </ul>
+     <div class="btn"><a class="btn_save" id="btn_save" href="javaScript:void()">保存</a></div>
+     
+     
+      <div id="filter_div"></div>
+	 <div class="outline_border">
+		<div class="add_window">
+			<div class="head">添加优惠券商品<span class="cancel"></span></div>
+			<div class="body">
+				<div class="body_top">
+					<span>商品类型：</span>
+					<select id="select" class="g_text">
+					<option value='0'>请选择</option>
+					<foreach name='groupType' item='val' key = 'key'>
+         			    <option  value="{$val['now_servername']}" <if condition="($groupTypeKey eq $val['now_servername'])">  selected </if> >{$val['now_servername']}</option> 
+		  			</foreach>
+					</select>
+					<span>商品ID号：</span>
+					<select  class="g_text" id="select_2">
+					<option value='0'>请选择</option>
+					</select>
+<!-- 					<input id="text" class="g_text" type="text" placeholder="请输入商品ID" value="请输入商品ID"/>
+ -->					
+					
+					<a class="g_search" id='g_search'>搜索</a>
+				</div>
+				<div class="config" id='showconfig'>请先选择商品类型或输入商品ID号</div>
+				<div class="body_main">
+					<ul>
+						<li class="l_left">
+							<p class="p_img"></p>
+							<p class="p_title">香港注册</p>
+							<p class="p_descri" >香港商标法是参照英国商标法制定的，与英国同属于英美...</p>
+						</li>
+						<li class="l_right">
+							<h3>香港商标注册申请代理服务</h3>
+							<h4>编码：<span id='bianma'>1018090</span></h4>
+							<h4>描述：<span id='miaoshu'>1018090</span></h4>
+							<div class="gd_choose">
+								<p>现价：<b id='xianjia'>￥3200.00</b>原价：<s id='yuanjia'>￥4200.00</s></p>
+								
+							</div>
+						</li>
+						<div class="clear"></div>
+					</ul>
+					<div class="bm_bottom">
+						<div class="bmb_left">赠送-优惠券：</div>
+						<div class="bmb_right">
+							<select class="s_option" id='money'>
+								<option value="0">——请选择优惠券面额——</option>
+								<option value="100">——￥100——</option>
+								<option value="200">——￥200——</option>
+								<option value="300">——￥300——</option>
+							</select>
+	
+					<select class="s_option"  id='use'>
+                	<option value='0'>——请选择优惠券类型——</option>
+                    <option value='1'>全场</option>
+                    <option value='2'>商标服务</option>
+                    <option value='3'>专利服务</option>
+                    <option value='4'>版权服务</option>
+                    <option value='5'>其他</option>
+                </select>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="foot"><a class="ok" href="javascript:;">确定</a></div>
+		</div>
+	 </div>
+	<div class="success_border">
+	 	<div class="success_window">
+			<div class="head">信息提示</div>
+			<div class="body" style="">
+				恭喜你，添加成功！
+			</div>
+			<div class="d_foot"><a class="d_ok" href="javascript:location.reload(true);"><b id="num">5</b>秒后自动返回</a></div>
+		</div>
+	</div>
+</div>
+<div id="bg"></div>
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}Calendar1.js"></script>
+
+<script type="text/javascript">
+$(function(){
+	$('#btn_save').click(function(){
+		 var returnVal = window.confirm("您确认保存吗", "标题");
+		  if(returnVal) {
+			  var saleId = $('#saleId').val();
+				  $.ajax({
+				         type: 'GET',
+				         url:"/Admin/Operation/ajaxCouponrelease_success", 
+				         data:{"saleId":saleId},
+				        
+				         success: function(result){
+				           // console.log(result)
+				           if(result ==1){
+				        	   window.location.href='/Admin/Operation/couponrelease_success?saleId='+saleId;
+				           }
+				           else{
+				        	   alert('操作失败');
+				           }
+				             
+				             
+				            }
+				        });
+		  }
+		
+		
+	});
+	
+	$("#text").focusin(function() { 
+        if($(this).val() =="请输入商品ID"){
+            $(this).val(""); 
+        } 
+    }); 
+
+    $("#text").focusout(function() {
+        if($(this).val() ==""){  
+            $(this).val("请输入商品ID"); 
+        } 
+
+    });
+    $("#select").change(function(){
+    	
+    	var sel = $(this).val();
+    	if(sel.length > 1){
+  		  $.ajax({
+		         type: 'GET',
+		         url:"/Admin/Operation/ajaxGetCouponFenlei", 
+		         data:{"type":sel},
+		        
+		         success: function(result){
+		        	 
+		           var obj = eval('(' + result + ')'); 
+		         
+		           if(1 == obj['success']){
+		        	  var list = obj['list'];
+		        	  // console.log(list)
+		        	  var html ='<option value="-1">请选择</option>';
+		        	  for(var o in list){  
+		        	         
+		        	       html += '<option value="'+list[o].goods_id+'">'+list[o].short_title+'</option>';
+		        	       
+		        	   }  
+			          $('#select_2').html(html)
+			          $('#bg').show();
+		           }
+		           else{
+		        	   alert('查询失败');
+		           } 
+		             
+		             
+		            }
+		        });
+    	}
+    });
+    
+    $("#g_search").click(function(){
+    	
+    	var sel = $('#select_2').val();
+    	
+    	if(sel.length > 1){
+  		  $.ajax({
+		         type: 'GET',
+		         url:"/Admin/Operation/ajaxGetCouponFenleiInfo", 
+		         data:{"goodsId":sel},
+		        
+		         success: function(result){
+		        	 
+		           var obj = eval('(' + result + ')'); 
+		        
+		           if(1 == obj['success']){
+		        	   
+		        	 
+		        	  var list = obj['list'];
+		        	  var description = subString(list['description'],50,'...')
+			          $(".p_title").html(list['short_title']);
+			          $(".p_descri").html(description);
+			          $(".l_right h3").html(list['short_title']);
+			          $("#miaoshu").html(description);
+			          $("#bianma").html(list['goods_code']);
+			          $("#yuanjia").html(list['old_price']);
+			          $("#xianjia").html(list['now_price']);
+			          $("#goods_id").attr('value',list['goods_id']);
+			          $(".body_main").show();
+		        	 
+					  $(".foot").show();
+					  $(".config").hide();
+					  $(".outline_border").css("height",$(".add_window").height());
+					  $(".bg").show();
+		           }
+		           else{
+		        	   alert('查询失败');
+		           } 
+		             
+		             
+		            }
+		        });
+    	}else{
+    		alert('请选择有效数据');
+    	}
+    });
+	//添加优惠商品弹框
+	$(".activity_list_title .add").click(function(){
+		$(".body_main").hide();
+		$(".foot").hide();
+		$(".config").show();
+		$("#bg").show();
+		$('#select').find("option[value=0]").attr("selected",true);
+		$("#text").val("请输入商品ID");
+		var filter_div = $("#filter_div");
+		var add_window = $(".outline_border");
+		add_window.show();
+		
+		if ($(document).height() < 500) {
+			$(window.parent.document).find("iframe").height(500);
+		}
+	
+		filter_div.css({
+			width: $(window).width(),
+			height: $(document).height(),
+			"position": "absolute",
+			top: 0,
+			left: 0,
+			"z-index": 10,
+			display: "block"
+		});
+		
+		add_window.css({
+			left: ($(window).width() - add_window.width()) / 2,
+			top: ($(window).height() - add_window.outerHeight()) / 2+$(window).scrollTop(),
+			display: "block"
+		});
+		add_window.css("height",$(".add_window").height());
+	});
+	//取消按钮（关闭弹出框）
+	$(".head .cancel").click(function(){
+		$("#filter_div").hide();
+		$("#bg").hide();
+		$(".outline_border").hide();
+		$('#select').find("option[value=0]").attr("selected",true);
+		$("#text").val("请输入商品ID");
+	});
+	//确定按钮
+	$(".ok").click(function(){
+		
+		var goods_id = $('#goods_id').val();
+		var money = $('#money').val();
+		var use = $('#use').val();
+		var saleId = $('#saleId').val();
+		if(use <= 0 || use.length < 0 ){
+			alert('请选择使用范围');
+			return false;
+		}
+		
+		if(money <= 0 || money.length < 0 ){
+			alert('请选择赠送优惠券金额');
+			return false;
+		}
+		
+		$.ajax({
+	         type: 'GET',
+	         url:"/Admin/Operation/ajaxAddCouponOne", 
+	         data:{"goodsId":goods_id,"money":money,"use":use,"saleId":saleId},
+	        
+	         success: function(result){
+	        	 
+	           var obj = eval('(' + result + ')'); 
+	        
+	           if(1 == obj['success']){
+	        		$(".outline_border").hide();
+	        		var filter_div = $("#filter_div");
+	        		var success_window = $(".success_border");
+	        		success_window.show();
+	        	
+	        		if ($(document).height() < 500) {
+	        			$(window.parent.document).find("iframe").height(500);
+	        		}
+	        		
+	        		success_window.css({
+	        			left: ($(window).width() - success_window.width()) / 2,
+	        			top: ($(window).height() - success_window.outerHeight()) / 2+$(window).scrollTop(),
+	        			display: "block"
+	        		});
+	        	 
+	        	 $('.bg').show();
+	        	 
+	        	 countDown(5);
+	        	
+	           }
+	           else{
+	        	   alert('添加失败');
+	           } 
+	             
+	             
+	            }
+	        });
+		
+		
+	
+	});
+    
+/* 	$(".body_top .g_search").click(function(){
+		var selectedVal = $('#select').find("option:selected").val();
+		var inputval=$("#text").val();
+		//alert(selectedVal);
+		//alert(inputval);
+		if(selectedVal=='0' || inputval=='请输入商品ID'){
+		//alert(inputval);
+			$(".body_main").hide();
+			$(".foot").hide();
+			$(".config").show();
+			$(".outline_border").css("height",$(".add_window").height());
+		}else{
+			$(".body_main").show();
+			$(".foot").show();
+			$(".config").hide();
+			$(".outline_border").css("height",$(".add_window").height());
+		}
+		
+	}); */
+	$(".success_window .d_ok").click(function(){
+		$("#filter_div").hide();
+		$(".success_border").hide();
+	});
+	
+});
+function subString(str, len, hasDot) 
+{ 
+    var newLength = 0; 
+    var newStr = ""; 
+    var chineseRegex = /[^\x00-\xff]/g; 
+    var singleChar = ""; 
+    var strLength = str.replace(chineseRegex,"**").length; 
+    for(var i = 0;i < strLength;i++) 
+    { 
+        singleChar = str.charAt(i).toString(); 
+        if(singleChar.match(chineseRegex) != null) 
+        { 
+            newLength += 2; 
+        }     
+        else 
+        { 
+            newLength++; 
+        } 
+        if(newLength > len) 
+        { 
+            break; 
+        } 
+        newStr += singleChar; 
+    } 
+
+    if(hasDot && strLength > len) 
+    { 
+        newStr += "..."; 
+    } 
+    return newStr; 
+}
+function countDown(secs) {    
+	 $('#num').html(secs); 
+	 if(--secs>0){    
+	     setTimeout("countDown("+secs+")",1000);    
+	 }    
+	 else{      
+		 location.reload(true);
+	     }    
+	 }   
+//菜单缩放
+  openclose=true;
+  function changeWin(){ 
+      parent.bodyFrame.cols =openclose?"1,*":"210,*";//这句话有报错
+      $(".indent").toggleClass('ind');
+      openclose=!openclose;
+  }
+  function del(id){
+	  var saleId = $('#saleId').val();
+	  var col = $('#colf00').text();
+	  var num = (parseInt(col)-parseInt(1));
+	
+	  if(id && saleId){
+		  var returnVal = window.confirm("您确认将这个活动商品删除吗", "标题");
+		  if(returnVal) {
+			  $.ajax({
+			         type: 'GET',
+			         url:"/Admin/Operation/delCoupon", 
+			         data:{"id":id,"saleId":saleId},
+			        
+			         success: function(result){
+			           // console.log(result)
+			           if(result ==1){
+				           $('#colf00').html(num);
+				           $('#show_'+id).remove();
+				           alert('操作成功');
+			           }
+			           else{
+			        	   alert('操作失败');
+			           }
+			             
+			             
+			            }
+			        });
+		  }
+	
+	  }else{
+		  alert('数据参数异常，请联系管理员');
+
+	  }
+  }
+  
+</script>
+</body>
+</html>

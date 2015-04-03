@@ -1,0 +1,51 @@
+<!--个人中心 安全中心 绑定手机 开始-->
+<include file="Public/header" />
+<link rel="stylesheet" type="text/css" href="{$Think.HOME_CSS}ucenter/bindphone.css">
+<script language="javascript" src="{$Think.HOME_JS}ucenter/bindphone.js"></script>
+<div class="container">
+	<div class="crumbs">
+    	您的位置：
+        <a href="{$Think.DOMAIN}">中细软服务商城</a>&gt;
+        <a href="{$Think.DOMAIN}Home/User/userhome">个人中心</a>&gt;
+        <a href="javascript:void()">安全设置</a>
+     
+    </div>
+	<include file="Public/ucenter_left"/>
+    <div class="members_right bindingphone  float-right">
+    	<p class="members_right_title">安全设置</p>
+        <div class="bindingphone_box">
+        	<h3>绑定手机</h3>
+            <table>
+            	<tr>
+                	<td class="text-right padding_top30">手机号：</td>
+                    <td style="padding-top:24px;"><input class="lineheight29" type="text" size="50" id="phone"/>  &nbsp;&nbsp;&nbsp;<input type="button" onclick="send_dx()" id="submitPhone" style="cursor:pointer; border:solid 1px #b9b9b9; height:29px; line-height:25px; padding:0px 5px; background-color:#f2f2f2;" value="点击获取验证码"><span id="success"><span><br /><span id="messagea">请输入11位手机号<span></td>
+                </tr>
+                <tr>
+                	<td class="text-right">验证码：</td>
+                    <td><input class="lineheight29" type="text" size="50" onblur="CheckYzm()" id="yzm"/><span id="messageb"></span></td>
+                </tr>
+                 <tr>
+                    <td class="text-right padding_bottom30"></td>
+                    <td class="text-left padding_bottom30"><input class="button_save" type="button" value="立即验证" onclick="return VerifiCation()" id="Yzbutton"></td>
+                </tr>    
+            </table>
+            <p>您可以享受有一下服务：</p>
+            <ul>
+            	<li>1.手机号码登录： 可直接使用 “手机号码” 登录到中细软超市网。</li>
+                <li>2.重要事件提醒： 进行（支付/跟踪）时，可以及时收到短信提醒。</li>
+                <li>3.手机找回密码： 忘记密码时，可以使用手机找回密码。</li>
+                <li>4.在您进行登录及修改密码等敏感操作时，未经您的授权的操作将不被允许</li>
+            </ul>
+        
+        
+        </div>
+    </div>
+    <div style="clear:both;"></div> 
+
+</div>
+<div class="verify_bg"  style="display:none" id="yzsuccess">
+	<div class="verify_box">恭喜您！验证成功！</br><span id="showtime"></span>  秒后自动关闭！</div>
+</div>
+
+<!--个人中心 安全中心 绑定手机 结束-->
+<include file="Public/footer" />

@@ -1,0 +1,214 @@
+<head>
+<link href="{$Think.ADMIN_CSS}style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}Calendar1.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}cart.js"></script>
+<script src="{$Think.ADMIN_JS}tab02.js" type="text/javascript"></script>
+<script src="{$Think.ADMIN_JS}ckeditor/ckeditor.js"></script>
+<script src="{$Think.ADMIN_JS}ckeditor/ckfinder.js"></script>
+<script type="text/javascript">
+    function showAddUser(){
+        $("#addUser").show();
+    }
+    function closeAddUser(){
+        $("#addUser").hide();
+    }
+    ck=0;
+    function CheckPhone(){
+        host = window.location.host;
+        var a = $("#mobile_phone").val();
+        if(a==""){
+            $("#message").html("<font style='color:red'>手机不能为空</font>");
+            return false;
+        }
+        var p = /^(((1[0-9]{1}))+\d{9})$/;
+        if(!p.test(a)){  
+            $("#message").html("<font style='color:red'>请输入有效的手机号！</font>");
+            return false;
+        }
+        $.ajax({
+            url:"http://"+host+"/Admin/User/checkphone",
+            type:"post",
+            data:{'phone':a},
+            success:function(e){
+                if(e==1){
+                    $("#message").html("<font style='color:red'>手机已经存在</font>");
+                    ck=0;
+                }else{
+                   $("#message").html("");
+                    ck=1;
+                }
+            }
+         })
+        
+    }
+    function checkUserName(){
+         var b = $("#user_name").val();
+         if(b==""){
+            $("#message").html("<font style='color:red'>用户名不能为空</font>");
+            return false;
+         }else{
+            
+             return true;
+         }
+    }
+    function CheckUser(){
+        var b = checkUserName();
+        var c = CheckPhone();
+        if(b==true && ck==1 && c!=false){
+        
+        }else{
+            return false;
+        }
+    }
+    function LookDetails(id){
+         host = window.location.host;
+         $.ajax({
+            url:"http://"+host+"/Admin/User/lookdetail",
+            type:"post",
+            data:{'user_id':id},
+            success:function(e){
+                src=JSON.parse(e);
+                $("#z_photo_add").attr("src",src.photo_add);
+                $("#z_login_num").val(src.visit_count);
+                $("#z_name").html(src.user_name);
+                $("#z_price").html(src.user_money);
+                $("#z_phone").html(src.mobile_phone);
+                $("#z_email").html(src.email);
+                $("#z_date").html(getLocalTime(src.reg_time));
+                if(src.is_hand==1){
+                    $("#z_status").html('业务员添加');
+                    $("#z_people").html('创建人：'+src.salesman);
+                }else{
+                    $("#z_status").html('自主注册');
+                    $("#z_people").html("");
+                }
+                $("#UserDetail").show();
+            }
+         })
+    }
+    function getLocalTime(nS) {       
+        //return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');   
+        var date = new Date(parseInt(nS) * 1000);
+        Y = date.getFullYear() + '-';
+        M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+        D = date.getDate() + ' ';
+        h = date.getHours() + ':';
+        m = date.getMinutes() + ':';
+        s = date.getSeconds(); 
+        return Y+M+D+h+m+s;
+    }   
+    function send_note(){
+           host = window.location.host;
+           var phone=$("#z_phone").html();
+           var num = $("#z_login_num").val();
+           if(num>0){
+               alert('该客户的信息已存在！');
+               return false;
+           }
+           if(phone!=""){
+                $.ajax({
+                    url:"http://"+host+"/Admin/User/send_notes",
+                    data:{'phone':phone},
+                    success:function(e){
+                        alert('发送成功！');
+                    }
+                })
+           }else{
+               alert('当前用户没有可联系的方式！');
+           }
+    }
+</script>
+</head>
+<div class="wapper">
+
+    <!--right_inner begin-->
+    <div class="wapper-right">
+    	<div class="right_inner">
+            <div class="path">您的位置：<a href="#">工作台</a>》<a href="#">会员管理</a>》<a href="#">会员列表</a></div>
+        <div class="search_dh">
+       <form action="usershow" method="get">
+                  <p class="jjss">
+                <span>关键词：</span><input name="keywords" type="text" placeholder ='请输入用户昵称、电子邮箱、手机号码进行模糊搜索' value="{$map['keywords']}" size="30" maxlength="20" onclick="javascript:if(this.value=='请输入文章标题、文章内容进行模糊查询')this.value='';">
+              <input type="submit" value="搜索">
+            </div>
+        	<a href="javascript:void(0)"><p class="tjyjyw" onclick="showAddUser()">添加会员</p></a>
+        	<table class="ddlc">
+            	<tr>
+                  <th>用户昵称</th>
+                  <th>电子邮箱</th>
+                  <th>手机号码</th>
+                  <th>注册时间</th>
+                  <th>最后登录时间</th>
+                </tr>
+                <foreach name="userinfo" item="val">
+                  <tr>
+                    <td><a href="javascript:void(0)" onclick="LookDetails({$val['user_id']})">{$val['user_name']}</a></td>
+                    <td>{$val['email']}</td>
+                    <td>{$val['mobile_phone']}<if condition="isset($val['mobile_phone']) && isset($val['bind_mobile'])">,</if>{$val['bind_mobile']}</td>
+                    <td><php>echo date('Y-m-d H:i:s',$val['reg_time'])</php></td>
+                    <td><php>if($val['last_login']!='0'){ echo date('Y-m-d H:i:s',$val['last_login']); }</php></td>
+                  </tr>
+                </foreach>
+            </table>
+            <div>{$page}</div>
+          </form>
+        </div>
+</div><!--wapper end-->
+</div>
+
+
+
+<!--adduser begin-->
+    		<div class="addmain" style="display:none" id="addUser">
+                 <h3 >添加会员<span class="guanbi"  onclick="closeAddUser()">X</span></h3>
+                 <form action="/Admin/User/saveuser" method="post" name="addddlc" onsubmit="return CheckUser()">
+        	<table class="lmgl">
+                        <tr>
+                    	<td><p><span style="color:red">*</span><span>用户昵称：</span><input name="user_name" type="text" value="" size="20" maxlength="20" id="user_name"></p></td>
+                        </tr>
+                	<tr>
+                    	<td><p><span style="color:red">&nbsp;</span><span>用户邮箱：</span><input name="email" type="text" value="" size="20" maxlength="20" id="email"></p></td>
+                        </tr>
+                        <tr>
+                    	<td><p><span style="color:red">*</span><span>用户手机：</span><input name="mobile_phone" type="text" value="" size="20" maxlength="20" id="mobile_phone" onblur="CheckPhone()"></p></td>
+                        </tr>
+                         <tr>
+                    	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="message"></span></td>
+                        </tr>
+            		<tr>
+                    	<td class="lmgl_qd"><input type="submit" value="提交" />
+                        <input type="button" value="关闭" onclick="closeAddUser()"/></td>
+                        </tr>
+                </table>
+                </form>
+                </div>
+<!--adduser end-->
+
+<!--add detail begin-->
+<div class="add detail" style="display:none" id="UserDetail">
+    	<div class="backcolor">
+        	<h3>会员详情<span class="guanbi">X</span></h3>
+            <div class="jb_info">
+            	<p><img src="" id="z_photo_add" height="100px" width="100px"/></p>
+                <div class="info">
+                	<p><span id="z_name"></span>&nbsp;&nbsp;<span class="dengji">V1</span></p>
+                    <p class="total_cost">总&nbsp;消&nbsp;费：<span class="total" id="z_price"></span></p>
+                    <input type="hidden" id="z_login_num"/>
+                    <p class="member_warn"><a href="javascript:void(0)" onclick="send_note(1)">会员信息提醒</a>&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                </div>
+            </div>
+            <div class="member_info">
+            	<ul>
+                    <li><span class="ddtj_name">手机号码：</span><font id="z_phone"></font></li>
+                    <li><span class="ddtj_name">电子邮箱：</span><font id="z_email"></font></li>
+                    <li><span class="ddtj_name">注册时间：</span><font id="z_date"></font></li>
+                    <li><span class="ddtj_name">会员来源：</span><font id="z_status"></font></li>
+                    <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ddtj_name" id="z_people"></span></li>
+                </ul>
+            </div>
+                
+           
+        </div>
+    </div>
+<!--add detail end-->

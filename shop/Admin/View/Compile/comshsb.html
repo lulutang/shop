@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>工作台</title>
+<link href="{$Think.ADMIN_CSS}s_style.css" rel="stylesheet" type="text/css">
+<link href="{$Think.ADMIN_CSS}global.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+</head>
+
+
+<body>
+  <div class="content_right">
+    <div class="indent"></div>
+    <div class="link_path">您所在的位置：<a href="javascript:void(0)">编修管理</a>&nbsp;>&nbsp;<a href="javascript:void(0)">编修报件</a></div>
+    <ul class="s_edit_tab clearfix">
+    <li><a href="/Admin/Compile/combxsh">编修审核<b></b></a></li>
+    <li><a href="/Admin/Compile/combxbj">编修报件<b></b></a></li>
+    <li><a href="/Admin/Compile/comxfsl">下发受理<b></b></a></li>
+    <li><a href="/Admin/Compile/comcsgg">初审公告<b></b></a></li>
+    <li><a href="/Admin/Compile/comzcxf">注册下发<b></b></a></li>
+    <li><a href="/Admin/Compile/comfwjs">服务结束<b></b></a></li>
+    <li class="s_red"><a href="/Admin/Compile/comshsb">审核失败</a></li>
+    </ul>
+    <div class="table_list casePay s" style="border:none;padding-top:49px;">
+      <div class="case_search" style="left:0">
+        <select onchange="searchSelectE()">
+          <option value="1">订单编号</option>
+          <option value="2">合同编号</option>
+          <option value="3">商标名称</option>
+          <option value="4">服务项目</option>
+          <option value="5">申请人名称</option>
+          <option value="6">申请人地址</option>
+          <option value="7">联系人</option>
+          <option value="8">联系电话</option>
+        </select>
+        <input type="text" class="input" placeholder="请输入订单编号"/>
+        <select><option>商标类型</option>
+            <foreach name='style' item='sty'>
+                <option value="{$sty}">{$sty}</option>
+            </foreach>
+        </select>
+        <select><option>支付时间</option><option>进入编修审核</option></select>
+        &nbsp;<input type="text" class="input_d" />
+        
+        <input name="input" type="submit" value="搜索" class="search_btn">
+      </div>
+      <table class="spffxx">
+        <tbody>
+          <tr>            
+            <th width="20%">合同编号</th>
+            <th width="30%">服务详情</th>
+            <th width="10%">编修状态</th>
+            <th width="20%">支付时间</th>
+            <th width="20%">编修审核时间<a href="javascript:void(0)"><b></b></a></th>
+          </tr>
+          <tr class="tr_bgc1">
+            <td><a href="editManage_BXBJ_detail.html">54353453453534</a></td>
+            <td>汉馥【33类】</td>
+            <td>编修报件</td>
+            <td>2015-01-09 15:12:27</td>
+            <td>2015-01-09 15:12:27</td>
+          </tr>
+          <tr class="">
+            <td><a href="editManage_BXBJ_detail.html">54353453453534</a></td>
+            <td>汉馥【33类】</td>
+            <td>编修报件</td>
+            <td>2015-01-09 15:12:27</td>
+            <td>2015-01-09 15:12:27</td>
+          </tr>
+          <tr class="tr_bgc1">
+            <td><a href="editManage_BXBJ_detail.html">54353453453534</a></td>
+            <td>汉馥【33类】</td>
+            <td>编修报件</td>
+            <td>2015-01-09 15:12:27</td>
+            <td>2015-01-09 15:12:27</td>
+          </tr>
+          <tr class="">
+            <td><a href="editManage_BXBJ_detail.html">54353453453534</a></td>
+            <td>汉馥【33类】</td>
+            <td>编修报件</td>
+            <td>2015-01-09 15:12:27</td>
+            <td>2015-01-09 15:12:27</td>
+          </tr>
+          <tr class="tr_bgc1">
+            <td><a href="editManage_BXBJ_detail.html">54353453453534</a></td>
+            <td>汉馥【33类】</td>
+            <td>编修报件</td>
+            <td>2015-01-09 15:12:27</td>
+            <td>2015-01-09 15:12:27</td>
+          </tr>
+          <tr class="">
+            <td><a href="editManage_BXBJ_detail.html">54353453453534</a></td>
+            <td>汉馥【33类】</td>
+            <td>编修报件</td>
+            <td>2015-01-09 15:12:27</td>
+            <td>2015-01-09 15:12:27</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>    
+    <div class="pageNew">
+      <input type="text" class="page_input" />&nbsp;条/页&nbsp;&nbsp;1/23页（225项）
+      <a href="javascript:void(0)" class="firstP"></a>
+      <a href="javascript:void(0)" class="preP"></a>
+      <a href="javascript:void(0)" class="cur">1</a><a href="javascript:void(0)">2</a>
+      <a href="javascript:void(0)">3</a><a href="javascript:void(0)">4</a>
+      <a href="javascript:void(0)">5</a><a href="javascript:void(0)">6</a>
+      <a href="javascript:void(0)">7</a><a href="javascript:void(0)">8</a>
+      <a href="javascript:void(0)">9</a><a href="javascript:void(0)">10</a>
+      <a href="javascript:void(0)" class="nestP"></a>
+      <a href="javascript:void(0)" class="lastP"></a>
+      第<input type="text" class="page_input" />页
+      <button>确 定</button>
+    </div>
+  </div>
+<script type="text/javascript"> 
+  //菜单缩放
+  openclose=true;
+  function changeWin(){ 
+      parent.bodyFrame.cols =openclose?"1,*":"210,*";//这句话有报错
+      $(".indent").toggleClass('ind');
+      openclose=!openclose;
+  }
+  function searchSelectE(){    
+    var selectedVal = $('.s .case_search select').find("option:selected").val();
+    var inputPObj = $('.s .case_search input.input');
+    if(selectedVal=='1'){
+        inputPObj.attr('placeholder','请输入订单编号');
+    }else if(selectedVal=='2'){
+        inputPObj.attr('placeholder','请输入合同号');
+    }else if(selectedVal=='3'){
+        inputPObj.attr('placeholder','请输入商标名称');
+    }else if(selectedVal=='4'){
+        inputPObj.attr('placeholder','请输入服务项目');
+    }else if(selectedVal=='5'){
+        inputPObj.attr('placeholder','请输入申请人名称');
+    }else if(selectedVal=='6'){
+        inputPObj.attr('placeholder','请输入申请人地址');
+    }else if(selectedVal=='7'){
+        inputPObj.attr('placeholder','请输入联系人');
+    }else if(selectedVal=='8'){
+        inputPObj.attr('placeholder','请输入联系电话');
+    }else{
+        inputPObj.attr('placeholder','请输入搜索关键字');
+    }
+  }
+  $(function(){
+    //列表标题排序
+    $(".casePay table.spffxx tr th a").bind("click",function(){
+      $(this).toggleClass("cur"); 
+    });
+  });
+
+</script>
+</body>

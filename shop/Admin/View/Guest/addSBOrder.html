@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>添加购物车商品</title>
+<link href="{$Think.ADMIN_CSS}global.css" rel="stylesheet" type="text/css">
+<link href="{$Think.ADMIN_CSS}m_style.css?a=<?php echo mt_rand(10000000,99999999);?>" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}guest.js?aa=<?php echo mt_rand(10000000,99999999);?>"></script>
+
+</head>
+
+<body>
+<div class="content_right addproducts">
+    <div id="indent" class="indent" onClick="changeWin()"></div>
+    <div class="link_path">您所在的位置：<a href="/index.php/Admin/Guest/lists">客官管理 </a>&nbsp;>&nbsp;<a href="javascript:void(0)">添加购物车商品</a></div>
+    <div class="addproducts_box">
+    	<div class="title"><span>{$user.truename}  {$user.mobile}</span> <a onclick="javascript:history.go(-1);">返回</a></div>
+        <div class="addproductsinfo">
+            <form id="sfrm" name="sfrm" action="/Admin/Guest/addMemOrder" method="post" >
+                <input type="hidden" id="typefrm" name="typefrm" value="" />
+                
+            <div class="filter01">
+                <select class="select130_30" name="oneType" id="oneType" onchange="addTwo(this.value)">
+                    <option selected="selected">==请选择==</option>
+                    <foreach name="oneType" item="vo" >
+                    <option value="{$vo.id}" <if condition="$oneTypeid eq $vo.id "> selected</if>  >{$vo.server_name}</option>
+                    </foreach>
+                </select>
+                <img src="{$Think.ADMIN_IMAGES}w_icon01.png" />
+                <select id="twoType" name="twoType" class="select130_30" onchange="addThree(this.value)">
+                	<option>==请选择==</option> 
+                </select>
+                <img src="{$Think.ADMIN_IMAGES}w_icon01.png" />
+                <select id="threeType" name="threeType" class="select130_30">
+                	<option>==请选择==</option>
+                </select>
+                <input class="btn_confirm" type="button" onclick="typeRrm()" value="确定" />
+            </div>
+            </form>
+               
+        
+        <form id="SBfrm" name="SBfrm" action="/Admin/Guest/addSBMemOrder" method="post" >
+            <input type="hidden" id="short_title" name="short_title" value="{$short_title}" />
+            <input type="hidden" id="cartId" name="cartId" value="{$cartId}" />
+            <input type="hidden" id="orderId" name="orderId" value="{$orderId}" />
+            <input type="hidden" id="uid" name="uid" value="{$uid}" />
+            
+            <div class="filter02"><span class="colf00">*</span>商标名称：<input class="text300" type="text" id="name" name="name"  value="请输入商标名称"    style="color:#ccc;" onFocus="javascript:this.style.color='#333';if(this.value=='请输入商标名称')this.value='';" onBlur="javascript:if(this.value==''){this.value='请输入商标名称';this.style.color='#ccc';}"  /></div>
+            <ul class="filter03">
+             <foreach name="bigtype" item="vo" >   
+                <li id="{$vo.cat_id}"><label><input type="hidden" value="false" class="i1"/><input type="hidden" class="i2" value="{$vo.cat_id}"/> {$vo.cat_name}</label></li>
+             </foreach>
+     
+            </ul>
+            <table class="filter04 hide" id="trademarklist">
+            	<tr>
+                    <th width="10%">商标类别</th>
+                    <th width="10%">商品价</th>
+                    <th width="10%">增项个数
+                        <a href="javascript:void(0)">
+                            <img src="{$Think.ADMIN_IMAGES}w_icon03.png" />
+                            <p>请选择商标类别，超过10个项目每项增收100元</p>
+                        </a>
+                    </th>
+                    <th width="10%">增项价</th>
+                    <th width="38%">商品/服务项目
+                        <a href="javascript:void(0)">
+                            <img src="{$Think.ADMIN_IMAGES}w_icon03.png" />
+                            <p>请输入商品/服务项目，按照如下格式输入<br>“1、肉；2、腌制，干制的肉；3、家禽（非活动）；4、非活水产品；5、蛋品；6、罐头制品；7、浓肉汤；8、卤肉；9、酱肉；10食用油；（截止）”</p>
+                        </a>
+                    </th>
+                    <th width="10%">服务价（元）</th>
+                    <th width="10%">操作</th>
+                </tr>
+                <!--<tr id="trademarklist_01">
+                    <td>01-日化用品</td>
+                    <td>￥1590.00</td>
+                    <td class="td3">0</td>
+                    <td class="td4">￥0.00</td>
+                    <td class="td5"><div style="max-height: 100px;overflow-x: auto;"></div></td>
+                    <td class="td6">￥1590.00</td>
+                    <td class="td7"><input type="hidden" value="01"/><a href="javascript:void(0)"><img src="{$Think.ADMIN_IMAGES}w_edit.png" style="margin: 0 5px;"/></a><a href="javascript:void(0)"><img src="{$Think.ADMIN_IMAGES}w_delete.png" style="margin: 0 5px;"/></a></td>
+                </tr>-->
+                <tr id="paymentid">
+                	<td class="payment" colspan="7">应付总额：<b>￥<span>1590</span>.00</b></td>
+                </tr>
+            </table>
+        	
+            <table class="filter05">
+            	<tr>
+                	<td class="text-right ver_top" width="20%">商标申请声明：</td>
+                    <td class="text-left">
+                    	<p><input type="checkbox" />集体商标  <input type="checkbox" />证明商标</p>
+                        <p><input type="checkbox" />以三维标志申请商标注册</p>
+                        <p><input type="checkbox" />以颜色组合申请商标注册</p>
+                        <p><input type="checkbox" />以声音标志申请商标注册</p>
+                        <p><input type="checkbox" />两个以上申请人共同申请注册同一商标</p>
+                        
+                    </td>
+                </tr>
+                <tr>
+                	<td class="text-right">要求优先权声明：</td>
+                    <td class="text-left"><input type="checkbox" />基于第一次申请的优先权  <input type="checkbox" />基于展会的优先权   <input type="checkbox" />优先权证明文件后补</td>
+                </tr>
+                <tr>
+                	<td class="text-right">申请/长出国家/地区：</td>
+                    <td class="text-left"><input class="text300" type="text" /></td>
+                </tr>
+                <tr>
+                	<td class="text-right">申请/展出日期：</td>
+                    <td class="text-left"><input class="text300" type="text" /></td>
+                </tr>
+                <tr>
+                	<td class="text-right">申请号：</td>
+                    <td class="text-left"><input class="text300" type="text" /></td>
+                </tr>
+                <tr>
+                	<td class="text-right">商标申请人：</td>
+                    <td class="text-left">
+                    	<input class="text300" type="text" />
+                    </td>
+                </tr>
+                <tr>
+                	<td class="text-right">商标申请人英文名：</td>
+                    <td class="text-left">
+                    	<input class="text300" type="text" />
+                    </td>
+                </tr>
+                <tr>
+                	<td class="text-right">申请人联系方式：</td>
+                    <td class="text-left">
+                    	<input class="text300" type="text" />
+                    </td>
+                </tr>
+                <tr>
+                	<td class="text-right">申请人身份证号：</td>
+                    <td class="text-left">
+                    	<input class="text300" type="text" />
+                    </td>
+                </tr>
+                <tr>
+                <td class="text-right">申请人地址：</td>
+                    <td class="text-left">
+                    	<input class="text300" type="text" />
+                    </td>
+                </tr>
+                <tr>
+               	  <td class="text-right ver_top"><span class="clof00">*</span>商标图样：</td>
+                    <td class="text-left"><img src="{$Think.ADMIN_IMAGES}w_icon02.png" /> <input name="" type="file"></td>
+                </tr>
+            </table>
+            
+        <div class="collect">
+        	<div><span class="wid01">服务商品：</span> <span class="wid02"><em class="em1">0</em>个</span></div>
+            <div><span class="wid01">共计：</span> <span class="wid02 colf00">￥<em class="em2">0</em>.00</span></div>
+        </div>    
+    </form>
+    </div>       
+</div>
+    <div class="btn">
+    	<input class="btn_confirm" type="button" value="保存" onclick="location.href='addProductsSuccess.html'"/> <input class="save_go" type="button" value="保存并继续添加" /> <input class="unsave" type="button" value="不保存返回" />
+    </div>
+    
+        
+    
+</div>
+<!--商标类别二级三级弹框开始-->
+<div class="alertW hide">
+    <div class="alertW_box">
+        <div class="alertw_box_title"><span class="span">第25类 服装鞋帽</span><input type="hidden" class="spanid" /><a class="close" href="javascript:void(0)" onclick="closeAlertWBtn()"></a></div>
+        <div class="alertW_box_content">
+            <div class="alertW_box_content_t">
+                <div class="alertW_box_content_left">
+                    <p class="alertW_box_name">群类</p>
+                    <input type="text" class="alertW_box_input" placeholder="请输入群组关键词"/>
+                    <div id="twoSBObjParent">
+
+                    </div>
+                </div>
+                <div class="alertW_box_content_right">
+                    <p class="alertW_box_name">类别</p>
+                    <input type="text" class="alertW_box_input" placeholder="请输入类别关键词"/>
+                    <div id="threeSBObjParent">
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="alertW_box_other">已选择群组<span class="span1">0</span>&nbsp;&nbsp;&nbsp;&nbsp;类别<span class="span2">0</span><input class="btn_confirm" type="button" value="确 认" style="float: right;font-size: 16px;height: 36px;line-height: 36px;width: 100px;" onclick="sureAlertWBtn()"></div>
+    </div>
+</div>
+<!--商标类别二级三级弹框开始-->
+
+<script type="text/javascript">
+//菜单缩放
+openclose=true;
+function changeWin(){ 
+      parent.bodyFrame.cols =openclose?"1,*":"210,*";//这句话有报错
+      $(".indent").toggleClass('ind');
+      openclose=!openclose;
+}
+//应付总额的计算，服务商品个数和总价的计算
+function paymentSumF(){
+    var paymentSumObj = $('.addproducts .addproducts_box .addproductsinfo .filter04 tr td.td6');
+    var paymentSum =0;
+    for (var i = 0; i < paymentSumObj.length; i++) {
+        paymentSum += parseInt(paymentSumObj.eq(i).html().substring(1));
+    };
+    //alert(paymentSum);
+    $("#paymentid").find("span").html(paymentSum);
+    $('.addproducts .addproducts_box .collect .wid02 .em1').html(paymentSumObj.length);//商品个数
+    $('.addproducts .addproducts_box .collect .wid02 .em2').html(paymentSum);//商品总价
+}
+function loadTwoSB(oneID){
+    
+    //根据一级的ID查询出来二级数据
+    if( oneID ){
+        $.ajax({
+            type: 'POST',
+            url:"/index.php/Admin/Guest/getTwoType", 
+            data:{"type":"getTwoType","oneID":oneID},
+
+            success: function( result ){
+                if( result ){
+                    
+                    var twoSBData = eval(result);
+                    var twoSBObj = $('<ul class="alertW_box_two" id="pid_'+oneID+'"></ul>');
+                    $('#twoSBObjParent').append(twoSBObj);
+                    if(twoSBData.length>0){
+                        //此一级下面有二级
+                        var twoSBhtml = '';
+                        for (var i=0; i < twoSBData.length; i++) {
+                            twoSBhtml += '<li onclick="checkThreeSB(' + twoSBData[i].item_id + ');" id="' + twoSBData[i].id + '"><a href="javascript:void(0)" title="' + twoSBData[i].name + '"><span class="s1">' + twoSBData[i].name + '</span><span class="s2"><i class="b1">0</i>/<i class="b2">' + twoSBData[i].childsum + '</i></span><b class="bs3"></b></a></li>';
+                        }
+                        //alert(twoSBhtml);
+                        twoSBObj.append($(twoSBhtml));
+                           
+                    }else{
+                        alert('此一级下面没有二级类别！');
+                    }  
+                }
+            }
+        });
+    }
+
+  
+}
+
+function checkThreeSB(twoID){
+    if( twoID ){
+        $.ajax({
+            type: 'POST',
+            url:"/index.php/Admin/Guest/checkThreeSB", 
+            data:{"type":"checkThreeSB","twoID":twoID},
+
+            success: function( result ){
+                
+                if( result ){
+                   // alert(result);
+                        $('.alertW_box_three').remove();
+                        var threeSBObj = $('<ul class="alertW_box_three" id="pid_'+twoID+'"></ul>');
+                        $('#threeSBObjParent').append(threeSBObj);
+                        var threeSBData = eval(result);
+                        
+                        var threeSBhtml = '';
+                        for (var i=0; i < threeSBData.length; i++) {
+                            threeSBhtml += '<li id="' + threeSBData[i].id + '"><a href="javascript:void(0)" title="' + threeSBData[i].name + '">' + threeSBData[i].name + '<b></b></a></li>';
+                        };
+                        //alert(threeSBhtml);
+                        threeSBObj.append($(threeSBhtml) );
+                }
+            }
+        });
+    }
+}
+
+//重新计算二级和三级的总个数。
+function allTwoAddThreeSum(){
+    //alertW_box_other span1 span2
+    var twoSumObj = $('.alertW_box_two .b1');
+    var twoSum =0;
+    for (var i = 0; i < twoSumObj.length; i++) {
+        //alert(twoSumObj.eq(i).html());
+        twoSum += parseInt(twoSumObj.eq(i).html());
+    };
+    //alert(twoSum);
+    $('.alertW_box_other .span2').html(twoSum);
+    var threeSumObj = $('.alertW_box_two').find('.threecheck');
+    $('.alertW_box_other .span1').html(threeSumObj.length);
+}
+
+//checkTwoSB();//弹窗里面二级加载过后的操作。
+function checkTwoSB(){
+    var threeSBData = 
+        [{id:2501001,name:'亚麻布服装',pid:2501},
+        {id:2501002,name:'背心式紧身衣',pid:2501},
+        {id:2501003,name:'亚麻布服装',pid:2501},
+        {id:2501004,name:'背心式紧身衣背心式紧身衣',pid:2501},
+        {id:2501005,name:'亚麻布服装',pid:2501},
+        {id:2501006,name:'背心式紧身衣背',pid:2501},
+        {id:2501007,name:'亚麻布服装',pid:2501},
+        {id:2501008,name:'背心式紧身衣背心式紧身衣',pid:2501},
+        {id:2501009,name:'亚麻布服装',pid:2501},
+        {id:2501010,name:'背心式紧身衣背',pid:2501},
+        {id:2501011,name:'背心式紧身衣背',pid:2501}],
+        threeSBPid = 2501;
+
+    
+    $('.alertW_box_two li').click(function(event){
+        var clickItem = event.target || event.srcElement;
+        //开始
+        $(this).parent().find('.cur').removeClass('cur');
+        threeSBObj.html('');//清空之前选中的二级的三级。
+        $(this).find('a').addClass('cur');
+        if(threeSBData.length>0){
+            //此二级下面有三级
+
+            threeSBObj.find('li').click(function(){                    
+                var curpidObj = $('#'+threeSBPid);
+                if($(this).find('a.check').length>0){
+                    //此三级当前是选中状态
+                    $(this).find('a').removeClass('check');
+                    //如果该二级下面的所有的三级均没有被选中，则设置该二级的方框为未选中状态。
+                    if($(this).parent().find('.check').length<=0){
+                        if(curpidObj.find('.cur').length>0&&curpidObj.find('.cur').find('.bs3.threecheck').length>0){
+                            curpidObj.find('.cur').find('.bs3').removeClass('threecheck');
+                        }
+                    }                    
+                }else{ 
+                    //此三级当前是未选中状态
+                    $(this).find('a').addClass('check');
+                    //判断此三级的二级的方框是否是选中状态。如果是，不变；如果不是，要改为选中状态
+                    if(( curpidObj.find('.cur').length) > 0 && ((curpidObj.find('.cur').find('.bs3.threecheck').length )<= 0 )){
+                        curpidObj.find('.cur').find('.bs3').addClass('threecheck');
+                    }
+                }
+                //此二级下，选中的三级的个数
+                curpidObj.find('.cur .b1').html($(this).parent().find('.check').length);
+                allTwoAddThreeSum();//重新计算二级和三级的总个数。
+           });
+        }else{
+            alert('此二级下面没有三级类别！');
+        }
+        //结束。下面是点击方框的操作
+        if(clickItem.nodeName.toLowerCase() === 'b'){ 
+            //alert('b');
+            //判断当前二级的方框是什么状态，如果是选中状态，再点击则将此二级下面的三级全部设为未选中状态。
+            //如果是未选中状态，再点击则将此二级下面的三级全部设为选中状态；
+            var curThreeObj = $("#pid_"+$(this).attr('id'));
+            if($(this).find('.threecheck').length>0){ 
+                //当前是选中状态      
+                $(this).find('.bs3').removeClass('threecheck');      
+                curThreeObj.find('a').removeClass('check');
+                $(this).find('.cur .b1').html('0');
+            }else{
+                //当前是未选中状态        
+                $(this).find('.bs3').addClass('threecheck');
+                curThreeObj.find('a').addClass('check');
+                $(this).find('.cur .b1').html(curThreeObj.find('li').length);
+            };
+            allTwoAddThreeSum();//重新计算二级和三级的总个数。
+        }
+    });
+}
+
+function closeAlertWBtn(){
+    $('.alertW').hide();
+    $('.alertW_box_other .span1').html('0');
+    $('.alertW_box_other .span2').html('0');
+    $('#twoSBObjParent').html('');
+    $('#threeSBObjParent').html('');
+    var curOneID = $('.alertw_box_title .spanid').val(),//一级ID
+        curOneIDObj = $('#'+curOneID);
+    checkboxNum--;
+    curOneIDObj.find('label').removeClass('checked');
+    curOneIDObj.find("input[type='hidden'].i1").val('false');
+}
+
+//确认按钮，同时回填显示选中的商标类别。
+function sureAlertWBtn(){
+    var threeSBSum = $('.alertW_box_other .span2').html();//三级个数
+    if(parseInt(threeSBSum)<=0){
+        alert('请选择商标类别！');
+        return false;
+    }
+    var oneSBID = $('.alertw_box_title .spanid').val(),//一级ID
+        oneSBhtml = $('.alertw_box_title .span').html(),//一级名称        
+        threeSBNames = "1、肉；2、腌制，干制的肉；3、家禽（非活动）；4、非活水产品；5、蛋品；6、罐头制品；7、浓肉汤；8、卤肉；9、酱肉；10食用油；（截止）";//三级内容集
+    //判断此个是否存在，是编辑后的确定还是新增时候的确定。
+    var trademarklistTrObj_old = $("#trademarklist_"+oneSBID),
+        trademarklistTrObj;
+        alert(trademarklistTrObj_old.length);
+    if(trademarklistTrObj_old.length>0){
+        trademarklistTrObj_old.html('');
+        trademarklistTrObj = trademarklistTrObj_old;
+    }else{
+        trademarklistTrObj = $('<tr id="trademarklist_'+oneSBID+'"></tr>');
+    }    
+    var td1Obj = $('<td>'+oneSBhtml+'</td>'),
+        td2Obj = $('<td>￥1590.00</td>'),
+        td3Obj = $('<td class="td3">0</td>'),
+        td4Obj = $('<td class="td4">￥0.00</td>'),
+        td5Obj = $('<td class="td5"><div style="max-height: 100px;overflow-x: auto;">'+threeSBNames+'</div></td>'),
+        td6Obj = $('<td class="td6">￥'+(parseInt(threeSBSum)-10)*100+1590+'.00</td>'),
+        td7EditObj = $('<a href="javascript:void(0)"><img src="{$Think.ADMIN_IMAGES}w_edit.png" style="margin: 0 5px;"/></a>').click(function(){
+            //编辑
+            var curid = oneSBID,
+                curidObj = $('#'+curid);
+            $('.alertw_box_title .span').html(oneSBhtml);
+            $('.alertw_box_title .spanid').val(curid);
+            $('.alertW').show();//打开弹窗
+            loadTwoSB(curid);//加载二级商标类型数据。
+        }),
+        td7DelObj = $('<a href="javascript:void(0)"><img src="{$Think.ADMIN_IMAGES}w_delete.png" style="margin: 0 5px;"/></a>').click(function(){
+            //删除
+            var curid = oneSBID,
+                curidObj = $('#'+curid);
+            $("#trademarklist_"+curid).remove();
+            paymentSumF(); 
+            checkboxNum--;
+            if(checkboxNum<=0){
+                $('#trademarklist').hide();
+            }
+            curidObj.find('label').removeClass('checked');
+            curidObj.find("input[type='hidden'].i1").val('false'); 
+        }),
+        td7Obj = $('<td class="td7"><input type="hidden" value="'+oneSBID+'"/></td>').append(td7EditObj).append(td7DelObj);
+    //trademarklistTrObj.append(td1Obj);
+    $("#paymentid").before(trademarklistTrObj);
+    trademarklistTrObj.append(td1Obj).append(td2Obj).append(td3Obj).append(td4Obj).append(td5Obj).append(td6Obj).append(td7Obj);
+    if(parseInt(threeSBSum)>10){
+        td3Obj.html(parseInt(threeSBSum)-10);
+        td4Obj.html("￥"+parseInt(td3Obj.html())*100+".00");
+        td6Obj.html("￥"+parseInt(parseInt(parseInt(td3Obj.html())*100)+1590)+".00");
+    }else{
+        td3Obj.html('0');
+        td4Obj.html('￥0.00');
+        td6Obj.html("￥1590.00");
+    }    
+    paymentSumF(); 
+    $('.alertW').hide();//关闭弹窗
+    $('.alertW_box_other .span1').html('0');
+    $('.alertW_box_other .span2').html('0');
+    $('#twoSBObjParent').html('');
+    $('#threeSBObjParent').html('');
+    $('#trademarklist').show();
+}
+var checkboxNum = 0;//一级选中项的条数。
+function addTrademarklist(){
+   
+    var curObj = $(".addproducts .addproducts_box .addproductsinfo .filter03 li");    
+    curObj.click(function(event){
+        //alert(checkboxNum);        
+        var clickItem = event.target || event.srcElement;
+        if(clickItem.nodeName.toLowerCase() === 'label'){ 
+            var checkedNum = $(this).text(); //一级商标类别的名称
+            var checkedID = $(this).find("input[type='hidden'].i2").val();//一级商标类别的ID
+            var curCheck = $(this).find("input[type='hidden'].i1");//该一级商标类别是否被选中
+            //alert(checkedID);            
+            if(curCheck.val()==='true'){
+                //去掉
+                //alert('true');
+                $("#trademarklist_"+checkedID).remove();
+                paymentSumF(); 
+                checkboxNum--;
+                if(checkboxNum<=0){
+                    $('#trademarklist').hide();
+                }
+                $(this).find('label').removeClass('checked');
+                curCheck.val('false');
+            }else{
+                ////选上       
+                //alert('false');
+                $(this).find('label').addClass('checked');
+                $('.alertw_box_title .span').html(checkedNum);
+                $('.alertw_box_title .spanid').val(checkedID);
+                $('.alertW').show();//打开弹窗
+                loadTwoSB(checkedID);//加载二级商标类型数据。
+                checkboxNum++;                
+                curCheck.val('true');
+             }                 
+        }        
+        //alert(checkboxNum);
+    });    
+}
+$(function(){
+    addTrademarklist(); 
+});
+</script>
+</body>

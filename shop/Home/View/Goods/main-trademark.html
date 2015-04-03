@@ -1,0 +1,182 @@
+
+<include file="Public/header" />
+<script src="{$Think.HOME_JS}jquery.min.js"></script>
+<script src="{$Think.HOME_JS}jquery-1.7.2.js"></script>
+<script src="{$Think.HOME_JS}shop-goodslist.js"></script>
+<!--主要内容 开-->
+<div class="mainbody" style=" margin-bottom:90px;">
+    <div class="container">
+    	<!--消息提示 开-->
+        	<p class="main-info">
+            	您的位置：<a href="/Home/Index/index">中细软服务商城</a><a href="">>
+                    <foreach name="common" item="cm" key="k" >
+                        <if condition=" $k eq $server_parentid">
+                            {$common[$k]}
+                        </if>
+                    </foreach></a>
+            </p>
+        <!--消息提示 结束-->
+        
+    	
+    	<div class="bigbox">
+            <!--子菜单开始-->
+            <div class="main-submenu" id="JS_fixed_goods_cat">
+			<foreach name="common" item="cm" key="k" > 
+                            <if condition=" $k eq $server_parentid">
+                                <div class="submenu-title">
+
+                                                {$common[$k]}
+
+                                </div>
+                            </if>
+			
+			</foreach>
+                <ul class="submenubox">
+				<volist name="arr_id" id="aid">
+                	<li>
+                    	<a href="/Home/Goods/goods_list/id/{$server_parentid}#goods_{$aid['id']}">
+                            <h3 style="color:red; font-size: 14px;">
+                        	{$aid['server_name']}
+                        </h3>
+                        </a>
+						
+                        <p><volist name="goods_list" id="gls">
+					<volist name="gls" id="gs">
+					<if condition="$aid['id'] eq $gs['s_id']">
+                                            <a href="/Home/Goods/gooddetails/id/{$gs['goods_id']}">{$gs['short_title']}</a>&nbsp;&nbsp; 
+                          </if>
+							</volist>
+						</volist>
+							
+                        </p>
+						
+                    </li>
+					</volist>
+                </ul>
+            </div>
+            <!--子菜单结束-->
+            
+            <!--列表开始-->
+            <div class="main-list" id="goods_table">
+				<volist name="arr_id" id="aid">
+                                 
+						<div class="main-list-title" name="goods_{$aid['id']}" id="goods_{$aid['id']}">
+							{$aid['server_name']}
+						</div>
+						
+				
+				
+				<ul class="main-listbox" id="main{$aid['id']}">
+				
+				<volist name="goods_list" id="gls">
+					<volist name="gls" id="gs">
+							<if condition="$aid['id'] eq $gs['s_id']">
+                	<li  onmouseover="reveal({$gs['goods_id']})" onmouseout="hide({$gs['goods_id']})">
+                    	<div class="country-img">
+                        	<a href="/Home/Goods/gooddetails/id/{$gs['goods_id']}"><img src="{$current|current_cdn_img}{$gs['thumb']}" width="235" height='134'></a>
+                        </div>
+                        <h3>{$gs['short_title']}</h3>
+                        <p>
+						<if condition="!empty($gs['description'])">
+                                                    <php>
+                                                        $str_l = mb_strlen($gs['description'], 'UTF-8') . "";
+                                                        if($str_l > 25)
+                                                        {
+                                                            echo mb_substr($gs['description'],0,25,'utf-8').'...';
+                                                        }else{
+                                                            echo mb_substr($gs['description'],0,25,'utf-8');
+                                                        }
+                                                    </php>
+						</if>
+							
+                        </p>
+                        <h4>￥{$gs['now_price']}</h4>
+                        <div class="country-button" style="display:none" id="g_id{$gs['goods_id']}">
+                        	<a class="button04 button" href="/Home/Goods/gooddetails/id/{$gs['goods_id']}">立即购买</a>
+                        </div>
+                    </li>
+					</if>
+					</volist>
+				</volist>
+			
+                    
+                   
+                </ul>
+				<if condition="12 lt $aid['more']">
+					<div class="more-button" id="end{$aid['id']}">
+						<a href="javascript:;" ><img src="{$Think.HOME_IMAGES}button07.png" onclick="more({$aid['id']})"></a>
+					</div>
+				</if>
+				</volist>
+                
+               
+            
+              </div>
+               
+            <!--列表结束-->
+        </div>  
+     <script>/*__APP__/Home/Goods/ajax_goods*/
+		function more(server_id)
+		{
+			jq.ajax({
+				url:"/Home/Goods/ajax_goods",
+				type:"get",
+				data:{"server_id":server_id},
+				success:function(e)
+				{
+					//alert(e);
+					jq("#main"+server_id).html(e);
+					jq("#end"+server_id).hide();
+				}
+			})
+		}
+	 </script>
+        
+        
+        
+    </div>    
+</div>
+<!--主要内容 结束-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<include file="Public/footer" />
+
+
+<!--<div id="leftsead">
+	<ul>
+		<li><a id="top_btn" class="topimg" href="javascript:;">TOP</a></li>
+		<volist name="arr_id" id="aid">                	
+        <li><a href="/Home/Goods/goods_list/id/{$server_parentid}#goods_{$aid['id']}">{$aid['server_name']}</a></li>
+		</volist>
+		<li><a id="" class="kefuimg" href="javascript:;" onclick="line('{$realm}')">在线客服</a></li>
+	</ul>
+</div>--><!--leftsead end-->
+
+<script type="text/javascript">
+/*$(document).ready(function(){
+
+	$("#top_btn").click(function(){if(scroll=="off") return;$("html,body").animate({scrollTop: 0}, 600);});
+
+});*/
+function line(linren)
+{
+	window.open ('http://webchart.gbicom.cn/LR/Chatpre.aspx?id=KJI83683011&lng=cn&e='+linren,'newwindow','height=648,width=1052,top=150,left=500,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');//写成一行
+}
+</script>
+</body>
+</html>

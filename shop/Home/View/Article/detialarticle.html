@@ -1,0 +1,36 @@
+<include file="Public/header" />
+<head>
+    <link rel="stylesheet" type="text/css" href="{$Think.HOME_CSS}help.css">
+    
+</head>
+<!--帮助中心 如何开发票 开始-->
+<div class="container">
+	<div class="crumbs">
+    	消费者帮助中心&gt;
+        <a href="javascript:void(0)">{$article.title}</a>
+    </div>
+    <div class="left_nav">
+        <foreach name="data" item="art" key='k'>
+    	<h2>{$art['catename']}</h2>
+        <php>unset($art['catename']);</php>
+        <ul>
+           
+            <foreach name="art.article" item="v">
+        	<li><a href="/Home/Article/detialarticle/id/{$v.art_id}" class="<?php if($v['art_id']==$_GET['id'])echo 'jh';?>">{$v.short_title}</a></li>
+            </foreach>
+        </ul> 
+        </foreach>
+    </div>
+    
+    <div class="help_right invoice">
+    	<p class="invoice_title">{$article.title}</p>
+        <div class="invoice_box"><?php echo $article['content'];?></div>
+    
+    </div>
+    <div style="clear:both;"></div> 
+
+</div>
+
+<!--帮助中心 如何开发票 结束-->
+
+<include file="Public/footer" />

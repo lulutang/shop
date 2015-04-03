@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>赠品促销</title>
+<link href="{$Think.ADMIN_CSS}global.css" rel="stylesheet" type="text/css">
+<link href="{$Think.ADMIN_CSS}g_style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+    <div class="content_right">
+    <div class="indent"></div>
+    <div class="link_path">您所在的位置：<a href="javascript:void(0)">运营管理</a>&nbsp;>&nbsp;<a href="javascript:void(0)">赠品促销</a></div>
+    <div class="promotion"><b>赠品促销</b></div>
+	<div class="directions">说明：赠品促销，请谨慎设置相关参数！</div>
+    <div class="table_list casePay s" style="border:none;padding-top:49px;">
+      <div class="case_search">商品类型：
+        <select class="goodstype">
+          <option value="1">---全部类型---</option>
+          <option value="2">商标设计</option>
+          <option value="3">商标转让</option>
+		  <option value="4">商标注册</option>
+		  <option value="5">专利申请</option>
+		  <option value="6">专利转让</option>
+		  <option value="7">套餐</option>
+        </select>
+        <a class="commonsettings" href="giftSet.html">赠品促销通用设置</a>
+      </div>
+      <table class="spffxx">
+          <tr>
+			<th width="13%"><input type="checkbox" id="chk_all"/>&nbsp;全选</th>		  
+            <th width="5%">序列</th>
+            <th width="21%">商品展示</th>
+            <th width="21%">商品ID</th>
+            <th width="21%">商品名称</th>
+			<th>商品价格</th>
+          </tr>
+          <tr class="tr_bgc2">
+            <td><input id="chk_list_1" type="checkbox" onclick="setselect();"/></td>
+            <td>1</td>
+            <td><a href="#"><img class="image" src="../images/o_logo.png" width="100px" height="100px"></img></a></td>
+            <td>123456789</td>
+            <td>国内商标注册</td>
+			<td>￥&nbsp;1590.00</td>
+          </tr>
+		  <tr class="tr_bgc1">
+            <td><input id="chk_list_1" type="checkbox" onclick="setselect();"/></td>
+            <td>2</td>
+            <td><a href="#"><img class="image" src="../images/o_logo.png" width="100px" height="100px"></img></a></td>
+            <td>123456789</td>
+            <td>国内商标注册</td>
+			<td>￥&nbsp;1590.00</td>
+            
+          </tr>
+		  <tr class="tr_bgc2">
+            <td><input id="chk_list_1" type="checkbox" onclick="setselect();"/></td>
+            <td>3</td>
+            <td><a href="#"><img class="image" src="../images/o_logo.png" width="100px" height="100px"></img></a></td>
+            <td>123456789</td>
+            <td>国内商标注册</td>
+			<td>￥&nbsp;1590.00</td>
+          </tr>
+		  <tr class="tr_bgc1">
+            <td><input id="chk_list_1" type="checkbox" onclick="setselect();"/></td>
+            <td>4</td>
+            <td><a href="#"><img class="image" src="../images/o_logo.png" width="100px" height="100px"></img></a></td>
+            <td>123456789</td>
+            <td>国内商标注册</td>
+			<td>￥&nbsp;1590.00</td>
+          </tr>
+		  <tr class="tr_bgc2">
+            <td><input id="chk_list_1" type="checkbox" onclick="setselect();"/></td>
+            <td>5</td>
+            <td><a href="#"><img class="image" src="../images/o_logo.png" width="100px" height="100px"></img></a></td>
+            <td>123456789</td>
+            <td>国内商标注册</td>
+			<td>￥&nbsp;1590.00</td>
+          </tr>
+      </table>
+    </div>    
+    <div class="pageNew">
+      <input type="text" class="page_input" />&nbsp;条/页&nbsp;&nbsp;1/23页（225项）
+      <a href="javascript:void(0)" class="firstP"></a>
+      <a href="javascript:void(0)" class="preP"></a>
+      <a href="javascript:void(0)" class="cur">1</a><a href="javascript:void(0)">2</a>
+      <a href="javascript:void(0)">3</a><a href="javascript:void(0)">4</a>
+      <a href="javascript:void(0)">5</a><a href="javascript:void(0)">6</a>
+      <a href="javascript:void(0)">7</a><a href="javascript:void(0)">8</a>
+      <a href="javascript:void(0)">9</a><a href="javascript:void(0)">10</a>
+      <a href="javascript:void(0)" class="nestP"></a>
+      <a href="javascript:void(0)" class="lastP"></a>
+      第<input type="text" class="page_input" />页
+      <button>确 定</button>
+    </div>
+	<div class="foot">
+		<p>亲，您已选中了&nbsp;<span>0</span>&nbsp;件商品</p>
+		<p><button class="sumit">提交</button></p>
+	</div>
+  </div>
+
+</body>
+</html>
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script type="text/javascript"> 
+  //菜单缩放
+  openclose=true;
+  function changeWin(){ 
+      parent.bodyFrame.cols =openclose?"1,*":"210,*";//这句话有报错
+      $(".indent").toggleClass('ind');
+      openclose=!openclose;
+  }
+  $(function(){
+    //列表标题排序
+    $(".casePay table.spffxx tr th").bind("click",function(){
+      $(this).find('a').toggleClass("cur"); 
+    });
+	//全选
+	$("#chk_all").bind("click",function(){
+			if($(this).attr("checked")){
+				$(":checkbox").attr("checked", true);
+				$(".foot span").html($("input[type='checkbox'][id='chk_list_1']").length);
+			}else{
+				$(":checkbox").attr("checked", false);
+				$(".foot span").html(0);
+			}
+		});
+		$(".sumit").click(function(){
+			window.location.href="giftSet.html";
+		});
+	
+  });
+	
+	function setselect(){
+		var sum=$("input[type='checkbox'][id='chk_list_1']").length;
+		var checkedsum=$("input[type='checkbox'][id='chk_list_1']:checked").length;
+		$(".foot span").html(checkedsum);
+		if(sum==checkedsum){
+			$("#chk_all").attr("checked", true);
+		}else{
+			$("#chk_all").attr("checked", false);
+		}
+	}
+	
+</script>

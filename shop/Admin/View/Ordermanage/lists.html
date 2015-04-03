@@ -1,0 +1,151 @@
+<link href="{$Think.ADMIN_CSS}style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}xial.min.js"></script>
+
+<script>
+   function showAdd(){
+       $("#statusid").attr("value",'');
+       $("#orderstatus").attr("value",'');
+       $("#desc").attr("value",'');
+       $('.addmain').show();
+   }
+   function hideAdd(){
+       $('.addmain').hide();
+   }
+   
+   var Host = 'http://'+window.location.host+'/';
+
+   function showEdit(id){
+       $("#o_id").attr("value",id);
+       //异步获取数据
+       $.ajax({
+         type: 'POST',
+         url: Host+'index.php/Admin/Ordermanage/getOneInfo' ,
+         data: "type=showEdit&id="+id, 
+        
+         success: function(result){
+              //  alert(result);
+                var obj = eval('(' + result + ')'); 
+                $("#statusid").attr("value",obj.statusid);
+                $("#orderstatus").attr("value",obj.orderstatus);
+                $("#desc").attr("value",obj.desc);
+            }
+        });
+       
+       $('.addmain').show();
+   }
+   
+   function sendNewOrder( id ){
+       var order_id = $("#ool_"+id).html();
+       $.ajax({
+         type: 'POST',
+         url: Host+'index.php/Admin/Ordermanage/getOneInfo' ,
+         data: "type=sendNewOrder&id="+id+"&orderid="+order_id, 
+        
+         success: function(result){
+              //  alert(result); 
+            }
+        });
+   }
+   
+   function spanhide(id){
+    $("#span"+id).hide();
+    $("#input"+id).show();
+  }
+  function inputhide(id){
+      var orderid = $("#input"+id).val();
+      if(orderid==0){
+        alert('序列从1开始');
+        return false;
+      }
+      $.ajax({
+        url:"__URL__/editorderid",
+        type:'post',
+        data:{"orderid":orderid,"id":id},
+        success:function(msg){
+          if(msg!=0){
+            $("#span"+id).html(msg);
+          }
+          
+        }
+    })
+    $("#span"+id).show();
+    $("#input"+id).hide();
+  }
+
+   function checkserver(){
+
+       if($("#orderstatus").val() == '') {
+        alert('订单流程名称不能为空哦！');
+        return false;
+       } else {
+          $('#addddlc').submit(); 
+      //  return true;
+       }
+   }
+</script>
+<div class="wapper">
+    
+    
+    <!--right_inner begin-->
+    <div class="wapper-right">
+    	<div class="right_inner">
+    		<div class="path">您的位置：<a href="#">工作台</a>》<a href="#">业务管理</a>》<a href="__URL__/lists">订单流程管理</a></div>
+        	<p class="tjyjyw"><a href="javascript:showAdd();">添加订单流程</a></p>
+        	<table class="ddlc">
+            	<tr>
+<!--                  <th>订单流程ID</th>-->
+                  <th>订单流程名称</th>
+                  <th>序列</th>
+                  <th>订单流程描述</th>
+                  <th>操作</th>
+                </tr>
+                <?php 
+                if( $data ){
+                    foreach( $data as $value){
+                      
+                ?>
+                <tr>
+<!--                  <td><?php echo $value['statusid'];?></td>-->
+                  <td><?php echo $value['orderstatus'];?></td>
+                  <td onclick="spanhide(<?php echo $value['id'];?>)"><span  id="span<?php echo $value['id'];?>"> <?php echo $value['orderid'];?> </span><input type="text" value="<?php echo $value['orderid'];?>" style="height:20px;width:40px;display:none" onblur="inputhide(<?php echo $value['id'];?>)" id="input<?php echo $value['id'];?>"></td>
+
+<!--                  <td id="ool_<?php echo $value['id'];?>" title="请双击修改" ondblclick="javascript:contentEditable=true;" onblur="sendNewOrder(<?php echo $value['id'];?>);"> <?php echo $value['orderid'];?> </td>-->
+                  <td><?php echo $value['desc'];?></td>
+                  <td><a href="javascript:showEdit(<?php echo $value['id']; ?>);">修改</a>&nbsp;&nbsp;<a onclick="{if(confirm('确认是否要删除?')){this.document.formname.submit();return true;}return false;}" href="__URL__/delOrder/id/<?php echo $value['id'];?>">删除</a></td>
+                </tr>
+                <?php }} ?>
+                
+            </table>
+            <!--addmain begin-->
+            <div class="addmain" style="display: none;">
+            <h3>添加订单流程<span class="guanbi" onclick="hideAdd();">X</span></h3>
+            <form action="/index.php/Admin/Ordermanage/addOrder" method="post" name="addddlc" id="addddlc">
+                <input type="hidden" value="" id="o_id" name="o_id" />
+                <table class="tjxglc">
+<!--                	<tr><td><span>订单流程ID</span><input id="statusid" name="statusid" type="text" value="" size="20" maxlength="20" placeholder="请输入以OS开头的流程ID" /></td></tr>-->
+                    <tr><td><span class="tixing">*</span><span>订单流程名称:</span><input id="orderstatus" name="orderstatus" type="text" value="" size="20" maxlength="20" placeholder="请输入订单流程名称" /></td></tr>
+                    <tr><td><span class="tixing"></span><span>订单流程描述:</span>
+                  <textarea id="desc" name="desc" cols="20" rows="3"></textarea></td></tr>
+                    <tr><td class="add_editddlc"><input name="sub" onclick="checkserver()" type="button" value="提交" />
+                <input name="colse" onclick="hideAdd();" type="button" value="关闭" /></td></tr>
+                </table>
+                <!--<p><span>订单流程ID</span><input id="statusid" name="statusid" type="text" value="" size="20" maxlength="20" placeholder="请输入以OS开头的流程ID" /></p>
+                <p><span>订单流程名称</span><input id="orderstatus" name="orderstatus" type="text" value="" size="20" maxlength="20" placeholder="请输入订单流程名称" /></p>
+                <p><span>业务类型描述</span>
+                  <textarea id="desc" name="desc" cols="20" rows="3"></textarea>
+                </p>
+                <input name="sub" type="submit" value="提交" />
+                <input name="colse" onclick="hideAdd();" type="button" value="关闭" />-->
+            </form>
+    	</div>
+    	<!--addmain end-->
+        </div>
+   
+    
+    </div>
+    <!--wapper-right end-->
+</div><!--wapper end-->
+<!--头部 开始-->
+</body>
+</html>

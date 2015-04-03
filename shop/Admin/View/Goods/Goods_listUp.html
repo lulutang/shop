@@ -1,0 +1,355 @@
+<link href="{$Think.ADMIN_CSS}style.css" rel="stylesheet" type="text/css">
+<div class="wapper">
+<div class="path_xgsp">业务类型：<a href='#'>{$Goods_desting["now_servername"]}</a></div>
+<form method="post" action="/Admin/Goods/Addorup" enctype="multipart/form-data" onsubmit="return Goodsadd()">
+    <div class="wapper-right">
+    <div class="right_inner">
+    	<div class="path"></div>
+    <div  id="main_goods" style="display:block">
+		<div class="jbxx">
+           	  <h4>基本信息</h4>
+              <table>
+              	<tr>
+                	<td  class="spbm"><span class="xing">*</span><span class="add_name">商品编码&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</span><input type="text" name="goods_code" value="{$Goods_desting['goods_code']}" id="sgoods_code" onblur="godcode()"></td>
+                    <td><span class="xing">*</span><span class="add_name">商品简称:</span><input type="text" name="short_title" value="{$Goods_desting['short_title']}" id="sshort_title"></td>
+                </tr>
+                <tr>
+                	<td colspan="2" class="spxxqc" ><span  class="xing">*</span><span class="add_name">商品详细全称:</span><input type="text" name="titl" value="{$Goods_desting['title']}" id="stitle"></td>
+                </tr>
+                <tr>
+                	<td colspan="2"><span class="xing">*</span><span class="add_name">商品标题描述:</span><textarea name="description" rows="3" id="sdescription"  maxlength="75">{$Goods_desting['description']}</textarea></td>
+                </tr>
+                <tr>
+                	<td colspan="2"  class="jiage"><span>*</span>现价:&nbsp;&nbsp;<input type="text" name="now_price" value="{$Goods_desting['now_price']}" id="snow_price">&nbsp;&nbsp;元&nbsp;&nbsp;&nbsp;&nbsp;原价:<input type="text" name="old_price" value="{$Goods_desting['old_price']}">元&nbsp;&nbsp;&nbsp;&nbsp;成本价:<input type="text" name="cost" value="{$Goods_desting['cost']}">元&nbsp;&nbsp; 默认销售量:<input type="text" name ="number" value="{$Goods_desting['number']}" pattern="[0-9]{0,}">&nbsp;&nbsp;个&nbsp;&nbsp;
+					
+					
+					
+					
+					</td>
+                </tr>
+                <tr>
+                	<td  colspan="2" class="tjj" id="tjj"><span></span>
+					<label>
+					<if condition="$Goods_desting['status'] eq 1">
+					<input type="checkbox" name="status" value="1" checked="checked">立即上架
+					<else/>
+					<input type="checkbox" name="status" value="1">立即上架
+					</if>
+					</label>
+                	  <label>
+						<if condition="$Goods_desting['is_index'] eq 1">
+						<input type="checkbox" name="is_index" value="1" checked="checked">首页推广
+						<else/>
+						<input type="checkbox" name="is_index" value="1">首页推广
+						</if>
+					</label>
+                	
+                	  <label>
+                	   <if condition="$Goods_desting['is_hot'] eq 1">
+						<input type="checkbox" name="is_hot" value="1" checked="checked">热门推荐
+						<else/>
+						<input type="checkbox" name="is_hot" value="1">热门推荐
+						</if>
+					</label>
+                	  
+                	  <label>
+                	    <if condition="$Goods_desting['is_gift'] eq 1">
+						<input type="checkbox" name="is_gift" value="1" checked="checked">赠品商品
+						<else/>
+						<input type="checkbox" name="is_gift" value="1">赠品商品
+						</if>
+					</label>
+					 <label>
+                	    <if condition="$Goods_desting['is_limit'] eq 1">
+						<input type="checkbox" name="is_lim" value="1" id="is" checked onclick='is_limito(this)'/>
+                	    是否限购
+						<else/>
+						<input type="checkbox" name="is_lim" value="1" id="is" onclick='is_limito(this)'/>
+                	    是否限购
+						</if>
+					</label>
+					<label>
+						<if condition="$Goods_desting['is_limit'] eq 1">
+						<font id="splim">&nbsp;&nbsp;限购个数:<input type="text" name="limit_num" value="{$Goods_desting['limit_num']}" id="slimit_num" pattern="[0-9]{0,}" style="width:80px"/>&nbsp;&nbsp;</font>
+					<else/>
+						<font id="splim" style="display:none">&nbsp;&nbsp;限购个数:<input type="text" name="limit_num" value="{$Goods_desting['limit_num']}" id="slimit_num" pattern="[0-9]{0,}" style="width:80px"/>&nbsp;&nbsp;</font>
+					</if>
+					</label>
+                	
+              	  </td>
+                </tr>
+              </table>     
+         </div>
+            <div class="shop_pic">
+                	<h4>商品图片</h4>
+                    <ul>
+                    	<li class="slt">
+                        	<p>
+							<span class="preview" id="preview1">
+							<img id="imghead1" src="{$current|current_cdn_img}{$Goods_desting['thumb']}" width=120 height=96>
+							</span>
+							</p>
+                           <input type="file" onchange="previewImage(this ,1)" name="thumb" accept="image/*"/>
+                        </li>
+                        <li>
+                        	<p>
+							<span class="preview" id="preview2"><img id="imghead2" src="{$current|current_cdn_img}{$Goods_desting['goods_pic']}" width=300 height=190></span>
+							</p>
+							<input type="file" onchange="previewImage(this ,2)" name="goods_pic" accept="image/*"/>
+                        </li>
+                        <div class="clear"></div>
+                    </ul>
+                </div>
+
+               <div class="spjs">
+                	<div class="tab1" id="tab1">
+		  	<div class="menu">
+		  	<ul>
+			<li id="one1" onclick="setTab(1)" style="background-color:#C4C4C4">商品介绍</li>
+			<li id="one2" onclick="setTab(2)">攻略问答</li>
+			<li id="one3" onclick="setTab(3)">成功案例</li>
+			</ul>
+		  </div>
+		  	<div class="menudiv">
+			  <div id="con1" height="300">
+        	  	  <p><textarea name="content" onchange="aa()">{$Goods_desting['content']}</textarea></p>
+        	  </div>
+			  <div id="con2" style="display:none;">
+        		  <p><textarea name="answer" rows="5" cols="10">{$Goods_desting['answer']}</textarea></p>
+        	  </div>
+			  <div id="con3" style="display:none;">
+        	  	  <p><textarea name="success" rows="5" cols="10">{$Goods_desting['success']}</textarea></p>
+        	  </div>
+		  </div>
+		  </div>
+                </div>
+                <div class="anniu" align="center">
+                	<input type="submit"  value="保存">
+					<input type="hidden" name="goods_id" value="{$Goods_desting['goods_id']}">
+					<input type="hidden" name="attrID_val" value="{$attrID_val}">
+					<input type="hidden" name="Attr_count" value="{$Attr_count}">
+                </div>
+        
+        </div>
+
+        </div>
+		
+    <!--right_inner end-->
+    </div><!--wapper-right end-->
+	</form>
+</div><!--wapper end-->
+
+<!--头部 开始-->
+</body>
+</html>
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script src="{$Think.ADMIN_JS}ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}Calendar1.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}cart.js"></script>
+<script src="{$Think.ADMIN_JS}tab02.js" type="text/javascript"></script>
+<script src="{$Think.ADMIN_JS}ckeditor/ckeditor.js"></script>
+<script src="{$Think.ADMIN_JS}ckeditor/ckfinder.js"></script>
+<style type="text/css">
+.preview{width:500px;height:300px;overflow:hidden;}
+
+#imghead1{filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=image);}
+#imghead2{filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=image);}
+</style>
+<script>
+    function godcode()
+    {
+        var code = $("#sgoods_code").val();
+         var p = {$Goods_desting['goods_id']};
+         $.ajax({
+                    url:"/Admin/Goods/Codeno",
+                    type:"get",
+                    data:{"code":code,"pid":p},
+                    success:function(e){
+                       var o = eval("("+e+")");
+                       if(o["data"] == '@')
+                       {
+                         alert("编码已存在"); 
+                         $("#sgoods_code").val("");
+                       }
+                    }
+                });
+              
+    }
+	function Goodsadd()
+	{
+		var code = $("#sgoods_code").val();
+		var short_title = $("#sshort_title").val();
+		var title = $("#stitle").val();
+		var descript = $("#sdescription").val();
+                if(parseInt(descript.length) > parseInt(75))
+                {
+                    alert("商品描述不能超过75个字");
+                    return false;
+                }
+		var now_price = $("#snow_price").val();
+		var old_price = $("#sold_price").val();
+                var thumbs = $("#imghead1").attr("src");
+                var pic = $("#imghead2").attr("src");
+                var t='';
+                var p='';
+		if(parseInt(now_price) > parseInt(old_price))
+		{
+			alert("现价不能大于原价");
+			return false;
+		}
+		if(code.length == 0 || short_title.length == 0 || title.length == 0 || descript.length == 0 || now_price.length == 0)
+		{
+                        alert("请将带有*好的填写完成");
+			return false;
+		}else{
+                     return true;
+		}
+	}
+	function aa(){
+		alert(11);
+		$(".cke_dialog_background_cover").hide();
+	}
+</script>
+<script type="text/javascript">
+ //是否限量
+	function is_limito(num)
+	{
+		var is_limitnum = $(num).attr("checked");
+		if(is_limitnum == "checked")
+		{
+			$("#splim").show();
+		}else {
+			$("#splim").hide();
+			$("#slimit_num").val("");
+		}
+		
+	}
+ 
+                //图片上传预览    IE是用了滤镜。
+        function previewImage(file , id)
+        {
+          var MAXWIDTH  = 500;
+          var MAXHEIGHT = 200;
+          var div = document.getElementById('preview'+id);
+          if (file.files && file.files[0])
+          {
+              if(id == 1)
+			  {
+			    div.innerHTML ='<img id=imghead'+id+' width=120 height=96>';
+			  }
+			  if(id == 2){
+				div.innerHTML ='<img id=imghead'+id+' width=300 height=190>';
+			  }
+              var img = document.getElementById('imghead'+id);
+              img.onload = function(){
+                var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+                img.width  =  rect.width;
+                img.height =  rect.height;
+//                 img.style.marginLeft = rect.left+'px';
+                img.style.marginTop = rect.top+'px';
+              }
+              var reader = new FileReader();
+              reader.onload = function(evt){
+                  if(evt.target.result . substring(5 , evt.target.result.indexOf("/")) != 'image'){
+                    alert("不是图片请选择图片格式");
+                } 
+                  img.src = evt.target.result;
+              }
+              reader.readAsDataURL(file.files[0]);
+          }
+          else //兼容IE
+          {
+            var sFilter='filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src="';
+            file.select();
+            var src = document.selection.createRange().text;
+            div.innerHTML = '<img id=imghead'+id+'>';
+            var img = document.getElementById('imghead'+id);
+            img.filters.item('DXImageTransform.Microsoft.AlphaImageLoader').src = src;
+            var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+            status =('rect:'+rect.top+','+rect.left+','+rect.width+','+rect.height);
+            div.innerHTML = "<div id=divhead style='width:"+rect.width+"px;height:"+rect.height+"px;margin-top:"+rect.top+"px;"+sFilter+src+"\"'></div>";
+          }
+        }
+        function clacImgZoomParam( maxWidth, maxHeight, width, height ){
+            var param = {top:0, left:0, width:width, height:height};
+            if( width>maxWidth || height>maxHeight )
+            {
+                rateWidth = width / maxWidth;
+                rateHeight = height / maxHeight;
+                 
+                if( rateWidth > rateHeight )
+                {
+                    param.width =  maxWidth;
+                    param.height = Math.round(height / rateWidth);
+                }else
+                {
+                    param.width = Math.round(width / rateHeight);
+                    param.height = maxHeight;
+                }
+            }
+             
+            param.left = Math.round((maxWidth - param.width) / 2);
+            param.top = Math.round((maxHeight - param.height) / 2);
+            return param;
+        }
+</script> 
+<script>
+CKEDITOR.replace( 'content', {
+        filebrowserBrowseUrl        : '{$Think.ADMIN_JS}ckfinder/ckfinder.html',
+        filebrowserImageBrowseUrl   : '{$Think.ADMIN_JS}ckfinder/ckfinder.html?Type=Images',
+        filebrowserFlashBrowseUrl   : '{$Think.ADMIN_JS}ckfinder/ckfinder.html?Type=Flash',
+        filebrowserUploadUrl		: '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+        filebrowserImageUploadUrl   : '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
+        filebrowserFlashUploadUrl   : '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
+    });
+CKEDITOR.replace( 'answer', {
+        filebrowserBrowseUrl        : '{$Think.ADMIN_JS}ckfinder/ckfinder.html',
+        filebrowserImageBrowseUrl   : '{$Think.ADMIN_JS}ckfinder/ckfinder.html?Type=Images',
+        filebrowserFlashBrowseUrl   : '{$Think.ADMIN_JS}ckfinder/ckfinder.html?Type=Flash',
+        filebrowserUploadUrl		: '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+        filebrowserImageUploadUrl   : '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
+        filebrowserFlashUploadUrl   : '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
+    });
+CKEDITOR.replace( 'success', {
+        filebrowserBrowseUrl        : '{$Think.ADMIN_JS}ckfinder/ckfinder.html',
+        filebrowserImageBrowseUrl   : '{$Think.ADMIN_JS}ckfinder/ckfinder.html?Type=Images',
+        filebrowserFlashBrowseUrl   : '{$Think.ADMIN_JS}ckfinder/ckfinder.html?Type=Flash',
+        filebrowserUploadUrl		: '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+        filebrowserImageUploadUrl   : '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
+        filebrowserFlashUploadUrl   : '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
+    });
+</script>
+<script>
+	function setTab(num)
+	{
+		if(num == 1)
+		{
+			$("#con1").show();
+			$("#con2").hide();
+			$("#con3").hide();
+			$("#one1").attr("style" , "background-color:#C4C4C4;");
+			$("#one2").removeAttr("style");
+			$("#one3").removeAttr("style");
+
+		}else if(num ==2)
+		{
+			$("#con1").hide();
+			$("#con2").show();
+			$("#con3").hide();
+			$("#one2").attr("style" , "background-color:#C4C4C4;");
+			$("#one1").removeAttr("style");
+			$("#one3").removeAttr("style");
+		}else if(num ==3)
+		{
+			$("#con1").hide();
+			$("#con2").hide();
+			$("#con3").show();
+			$("#one3").attr("style" , "background-color:#C4C4C4;");
+			$("#one1").removeAttr("style");
+			$("#one2").removeAttr("style");
+		}
+	}
+	
+</script>
+
+

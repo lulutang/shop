@@ -1,0 +1,443 @@
+<link href="{$Think.ADMIN_CSS}style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}cart.js"></script>
+<!--<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript" src="xial.js"></script>-->
+
+<script>
+    function showAddRole(){
+     //   $(":input[type=text]").attr('value','');
+    //    $("#remark").val('');
+        $('#addrole').show();
+    }
+    function hideshow(){
+        $('#addrole').hide();
+    }
+    function setMember( rid ){
+        $('#role_id').val(rid);
+        if( rid ){
+            $.ajax({
+               url:"__URL__/getSetMember",
+               type:'post',
+               data:{"type":"setMember","rid":rid},
+               success:function(result){
+                 //  alert(result);
+                   if( result ){
+                        var obj = eval('(' + result + ')'); 
+                        $('#rrname').val(obj.name);
+                        $('#rremark').val(obj.remark);
+                        
+                        $('#curmember').empty();
+                        if(obj.role_user){
+                          //  $('#curmember').append('<option selected="selected">当前角色所有人</option>');
+                            for( var i=0; i< obj.role_user.length;i++ ){
+                                $('#curmember').append('<option id='+obj.role_user[i].user_id+' value='+obj.role_user[i].user_id+' > '+obj.role_user[i].truename+'</option>');
+                            }
+                        } 
+                         
+                        $('#membersel').empty();
+                        if(obj.member){
+                         //   $('#membersel').append('<option selected="selected">所有管理员</option>');
+                        // alert(obj.member.length);
+                            for( var j=0; j< obj.member.length;j++ ){
+                                $('#membersel').append('<option id='+obj.member[j].id+' value='+obj.member[j].id+' > '+obj.member[j].truename+'</option>');
+                            }
+                        } 
+
+                    }
+                }
+            });
+        }
+        $('#setmember').show();
+    }
+    
+    function addrolemem(){
+        
+        var rid = $('#role_id').val();
+        
+        var ids = '';
+        $("#membersel").find("option:selected").each(function (){
+                var vv = $(this).text();   
+                $('#curmember').append('<option id='+$(this).val()+' value='+$(this).val()+' > '+vv+'</option>');    
+                $(this).remove();
+                ids +=  $(this).val()+',';
+           });
+        //根据id执行更新数据库操作； 
+        if( rid ){
+            $.ajax({
+               url:"__URL__/addRoleMem",
+               type:'post',
+               data:{"type":"addRoleMem","rid":rid,"ids":ids},
+               success:function(result){
+//                   if(result==='1'){
+//                     //  alert('移除成功！');
+//                   }else{
+//                     //  alert('移除失败！');
+//                   }
+               }
+           });
+       }
+
+    }
+    
+    function delrolemem(){
+        res = $("#curmember").find("option:selected").val();
+        
+        var rid = $('#role_id').val();
+        
+        var ids = '';
+        $("#curmember").find("option:selected").each(function (){
+                var vv = $(this).text();   
+                $('#membersel').append('<option id='+$(this).val()+' value='+$(this).val()+' > '+vv+'</option>');    
+                $(this).remove();
+                ids +=  $(this).val()+',';
+           });
+        //根据id执行更新数据库操作； 
+        if( rid ){
+            $.ajax({
+               url:"__URL__/delRoleMem",
+               type:'post',
+               data:{"type":"delRoleMem","rid":rid,"ids":ids},
+               success:function(result){
+//                   if(result==='1'){
+//                   //    alert('移除成功！');
+//                   }else{
+//                   //    alert('移除失败！');
+//                   }
+               }
+           });
+       }
+    }
+    
+    function delRole(rid){
+        if( rid ){
+            $.ajax({
+               url:"__URL__/DelRole",
+               type:'post',
+               data:{"type":"delRole","rid":rid},
+               success:function(result){
+                   if( result ==='1' ){ alert('删除成功！'); window.location.reload();}
+               }
+           }); 
+        }
+    }
+    
+    function hidesetMember(){
+        $('#setmember').hide();
+    }
+    function editRole(rid){
+        if( rid ){
+            $.ajax({
+               url:"__URL__/getRoleInfo",
+               type:'post',
+               data:{"type":"getRoleInfo","rid":rid},
+               success:function(result){
+                   if( result ){
+                        var obj = eval('(' + result + ')'); 
+                        
+                        $("#rid").attr("value",obj.role_id);
+                        $("#name").attr("value",obj.name);
+                        $("#remark").attr("value",obj.remark);
+                        if(obj.status=='1') $("#status").attr("checked",true);
+                        //①清空所有权限设置
+                  //      $(":input[type=checkbox]").attr('value','');
+                        //②付权限
+                        if(obj.priv){
+                            for( var i=0; i < obj.priv.length; i++ ){
+
+                                var chk = $("[name ='Son["+obj.priv[i].role_id+"][]']:checkbox");
+                           //     console.log(chk[0].checked);return;
+
+                                $("#sson"+obj.priv[i].priv_id).attr("checked",true);
+
+    //                            alert($("input[type='checkbox']:checked").length);
+                                var num = 0;
+                                for( var j=0 ; j < chk.length ; j++ ){
+    //                                alert(j);
+    //                                alert(chk[j].checked);
+                                    if( chk[j].checked == true ){ 
+                                        num++;
+                                    }
+                                }
+                               // alert(num);
+                             //   var ss = $("input[name='Son["+obj.priv[i].role_id+"][]']:checked").length;
+                             // alert(ss);
+                                if(num == chk.length ){
+                                    $("#Son["+obj.priv[i].role_id+"]").attr("checked",true);
+                                }
+                            }
+                        }
+                    }
+                   $('#addrole').show(); 
+               }
+           });
+        }
+    }
+    function selAll(){  
+        if ($("#All").attr("checked")) {  
+            $(":checkbox").attr("checked", true);  
+        } else {  
+            $(":checkbox").attr("checked", false);  
+        }  
+    } 
+    function changeRoleStatus(status){
+       
+        var s = '';
+        $('input[name="role_id"]:checked').each(function(){
+//            alert($(this).val());
+          s+=$(this).val()+',';
+        }); 
+        
+        //根据id执行更新数据库操作； 
+        if( s ){
+            $.ajax({
+               url:"__URL__/changeRoleStatus",
+               type:'post',
+               data:{"type":"changeRoleStatus","id":s,"status":status},
+               success:function(result){
+                  if( result ==='1'){
+                      alert('操作成功！');
+                      location.reload();
+                  }
+                  $(":checkbox").attr("checked", false);  
+               }
+           });
+        }
+    }
+    
+    function outOPtion(){
+       // alert('dfd');
+         $("#menu_xl02").slideDown("slow"); 
+    }
+    
+    
+    function checkData(){
+
+       if($("#name").val() == '') {
+        alert('角色名称不能为空哦！');
+        return false;
+       } else {
+          $('#addform').submit(); 
+      //  return true;
+       }
+   }
+    
+</script>
+<div class="wapper">
+
+    
+    <div class="wapper-right">
+    <div class="right_inner">
+    	<div class="path">您的位置：<a href="/index.php/Admin/Index/main">工作台</a>》<a href="/index.php/Admin/User/roleinfo">系统管理</a>》<a href="/index.php/Admin/User/roleinfo">角色管理</a></div>
+<!--        <div class="search_dh">
+            <form action="" method="post" name="search" target="_blank">
+                    <div class="jjss">
+                    	角色名称：<input name="keywords" type="text" onclick="javascript:this.value='';" value="请输入商品编码、简称、全称、描述进行查询" size="30" maxlength="20" />
+                    </div>
+                    
+		     <div class="search_btn"><input name="input" type="submit" value="搜索" /></div>      
+            </form>
+        </div>-->
+        <div class="clear"></div>
+       	<div class="operation">
+        	        	<a href="javascript:showAddRole();"><div class="tisp">添加角色
+        	             
+        	
+                                    </div></a>
+                    <div id="systembox02">
+                        <script>
+                        $(document).click(function(){
+                            if($(".menu_xl02").css('display')=='block'){
+                                $(".menu_xl02").hide();
+                            }
+                        });
+                        </script>   
+                    <div id="systembtn02" class="systembtn02">
+                        <a href="javascript:outOPtion();" class="abtn"><span>批量操作</span></a>
+                        <div id="menu_xl02" class="menu_xl02" >
+                          <dl>
+                             <dt><a  href="javascript:changeRoleStatus('1')" >批量启用</a></dt>
+                          </dl>
+                          <dl>
+                             <dt><a  href="javascript:changeRoleStatus('0')" >批量不启用</a></dt>
+                          </dl>
+
+                        </div>
+                    </div>
+
+                </div>
+		<div class="clear"></div>
+        </div>
+        <div class="neir">
+        <table class="ddlc jsgl">
+        	<tr>
+            	<th  class="col_01">
+                    <label>
+                        <input type="checkbox" id='All' onclick="selAll()"/>
+                	</label></th>
+                <th class="col_02">序号</th>
+                <th  class="col_03">角色名称</th>
+                <th  class="col_04">角色描述</th>
+                <th  class="col_05">状态</th>
+                <th  class="col_06">操作</th>
+            </tr>
+            <?php
+            if( $roleinfo ){
+                foreach( $roleinfo as $value ){
+            ?>
+            <tr>
+           	<td><label>
+                          <input type="checkbox" id="role_id" name="role_id" value="<?php echo $value['role_id'];?>"/>
+                	</label></td>
+                <td><?php echo $value['role_id'];?></td>
+                <td><?php echo $value['name'];?></td>
+                <td><?php echo $value['remark'];?></td>
+                <?php if( $value['status']==='0' ){ ?>
+                <td  class="cunp"> 存盘 </td>
+                <?php } ?>
+                 <?php if( $value['status']==='1' ){ ?>
+                <td  class="qiyong"> 启用 </td>
+                <?php } ?>
+                <?php if( $value['status']==='2' ){ ?>
+                <td  class="tingy"> 停用 </td>
+                 <?php } ?>
+                 <td class="pic_op"><a href="javascript:setMember(<?php echo $value['role_id'];?>)">设置员工组</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:editRole(<?php echo $value['role_id'];?>);">修改</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:delRole(<?php echo $value['role_id'];?>)">删除</a></td>
+            </tr>
+            <?php }} ?>
+        </table>
+    </div>	
+        <!--table end-->
+        </div>
+    <!--right_inner end-->
+    <!--添加角色 开始-->
+    <div id="addrole" class="add role" style="display:none;" >
+    	<div class="backcolor">
+          <script>
+            function selectAll(id){
+             var checklist = document.getElementsByName("Son["+id+"][]");
+            // alert(checklist.length);
+            if(document.getElementById("Son["+id+"]").checked){
+
+               for(var i=0;i<checklist.length;i++)
+               {
+                  checklist[i].checked = true;
+               }
+             
+            }else{
+              for(var j=0;j<checklist.length;j++)
+              {
+                 checklist[j].checked = false;
+              }
+             }
+            }
+          </script>
+       	  <h3>添加角色<span class="guanbi" onclick="hideshow();">X</span></h3>
+          <form action="__URL__/addrole" method="post" id="addform" name="addform">
+          <div class="role_con">
+              <input type="hidden" id="rid" name="rid" value="" />
+          	<table>
+            	<tr>
+                	<td class="role_name"><span>*</span>&nbsp;&nbsp;角色名称:</td>
+                        <td><input type="text" id="name" name="name" value=""/></td>
+                </tr>
+                <tr>
+                	<td class="role_name"><span>&nbsp;</span>&nbsp;&nbsp;角色描述:</td>
+                    <td><textarea rows="3" id="remark" name="remark"></textarea></td>
+                </tr>
+                <tr>
+                	<td>&nbsp;</td>
+                    <td><input type="checkbox" id='status' name="status" />启用</td>
+                </tr>
+                <tr>
+                	<td colspan="2"><h4>权限设置</h4></td>
+                </tr>
+                <?php 
+                    if( $menus){
+                        foreach( $menus as $value){
+                ?>
+                <tr>
+                	<td colspan="2">
+                    	<dl>
+                            
+                            <dt class="role_on"><input type="checkbox" id="Son[<?php echo $value['id'];?>]"  onclick="selectAll(<?php echo $value['id'];?>)" /><?php echo $value['mname'];?></dt>
+                            <?php 
+                                if( $value['son']){
+                                    foreach( $value['son'] as $val){
+                            ?>
+                            <dd>&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" value="<?php echo $val['id'];?>"  id="sson<?php echo $val['id'];?>" name="Son[<?php echo $value['id'];?>][]" /><?php echo $val['mname'];?></dd>
+                            <?php }} ?>
+                        </dl>
+                    </td> 
+                </tr>
+                <?php }}?>
+                <tr>
+                    <td colspan="2" class="qd"><input type="button" onclick="checkData()" name="save" value="保存">&nbsp;&nbsp;<input onclick="hideshow();" type="button" name="save" value="关闭"></td> 
+                </tr>
+            </table>
+          </div>
+       	 
+          </form>
+        </div>
+    </div>
+    
+    <!--添加角色 结束-->
+    <!--角色信息 开始-->
+    <div id="setmember" class="add role"   style="display:none;">
+    	<div class="backcolor">
+           <form action="" method="post" id="subfrm" name="subfrm">
+       	  <h3>角色信息<span class="guanbi">X</span></h3>
+          <div class="role_con">
+              <input type="hidden" id="role_id" name="role_id" value="">
+       
+          	   <table class="jsgl_jsxx">
+          	
+            	<tr>
+                	<td class="role_name"><span>*</span>&nbsp;&nbsp;角色名称</td>
+                        <td><input id="rrname" name="rrname" value="" type="text"  readonly="readonly"/></td>
+                </tr>
+                <tr>
+                	<td class="role_name"><span>*</span>&nbsp;&nbsp;角色描述</td>
+                        <td><textarea id="rremark" name="rremark" rows="3" readonly="readonly" ></textarea></td>
+                </tr>
+                
+                <tr>
+                	<td colspan="2"><h4>员工角色设置</h4></td>
+                </tr>
+                <tr><td width="37%"><span>非当前角色员工</span></td><td><span>当前角色员工</span></td> </tr>
+                <tr>
+                	<td colspan="2">
+                    	<ul>
+                        	<li>
+                                 <select id="membersel" multiple="multiple" size="2" >
+                        	  
+                        	</select></li>
+                            <li class="pic">
+                                <a onclick="addrolemem();"><img src="{$Think.ADMIN_IMAGES}select_left.png" /></a>
+                            	<a onclick="delrolemem();"><img src="{$Think.ADMIN_IMAGES}select_right.png" /></a>
+                            </li>
+                            <li>
+                                <select id="curmember" multiple="multiple" size="2">
+                        	</select></li>
+                        </ul>
+                    </td> 
+                </tr>
+                
+                <tr>
+                	<td colspan="2" class="qd">
+<!--                            <input type="submit" name="save" value="保存">&nbsp;&nbsp;-->
+                            <input type="button" onclick="hidesetMember()" name="save" value="关闭"></td> 
+                </tr>
+            </table>
+          </div>
+       	  <p class="anniu">
+           	  
+          </p>
+           </form>
+        </div>
+    </div>
+    <!--角色信息 结束-->
+    </div><!--wapper-right end-->
+</div><!--wapper end-->
+<!--头部 开始-->
+</body>
+</html>

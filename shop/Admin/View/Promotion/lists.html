@@ -1,0 +1,849 @@
+<link href="{$Think.ADMIN_CSS}style.css" rel="stylesheet" type="text/css">
+<div class="wapper">
+    <!--right_inner begin-->
+    <div class="wapper-right">
+    	<div class="right_inner tcsp">
+    		<div class="path">您的位置：<a href="#">工作台</a>》<a href="#">商品服务管理</a>》<a href="#">单个商品促销管理</a></div>
+        	<form action="/Admin/Package/Package_list" method="get" name="search">
+			<div class="search">
+                	<div class="tcsp02_search"><p><span>套餐状态：</span>
+                                <select name="stat">
+						<option value=''>请选择</option>
+                                                <if condition="$map['stat'] eq 'status@0'">
+                                                    <option value="status@0" selected>待上架</option>
+                                                <else/>
+                                                    <option value="status@0">待上架</option>
+                                                </if>
+                                                <if condition="$map['stat'] eq 'status@1'">
+                                                    <option value="status@1" selected>已上架</option>
+                                                <else/>
+                                                     <option value="status@1">已上架</option>
+                                                </if>
+                                                <if condition="$map['stat'] eq 'status@2'">
+                                                    <option value="status@2" selected>已下架</option>
+                                                    <else/>
+                                                    <option value="status@2">已下架</option>
+                                                </if>
+                                                <if condition="$map['stat'] eq 'is_index@1'">
+                                                     <option value="is_index@1" selected>首页推广</option>
+                                                    <else/>
+                                                    <option value="is_index@1">首页推广</option>
+                                                </if>
+                                               <if condition="$map['stat'] eq 'is_hot@1'">
+                                                   <option value="is_hot@1" selected>热门推荐</option>
+                                                   <else/>
+                                                   <option value="is_hot@1">热门推荐</option>
+                                               </if>
+                                                
+					</select>
+                                <span>关键词：</span><input name="keywords" type="text" value="{$map['keyword']}" size="30" maxlength="20" placeholder="请输入套餐编码、套餐简称"/></p><!--请输入商品编码、简称、全称、描述进行查询-->
+					<input type="submit" value="搜索" />
+					</div>
+		     
+		  
+            </div>
+           
+
+				<div class="operation">
+        	<a href="javascript:;" onclick="Addpack()"><div class="tisp">添加套装</div></a>
+			<div id="systembox02">
+
+				<div id="systembtn02" class="systembtn02">
+					<a href="javascript:;" id="p" class="abtn" ><span>批量操作</span></a>
+
+					<div id="menu_xl02" class="menu_xl02">
+					  <dl>
+						 <dt><a href="javascript:;" onclick="Lot('status',1)">批量上架</a></dt>
+					  </dl>
+					  <dl>
+						 <dt><a href="javascript:;" onclick="Lot('status',2)">批量下架</a></dt>
+					  </dl>
+					  <dl>
+						 <dt><a href="javascript:;" onclick="Lot('del',0)">批量删除</a></dt>
+					  </dl>
+							
+					</div>
+
+				</div>
+
+			</div>
+
+
+
+
+
+            <table width="100%" align="left" class="ddlc tcsp">
+                <tr>
+                  <th class="col_01"><input name="input2" type="checkbox" value="" id="xutop" onclick="moreXU()"/></th>
+                  <th class="col_02">序号</th>
+                  <th class="col_03">套装编码</th>
+                  <th class="col_04">套装商品简称</th>
+                  <th class="col_05">现价</th>
+                  <th class="col_06">状态</th>
+                  <th class="col_07">套装促销时间</th>
+                  <th class="col_08">操作</th>
+                </tr>
+				<volist name="Package_arr" id="PA">
+                <tr class="regester">
+                  <td ><span class="col_01">
+                    <input name="list_child" type="checkbox" value="{$PA['package_id']}" />
+                  </span></td>
+                  <td >{$PA["package_id"]}</td>
+                  <td >{$PA["package_code"]}</td>
+                  <td >{$PA["short_title"]}</td>
+                  <td >￥{$PA["now_price"]}</td>
+                  <td >
+                    <if condition="$PA['endtime'] lt time()">
+                    已过期
+                    <else/>
+                                <if condition="$PA['status'] eq 1">
+				    <span class="dsj">已上架</span>
+				  </if>
+				   <if condition="$PA['status'] eq 0">
+				    <span class="bxs">待上架</span>
+				  </if>
+			          <if condition="$PA['status'] eq 2">
+				   <span class="sytg"> 已下架</span>
+				  </if>
+                    </if>
+				  
+		 </td>
+                  <td ><php>echo date("Y-m-d H:i:s",$PA["starttime"]);</php>&nbsp;&nbsp;至&nbsp;&nbsp;<php>echo date("Y-m-d H:i:s",$PA["endtime"]);</php></td>
+                  <td ><a title="添加商品" alt="添加商品" href="javascript:;"onclick="Goods_server('{$PA['package_id']}@{$PA['zuhe']}' , '{$PA['zuhe']}')"><img src="{$Think.ADMIN_IMAGES}1_03.png"></a>&nbsp;&nbsp;&nbsp;&nbsp;
+				  <a title="修改套餐" alt="修改套餐" href="javascript:;" onclick="UPpackage({$PA['package_id']})"><img src="{$Think.ADMIN_IMAGES}1_05.png"/></a>
+				  <a title="预览套餐" alt="预览套餐" href="javascript:;" onclick="TC_prover({$PA['package_id']})"><img src="{$Think.ADMIN_IMAGES}view.png"/></a>
+				  </td>
+                </tr>
+					<volist name="Goods_arr" id="GAR">
+					<if condition="$GAR['package_id'] eq $PA['package_id']">
+						<tr>
+						  <td>&nbsp;</td>
+						  <td>&nbsp;</td>
+						  <td>{$GAR["goods_code"]}</td>
+						  <td>{$GAR["short_title"]}</td>
+						  <td>￥{$GAR["now_price"]}</td>
+						  <td>
+                                                      <if condition="$GAR['status'] eq 1">
+                                                        <span class="dsj">已上架</span>
+                                                      </if>
+                                                  </td>
+						  <td ><php>echo date("Y-m-d ",$GAR["addtime"]);</php></td>
+						  <td ><a href="javascript:;" onclick="pack_Del({$GAR['goods_id']} , {$GAR['package_id']} , '{$PA['zuhe']}')"><img src="{$Think.ADMIN_IMAGES}1_07.png"/></a></td>
+						</tr>
+						</if>
+					</volist>
+				</volist>
+              </table>
+            <div class="page_ljd">
+			{$Pagesize}
+            	
+            </div>
+            <div class="clear"></div>
+		</div>
+    </form>
+        </div>
+    
+    </div>
+    <!--第一步 开始-->
+<!--新添加div包含全部添加-->
+<div id="up">
+ <form action="/Admin/Package/upORadd" method="post" name="tjtc_second" enctype="multipart/form-data" onsubmit="return Packagesub()">
+    <div class="add suit" style="display:none" id="Addone">
+    	<div class="backcolor">
+    		<h3>添加套餐<a style="float:right;" href='javascript:;' onclick="Addhide('one')">x</a></h3>
+        	
+            <div class="guides"><ul>
+        	<li class="guide guide_first guide_cur">1.选择商品服务</li>
+			<p><a href="javascript:;" onclick="Goods_server('@' , '')">选择商品服务</a></p>
+			<li class="guide ">2.录入基本信息</li>
+			<li class="guide guide_last ">3.录入套餐说明</li>
+		</ul></div>
+<!--新添加div--><div id="twoshow"></div>
+      		<div class="next"><input type="button" value="下一步" onclick="Addpacktwo()"/></div>
+        </div>
+    </div>
+    <!--第一步 结束-->
+    <!--第二步 开始-->
+
+
+
+    <div class="add second" style="display:none" id="Addtwo">
+    	<div class="backcolor">
+    		<h3>添加套餐<a style="float:right;" href='javascript:;' onclick="Addhide('two')">x</a></h3>
+        	
+          <div class="guides"><ul>
+        	<li class="guide ">1.选择商品服务</li>
+			<li class="guide guide_first guide_cur">2.录入基本信息</li>
+			<li class="guide guide_last ">3.录入套餐说明</li>
+		  </ul></div>
+       	 <div class="tzgl_22">
+		 	<p><span>*</span><span class="secname">套装商品编码:</span><input type="text" name="package_code" value="" onblur="Packd(this)" id="spackage_code"/></p>
+                <p><span>*</span><span class="secname">套装商品简称:</span><input type="text" name="short_title" value="" onblur="prov(this)" id="sshort_title"/></p>
+                <p><span>*</span><span class="secname">套装商品全称:</span><input type="text" name="title" value="" onblur="prov(this)" id="stitle"/></p>
+                <p><span>*</span><span class="secname">套装商品描述:</span>
+                  <textarea name="description" cols="200" rows="3" onblur="prov(this)" id="sdescription" placeholder="请输入75字以内的描述" maxlength="75"></textarea>
+                </p>
+                <p class="present"><span>*</span>现价:<input type="text" name="now_price" value="" onblur="prov(this)" id="snow_price"/>&nbsp;&nbsp;&nbsp;&nbsp;/元</p>
+                <p class="present">原价:<input type="text" name="old_price" value="" id="sold_price" />&nbsp;&nbsp;&nbsp;&nbsp;/元</p>
+				<p class="present">成本价:<input type="text" name="cost" value="{$Package_Arr['cost']}" />&nbsp;&nbsp;&nbsp;&nbsp;/元</p>
+                <p class="time"><span>*</span>套装促销时间:<input type="text" name="starttime" value="" onclick="SelectDate(this,'yyyy-MM-dd hh:mm:ss')" id="sstarttime"/>&nbsp;&nbsp;&nbsp;&nbsp;至<input type="text" name="endtime" value="" onclick="SelectDate(this,'yyyy-MM-dd hh:mm:ss')" id="sendtime"/></p>
+                <p class="account"><span>&nbsp;</span><span class="secname">默认销售量:</span><input type="text" name="sales" value="" pattern="[0-9]{0,}"/>&nbsp;&nbsp;&nbsp;&nbsp;/个</p>
+                <p class="tj">
+                  <label>
+                    <input type="checkbox" name="status" value="1" id="tgsj_0" />
+                    立即上架</label>
+
+                  <label>
+                    <input type="checkbox" name="is_index" value="1" id="tgsj_1" />
+                    首页推广</label>
+                  
+                  <label>
+                    <input type="checkbox" name="is_hot" value="1" id="tgsj_2" />
+                    热门推荐</label>
+                 
+            </p>
+
+            <ul >
+            	<li class="liimg">
+					套餐缩略图<span class="preview" id="preview1"><img id="imghead1" src="{$Think.ADMIN_IMAGES}shop_img.png"></span>
+                	
+                   <input type="file" onchange="previewImage(this ,1)" name="thumb" accept="image/*"/>
+                </li> 
+                <li class="liimg">
+                	套餐详情图<span class="preview" id="preview2"><img id="imghead2" src="{$Think.ADMIN_IMAGES}shop_img.png"></span>
+                	
+                   <input type="file" onchange="previewImage(this ,2)" name="pic" accept="image/*"/>
+                </li>
+                <li class="liimg">
+                	图片暂不使用<span class="preview" id="preview3"><img id="imghead3" src="{$Think.ADMIN_IMAGES}shop_img.png"></span>
+                	
+                   <input type="file" onchange="previewImage(this ,3)" name="cose1_pic" accept="image/*"/>
+                </li>
+                <li class="liimg">
+                	图片暂不使用<span class="preview" id="preview4"><img id="imghead4" src="{$Think.ADMIN_IMAGES}shop_img.png"></span>
+                	
+                   <input type="file" onchange="previewImage(this ,4)" name="cose2_pic" accept="image/*"/>
+                </li>
+                <li class="liimg">
+                	图片暂不使用<span class="preview" id="preview5"><img id="imghead5" src="{$Think.ADMIN_IMAGES}shop_img.png"></span>
+                	
+                   <input type="file" onchange="previewImage(this ,5)" name="cose3_pic" accept="image/*"/>
+                </li>
+            </ul>
+            
+
+<style type="text/css">
+.preview{width:100px;height:100px;overflow:hidden;}
+
+#imghead1{filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=image);}
+#imghead2{filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=image);}
+#imghead3{filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=image);}
+#imghead4{filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=image);}
+#imghead5{filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=image);}
+</style>
+            <div class="next"><input type="reset" class="syb" value="上一步" onclick="Onetwo()"/><input type="button" value="下一步" onclick="twothree()"/></div>
+            <div class="clear"></div>
+        </div>
+    </div>
+	</div>
+    <!--第二步结束-->
+    <!--第三步 开始-->
+    <div class="add three" style="display:none" id="Addthree">
+    	<div class="backcolor">
+    		<h3>添加套餐<a style="float:right;" href='javascript:;' onclick="Addhide('three')">x</a></h3>
+        	
+            <div class="guides"><ul>
+        	<li class="guide ">1.选择商品服务</li>
+			<li class="guide">2.录入基本信息</li>
+			<li class="guide guide_first guide_cur end ">3.录入套餐说明</li>
+		  </ul></div>
+          <div class="tab1" id="tab1">
+		  	<div class="menu">
+		  	<ul>
+			<li id="one1" onclick="setChk(1)" style="background-color:#C4C4C4">优惠说明</li>
+			<li id="one2" onclick="setChk(2)">攻略问答</li>
+			<li id="one3" onclick="setChk(3)">成功案例</li>
+			</ul>
+		  </div>
+		  	<div class="menudiv">
+			  <div id="one_1">
+        	  	  <p><textarea name="coupon" rows="5"></textarea></p>
+        	  </div>
+			  <div id="one_2" style="display:none;">
+        		  <p><textarea name="ask" rows="5"></textarea></p>
+        	  </div>
+			  <div id="one_3" style="display:none;">
+        	  	  <p><textarea name="case" rows="5"></textarea></p>
+        	  </div>
+		  </div>
+		  </div>
+          <div class="next">
+		  <input type="hidden" name="pakeageID" value="">
+          	<input type="reset" value="上一步" onclick="threetwo()"/>&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" value="保存" /><!--&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" value="预览" onclick='TC_prover()'/>-->
+          </div>
+        </div>
+    </div>
+</form>
+</div>
+    <!--第三步 结束-->
+    <!--wapper-right end-->
+</div><!--wapper end-->
+<!--头部 开始-->
+
+<!--第三步 开始-->
+    <div class="addtwo four" style="display:none" id="Addfour">
+    	<div class="backcolor">
+          <div class="tab15" id="addgoods">
+
+		  	
+		  </div>
+        </div>
+    </div>
+
+</body>
+</html>
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}Calendar1.js"></script>
+<script src="{$Think.ADMIN_JS}ckeditor/ckeditor.js"></script>
+<script src="{$Think.ADMIN_JS}ckeditor/ckfinder.js"></script>
+<script>
+onload=function()
+{
+	$.ajax({
+			url:"/Admin/Package/Dell_ALL",
+			type:"get",
+                        success:function(e)
+                        {
+                           // alert(e);
+                        }
+		});
+}
+//关闭添加商品
+	function Addhide(off)
+	{
+		$.ajax({
+			url:"/Admin/Package/Dell_ALL",
+			type:"get",
+			success:function(e)
+			{
+				location.href='/Admin/Package/Package_list'
+				//$("#Add"+off).hide();
+			}
+		});
+		
+	}
+	function Packagesub()
+	{
+		var code = $("#spackage_code").val();
+		var short_title = $("#sshort_title").val();
+		var title = $("#stitle").val();
+		var descript = $("#sdescription").val();
+		var now_price = $("#snow_price").val();
+		var starttime = $("#sstarttime").val();
+		var endtime = $("#sendtime").val();
+		var old_price = $("#sold_price").val();
+		if(parseInt(now_price) > parseInt(old_price))
+		{
+			alert("现价不能大于原价");
+			return false;
+		}
+		if(starttime.length == 0 || endtime.length == 0)
+		{
+			alert("带*为必填项");
+			return false;
+		}else {
+			if(code.length == 0 || short_title.length == 0 || title.length == 0 || descript.length == 0 || now_price.length == 0)
+			{
+				alert("带*为必填项");
+				return false;
+			}else{
+				return true;
+			}
+		}
+		/**/
+		
+	}
+</script>
+<script type="text/javascript">
+ //删除套餐商品
+ function pack_Del(goods , pacage ,zuhe)
+ {
+     var pzuhe = zuhe.split(",");
+     if(parseInt(pzuhe.length) <= 2)
+     {
+         alert("套餐商品不能少于两个");
+     }else{
+         if(confirm("确认删除吗")){
+		location.href ="__APP__/Admin/Package/PackageDel/Goods_id/"+goods+"/Package_id/"+pacage;
+	  }
+	  else{
+		return;
+	  }
+     }
+ }
+
+ 
+                //图片上传预览    IE是用了滤镜。
+        function previewImage(file , id)
+        {
+          var MAXWIDTH  = 100;
+          var MAXHEIGHT = 100;
+          var div = document.getElementById('preview'+id);
+          if (file.files && file.files[0])
+          {
+              div.innerHTML ='<img id=imghead'+id+' width=96 height=97>';
+              var img = document.getElementById('imghead'+id);
+              img.onload = function(){
+                var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+                img.width  =  rect.width;
+                img.height =  rect.height;
+//                 img.style.marginLeft = rect.left+'px';
+                img.style.marginTop = rect.top+'px';
+              }
+              var reader = new FileReader();
+             
+              reader.onload = function(evt){
+                if(evt.target.result . substring(5 , evt.target.result.indexOf("/")) != 'image'){
+                    alert("不是图片请选择图片格式");
+                } 
+                  img.src = evt.target.result;
+              }
+              reader.readAsDataURL(file.files[0]);
+          }
+          else //兼容IE
+          {
+            var sFilter='filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src="';
+            file.select();
+            var src = document.selection.createRange().text;
+            div.innerHTML = '<img id=imghead'+id+'>';
+            var img = document.getElementById('imghead'+id);
+            img.filters.item('DXImageTransform.Microsoft.AlphaImageLoader').src = src;
+            var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+            status =('rect:'+rect.top+','+rect.left+','+rect.width+','+rect.height);
+            div.innerHTML = "<div id=divhead style='width:"+rect.width+"px;height:"+rect.height+"px;margin-top:"+rect.top+"px;"+sFilter+src+"\"'></div>";
+          }
+        }
+        function clacImgZoomParam( maxWidth, maxHeight, width, height ){
+            var param = {top:0, left:0, width:width, height:height};
+            if( width>maxWidth || height>maxHeight )
+            {
+                rateWidth = width / maxWidth;
+                rateHeight = height / maxHeight;
+                 
+                if( rateWidth > rateHeight )
+                {
+                    param.width =  maxWidth;
+                    param.height = Math.round(height / rateWidth);
+                }else
+                {
+                    param.width = Math.round(width / rateHeight);
+                    param.height = maxHeight;
+                }
+            }
+             
+            param.left = Math.round((maxWidth - param.width) / 2);
+            param.top = Math.round((maxHeight - param.height) / 2);
+            return param;
+        }
+</script>    
+
+
+
+
+
+<script>
+CKEDITOR.replace( 'coupon', {
+        filebrowserBrowseUrl        : '{$Think.ADMIN_JS}ckfinder/ckfinder.html',
+        filebrowserImageBrowseUrl   : '{$Think.ADMIN_JS}ckfinder/ckfinder.html?Type=Images',
+        filebrowserFlashBrowseUrl   : '{$Think.ADMIN_JS}ckfinder/ckfinder.html?Type=Flash',
+        filebrowserUploadUrl		: '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+        filebrowserImageUploadUrl   : '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
+        filebrowserFlashUploadUrl   : '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
+    });
+CKEDITOR.replace( 'ask', {
+        filebrowserBrowseUrl        : '{$Think.ADMIN_JS}ckfinder/ckfinder.html',
+        filebrowserImageBrowseUrl   : '{$Think.ADMIN_JS}ckfinder/ckfinder.html?Type=Images',
+        filebrowserFlashBrowseUrl   : '{$Think.ADMIN_JS}ckfinder/ckfinder.html?Type=Flash',
+        filebrowserUploadUrl		: '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+        filebrowserImageUploadUrl   : '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
+        filebrowserFlashUploadUrl   : '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
+    });
+CKEDITOR.replace( 'case', {
+        filebrowserBrowseUrl        : '{$Think.ADMIN_JS}ckfinder/ckfinder.html',
+        filebrowserImageBrowseUrl   : '{$Think.ADMIN_JS}ckfinder/ckfinder.html?Type=Images',
+        filebrowserFlashBrowseUrl   : '{$Think.ADMIN_JS}ckfinder/ckfinder.html?Type=Flash',
+        filebrowserUploadUrl		: '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+        filebrowserImageUploadUrl   : '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
+        filebrowserFlashUploadUrl   : '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
+    });
+</script>
+<script>
+var jq = $;
+//显示添加套装
+	function Addpack()
+	{
+		jq("#Addone").show();
+	}
+	function Addpacktwo()
+	{
+		$.ajax({
+                    url:"/Admin/Package/Getinterall",
+                    type:"get",
+                    success:function(e)
+                    {
+                        var o = eval("("+e+")");
+                        if(o["data"] == 0)
+                        {
+                            alert("请选择套餐商品");
+                        }else if(o["data"] > 3){
+                            alert("套餐不能大于三个");
+                        }else if(o["data"] < 2){
+                            alert("套餐最少两个");
+                        }else{
+                            $("#Addone").hide();
+                            $("#Addtwo").show();
+                        }
+                    }
+                });
+		
+		
+	}
+	function Onetwo()
+	{
+		jq("#Addone").show();
+		jq("#Addtwo").hide();
+	}
+	function twothree()
+	{
+                var code = $("#spackage_code").val();
+		var short_title = $("#sshort_title").val();
+		var title = $("#stitle").val();
+		var descript = $("#sdescription").val();
+		var now_price = $("#snow_price").val();
+		var starttime = $("#sstarttime").val();
+		var endtime = $("#sendtime").val();
+		var old_price = $("#sold_price").val();
+                var flag = 0;
+		if(parseInt(now_price) > parseInt(old_price))
+		{
+			
+                        flag = 1;
+		}
+		if(starttime.length == 0 || endtime.length == 0)
+		{
+			alert("带*为必填项");
+		}else {
+			if(code.length == 0 || short_title.length == 0 || title.length == 0 || descript.length == 0 || now_price.length == 0)
+			{
+				alert("带*为必填项");
+			}else if(flag == 1){
+                            alert("现价不能大于原价");
+                        }else if(parseInt(descript.length) > parseInt(75)){
+                            alert("套餐描述不能超过75个字");
+                        }else{
+                            jq("#Addthree").show();
+                            jq("#Addtwo").hide();
+                        }
+		}
+		
+	}
+	function threetwo()
+	{
+		jq("#Addthree").hide();
+		jq("#Addtwo").show();
+	}
+	function setChk(num)
+	{
+		if(num == 1)
+		{
+			jq("#one_1").show();
+			jq("#one_2").hide();
+			jq("#one_3").hide();
+			$("#one1").attr("style" , "background-color:#C4C4C4;");
+			$("#one2").removeAttr("style");
+			$("#one3").removeAttr("style");
+		}else if(num == 2)
+		{
+			jq("#one_1").hide();
+			jq("#one_2").show();
+			jq("#one_3").hide();
+			$("#one2").attr("style" , "background-color:#C4C4C4;");
+			$("#one1").removeAttr("style");
+			$("#one3").removeAttr("style");
+		}else if(num == 3)
+		{
+			jq("#one_1").hide();
+			jq("#one_2").hide();
+			jq("#one_3").show();
+			$("#one3").attr("style" , "background-color:#C4C4C4;");
+			$("#one1").removeAttr("style");
+			$("#one2").removeAttr("style");
+		}
+	}
+	function Goods_server(package_id , goods_zuhe)
+	{
+		var goods_count = goods_zuhe.split(",").length;
+				$.ajax({
+				url:"__APP__/Admin/Package/Optgoods",
+				type:"post",
+				data:{"package_id":package_id},
+				success:function(e)
+				{
+					$("#addgoods").empty();
+					$("#addgoods").html(e);
+					$(".four").show();
+					//$("#up").hide();
+				}
+			});
+	}
+</script>
+<script>
+//全选
+	function Opt(){
+		var child = document.getElementsByName("child");
+		var top = document.getElementById("childtop");
+	
+		if(top.checked){
+			for(var i = 0;i<child.length;i++){
+			   child[i].checked = true;	
+			}
+		}
+		else{
+			for(var i = 0;i<child.length;i++){	
+			  child[i].checked = false;	
+			}
+		}
+
+	}
+	function moreXU()
+	{
+		var child = document.getElementsByName("list_child");
+		var top = document.getElementById("xutop");
+	
+		if(top.checked){
+			for(var i = 0;i<child.length;i++){
+			   child[i].checked = true;	
+			}
+		}
+		else{
+			for(var i = 0;i<child.length;i++){	
+			  child[i].checked = false;	
+			}
+		}
+	}
+	//选择商品添加
+	function OPTgoods(packade_id)
+	{
+		var str_pack = packade_id.split("@");
+		var str_goods = '';
+		var str_count = '';
+		if(packade_id == '@')
+		{
+			var url = "__APP__/Admin/Package/Inter";
+		}else if(str_pack[1] == "#")
+		{
+			var url = "__APP__/Admin/Package/Inter";
+			var packade_id = str_pack[0];
+			var str_goods = str_pack[2];
+		}else{
+			var url = "__APP__/Admin/Package/UPpack";
+			var packade_id = str_pack[0];
+			var str_goods = str_pack[1];
+		}
+                if($("#gid").val().length == 0)
+                {
+                    var goods_id  = checkbox()+$("#gid").val();
+                }else{
+                    var goods_id  = checkbox()+$("#gid").val();
+                }
+		if(str_goods !='')
+		{
+			str_count = goods_id.substring(0,goods_id.length-1)+","+str_goods;
+		}else{
+			str_count = goods_id.substring(0,goods_id.length-1);
+		}
+		var goods_count = str_count.split(",").length;
+		if(goods_count <= 3)
+		{
+			$.ajax({
+				url:url,
+				type:"post",
+				data:{"goods_id":goods_id,"package_id":packade_id},
+				success:function(e)
+				{
+					if(e == "0@")
+					{
+						location.href="__APP__/Admin/Package/Package_list";
+					}else{
+						$("#twoshow").html(e);
+						$(".four").hide();
+					}
+				}
+			});
+		}else if(str_goods !=''){
+			alert("已有商品和选择商品不能大于三个");
+		}else{
+			alert("选择商品不能大于三个");
+		}
+		
+	}
+	//取消选择商品
+	function removegoods()
+	{
+		$.ajax({
+			url:"/Admin/Package/Dell_ALL",
+			type:"get",
+			success:function(e)
+			{
+				$(".four").hide();
+			}
+		});
+	}
+//取出选中的value值
+	function checkbox()
+	{
+
+		var string = '';
+		var inps = document.getElementsByTagName('input');
+		for(var i = 0 ; i < inps.length ; i++)
+		{
+			if(inps[i].type == 'checkbox' && inps[i].name == "child")
+			{
+				if(inps[i].checked == true)
+				{
+					string += inps[i].value + ',';
+				} 
+			}
+		}
+		return string;
+	}
+	/*
+		* 修改套餐所有信息
+	*/
+	function UPpackage(Packageid)
+	{
+		//$("#up").show();
+		//$("#tat").hide();
+		$.ajax({
+			url:"__APP__/Admin/Package/UPpackage",
+			type:"get",
+			data:{"package_id":Packageid},
+			success:function(e)
+			{
+					//alert(e);
+					$("#up").html(e);
+					
+			}
+		});
+	}
+	function Lot(syllable , status)
+	{
+            var sta_nnss = "";
+            var List_packageId = listcheck_box();
+            var List_o = List_packageId.split(",");
+            var List_t = parseInt(List_o.length)- parseInt(1);
+            if(syllable == "status" && status == 1)
+            {
+                 var sta_nnss = "批量上架";
+            }else if(syllable == "status" && status == 2){
+                var sta_nnss = "批量下架";
+            }else if(syllable == "del"){
+                var sta_nnss = "批量删除";
+            }
+           
+            if(List_packageId.length != 0)
+            {
+                if(confirm("您确认将选择的"+List_t+"条数据进行"+sta_nnss+"吗?")){
+			
+			$.ajax({
+				url:"__APP__/Admin/Package/syllUP",
+				type:"get",
+				data:{"package_id":List_packageId , "syllable":syllable , "staus":status},
+				success:function(e)
+				{	
+                                     var o = eval("("+e+")");
+                                    if(o["data"] == ''){
+                                        alert("已上架商品不能进行删除");
+                                    }
+                                    if(o["code"] == 1)
+                                    {
+                                        alert(o["data"]);
+                                    }
+				    location.href="__APP__/Admin/Package/Package_list";
+				}
+			});
+		  }
+		  else{
+			$("#menu_xl02").hide();
+		  }
+            }else{
+                alert("请选择");
+            }
+		
+		
+	}
+	function listcheck_box()
+	{
+		var string = '';
+		var inps = document.getElementsByTagName('input');
+		for(var i = 0 ; i < inps.length ; i++)
+		{
+			if(inps[i].type == 'checkbox' && inps[i].name == "list_child")
+			{
+				if(inps[i].checked == true)
+				{
+					string += inps[i].value + ',';
+				} 
+			}
+		}
+		return string;
+	}
+	
+	//验证文本框数据
+	function prov(cont)
+	{
+		var content = $(cont).val();
+		if(content == '')
+		{
+			$(cont).attr("placeholder" , "请输入内容");
+		}
+	}
+         //验证套餐唯一
+        function Packd(cs)
+        {
+           var code = $(cs).val();
+           $.ajax({
+               url:"/Admin/Package/onepackcode",
+               type:"get",
+               data:{"code":code},
+               success:function(e){
+                   var o = eval("("+e+")");
+                   if(o["data"] == '@')
+                   {
+                       alert("套餐编码已存在");
+                      $(cs).val("");
+                   }
+               }
+           });
+        }
+	//套餐预览
+	function TC_prover(TC_id)
+	{
+			window.open ('__APP__/Home/Package/details/id/'+TC_id,'newwindow'+TC_id,'height=648,width=1052,top=150,left=500,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');//写成一行
+	}
+</script>
+<script>
+    $(document).click(function(){
+        if($("#menu_xl02").css('display') == 'block'){
+            $("#menu_xl02").hide();
+        }else{
+            $("#p").click(function(e){
+               $("#menu_xl02").attr('style' , "display:block");
+               return false;
+            });
+            
+        }
+    });  
+</script>
+
+

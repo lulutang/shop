@@ -1,0 +1,154 @@
+<include file="Public/header" />
+<head>
+<style>
+#soldOut{ color:#fff; text-align: center; width:85px; font-size: 16px; font-family:"微软雅黑"; text-decoration:none; display:inline-block; height:34px; line-height:34px; padding:0px 15px; background-color:#aeaeae;}
+
+</style>
+</head>
+<body onload="DivShow(0)">
+<!--主要内容 开始-->
+<div class="mainbody" style=" margin-bottom:120px;">
+    <div class="container">
+    	<!--消息提示 开始-->
+        <p class="main-info">
+            您的位置：<a href="">会员服务中心</a><a href="">>注商标</a>
+        </p>
+        <!--消息提示 结束-->
+        
+    	<!--优惠选择 开始-->
+    	<div class="bigbox">
+            <div class="preferential-banner">
+                <img src="{$info[0].goods_pic}" height="375px" width="566px">
+            </div>
+            <div class="preferential-info">
+            	<h3>{$info[0].title}</h3>
+                <h4>编码：<span>{$info[0].goods_code}</span></h4>
+
+				<h4> <?php if(mb_strlen($info[0]['description'],'utf-8') > 70){echo mb_substr($info[0]['description'],0,72,'utf-8').'...';}else{ echo $info[0]['description'];}?></h4>
+                <div class="preferential-choose">
+                	<p>现价：<b>￥{$info[0].now_price}</b>原价：<s>￥{$info[0].old_price}</s></p>
+                	
+                </div>
+                <ul class="preferential-icon">
+                    <li><a href="javascript:void(0)" id="soldOut" disabled="true">已下架</a></li>
+                    <li><a href="" class="button"><img src="{$Think.HOME_IMAGES}button09.png"></a></li>
+                    <div style="clear:both"></div>
+                </ul>
+            	<div style="clear:both"></div>
+            </div>
+        </div> 
+         
+      	<!--优惠选择 结束-->
+      	
+        <!--优惠套餐 开始-->
+        <php>if(!empty($package)){</php>
+        <div class="preferential-package" style="margin-top:75px;">
+            <ul class="preferential-packagebox">
+                <li class="ul_li_bian"><a href="javascript:void(0)">优惠套餐</a></li>
+                
+                <div style="clear:both"></div>
+            </ul>
+            
+            <div class="pref-pkg-bigbox">
+                <ul class="preferential-packagebox-titletabs">
+                    <foreach name="package" item="p" key="k">
+                        <php>if(count($package)>1){</php>
+                    <li><a href="javascript:void(0)" class="button" onclick="DivShow({$k})" id="a{$k}">套餐{$k+1}</a></li>
+                    <php>}</php>
+                    </foreach>
+                    <div style="clear:both"></div>
+                </ul>
+                <input type="hidden" id="hidden" value="{$p_num}">
+                <foreach name="package" item="p" key="k">
+                <div class="pref-pkg-smallbox" id="div{$k}" style="display:none">
+                        <php>if(count($package)>1){</php>
+                	<a class="pref-pkg-smallboxleft" href="javascript:void(0)" onclick="Up({$k-1})"><img src="{$Think.HOME_IMAGES}icon18.png"></a>
+                    <a class="pref-pkg-smallboxright" href="javascript:void(0)" onclick="Down({$k+1})"><img src="{$Think.HOME_IMAGES}icon19.png"></a>
+                    <php>}</php>
+                	<ul>
+                        <foreach name="p.shop" item="sh" key="n">
+                    	<li>
+                            <a href="__URL__/gooddetails/id/{$sh.goods_id}" target="_blank"><img src="{$sh['thumb']}" height="167px" width="292px"></a>
+                            <p>{$sh['short_title']}</p>
+                        </li>
+                        <php>if($n<(count($p['shop'])-1)){</php>
+                        <li>
+                        	<h3></h3>
+                        </li>
+                        <php>}</php>
+                        </foreach>
+                       	<li class="pref-pkg-price" style="float: right;margin-right: 50px;">
+                        	<h4>原价：<s>￥{$p.now_price}</s></h4>
+                            <h2>优惠价：<b>￥{$p.old_price}</b></h2>
+                            <a class="pref-pkg-button button" href=""><img src="{$Think.HOME_IMAGES}button08.png"></a>
+                        </li>
+                    </ul>
+                
+                </div>
+                </foreach>
+            </div>             
+        </div>
+        <php>}</php>   
+        <!--优惠套餐 结束-->
+        
+        <!--产品介绍 攻略问答 开始-->
+        <div class="preferential-package" style="margin-top:15px;">
+            <ul class="preferential-packagebox" id="ul_li">
+                <li id="ca"><a href="javascript:void(0)" onclick="product()" >产品介绍</a></li>
+                <if condition="!empty($info[0]['answer'])">
+                <li id="gb"><a href="javascript:void(0)" onclick="answer()" >攻略问答</a></li>
+                </if>
+                <if condition="!empty($info[0]['success'])">
+                <li id="sc"><a href="javascript:void(0)" onclick="success()" >成功案例</a></li>
+                </if>
+                <div style="clear:both"></div>
+            </ul>
+            <div class="pref-pkg-bigbox" >
+            	<!--产品介绍 开始-->
+            	<div class="product" class="bianse"  id="product">
+                	{$info[0].content}
+                </div>
+                <!--产品介绍 结束--> 
+                 <!--攻略问答 开始-->
+                <div class="question" style="display:none;"  id="answer">
+                	{$info[0].answer}
+                </div>
+                <!--攻略问答 结束-->
+                   <!--成功案例 开始-->
+                <div class="question" style="display:none;"  id="success">
+                	{$info[0].success}
+                </div>
+                <!--成功案例 结束-->
+            </div>
+            
+        </div>
+        <!--产品介绍 攻略问答 结束-->
+        
+      	<!--成功案例 开始-->
+       <!-- <div class="preferential-package" style="margin-top:15px;">
+            <ul class="preferential-packagebox">
+                <li><a href="">成功案例</a></li>
+                <div style="clear:both"></div>
+            </ul>
+            <div class="pref-pkg-bigbox" >
+            	<div class="case-position">
+                    <a href="" class="case-left"><img src="{$Think.HOME_IMAGES}icon18.png"></a>
+                    <a href="" class="case-right"><img src="{$Think.HOME_IMAGES}icon19.png"></a>
+                </div>
+            	<ul class="case">
+                	<a href=""><li class="case-img01"></li></a>
+                    <a href=""><li class="case-img01"></li></a>
+                    <a href=""><li class="case-img01"></li></a>
+                    <a href=""><li class="case-img01"></li></a>
+                    <a href=""><li class="case-img01"></li></a>
+                    <a href=""><li class="case-img01"></li></a>
+                </ul>
+                
+            </div>
+        </div>    -->
+        <!--成功案例 结束-->
+    </div>    
+</div>
+<!--主要内容 结束-->
+<include file="Public/footer" />
+</body>

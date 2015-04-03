@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>付款提交成功</title>
+<link href="{$Think.HOME_CSS}style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<!--顶部导航 开始-->
+<include file="Public/pay_header" />
+<!--顶部导航 结束-->
+
+<!--顶部logo 开始-->
+<div class="container top-search">
+	<div class=" float-left">
+    	<a href="{$Think.DOMAIN}"><img src="{$Think.HOME_IMAGES}logo.png"></a>
+    </div>
+    <div class=" float-left">
+    	<a class="mallname" href="{$Think.DOMAIN}">服务商城</a>
+    </div>
+    <div class="float-right"><img src="{$Think.HOME_IMAGES}pay_process4.png" /></div>
+</div>
+<!--顶部logo 结束-->
+
+<!--付款成功-支付 开始-->
+<div class="container pay_success">
+	<div class="success_box">
+   	    <p class="success_title">恭喜您，付款成功！<span>请保持电话畅通我们稍后会有服务顾问与您取得联系！</span></p>
+        <table width="694">
+        	<tr>
+        		<td width="81" rowspan="2"><img src="{$Think.HOME_IMAGES}products1.png" /></td>
+                <td width="110" class="text-right">您的订单号：</td>
+                <td width="150" class="text-left">{$order.order_card}</td>
+                <td width="93"></td>
+                <td width="236"></td>
+
+            </tr>
+            <tr>
+            	<td class="text-right">商品金额：</td>
+                <td class="text-left">￥{$order.totalprice}</td>
+                <td class="text-right">支付时间：</td>
+                <td class="text-left">{$order.pay_time|date='Y-m-d H:i:s',###}</td>
+
+            </tr>
+          
+        </table>
+        <if condition="($order['onsale_money'] gt 0)">
+         <p class="next">恭喜您获得了￥{$order['onsale_money']}优惠卷：<a href="{$Think.DOMAIN}/Home/Package/myOnsale">查看优惠卷</a>         </p>   
+        <else/>
+         <p class="next">完成支付后您可以查看：<a href="javascript:void(0)" onclick="CheckLogin('allorder')">查看订单状态</a><a href="{$Think.DOMAIN}">继续购物</a>         </p>    
+    	</if>
+    </div>
+  
+
+</div>
+<!--付款成功-支付结束-->
+
+<!--页脚 开始-->
+<include file="Public/footer" />
+<!--页脚 结束-->
+
+</body>
+</html>

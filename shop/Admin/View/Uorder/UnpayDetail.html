@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>工作台</title>
+<link href="{$Think.ADMIN_CSS}global.css" rel="stylesheet" type="text/css">
+<link href="{$Think.ADMIN_CSS}m_style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<div class="content_right unpaydetail">
+    <div id="indent" class="indent" onClick="changeWin()"></div>
+    <div class="link_path">您所在的位置：<a href="/admin/Uorder/judge">订单管理</a>&nbsp;>&nbsp;<a href="/admin/Uorder/judge/pay/0">未支付</a>&nbsp;>&nbsp;{$orderfind["order_card"]}</div>
+    <table class="case_detail">
+      <tbody>
+        <tr>
+          <td width="20%">客官昵称：{$userdata["user_name"]}<img src="{$Think.ADMIN_IMAGES}level1.png" class="imgqq"></th>
+          <td width="20%">客官姓名：{$userdata["truename"]}</th>
+          <td width="20%">可用盘缠：<span>{$userdata["coil"]}盘缠</span></th>
+          <td width="20%">手机号码：{$userdata["mobile_phone"]}</th>
+          <td width="20%">QQ：{$userdata["qq"]}<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin={$userdata['qq']}&site=qq&menu=yes"><img border="0" src="{$Think.ADMIN_IMAGES}icon09.jpg" class="imgqq" alt="点击这里给我发消息"></a></th>
+        </tr>
+        <tr>
+          <td class="cased" colspan="5">
+            <div><p class="pname">订单编号：</p><p class="pcon">{$orderfind["order_card"]}</p></div>
+            <div><p class="pname">下单时间：</p><p class="pcon">{$orderfind["createtime"]|date="Y-m-d H:i:s",###}</p></div>
+            <div><p class="pname">状态：</p><p class="pcon">未支付</p></div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="table_list">
+      <ul class="tab_list">
+        <li><a href="javascript:void(0)">商品服务信息</a></li>
+      </ul>    
+      <table class="spffxx">
+        <tbody>
+          <tr>
+            <th width="30%">商品信息</th>
+            <th width="22%">服务信息</th>
+            <th width="23%">服务状态</th>
+            <th width="25%">服务价（元）</th>
+          </tr>
+         <foreach name="ordergoods" item="ogs">
+            <tr class="tr_bgc1">
+              <td><a href="/Home/Goods/gooddetails/id/{$ogs['goods_id']}">{$ogs['erji']}[￥{$ogs['goods_price']}]</a></td>
+              <td>
+                  <if condition="$ogs['style'] eq 38">
+                           {$ogs["message"]["name"]} <br>
+                           {$ogs["message"]["style"]}
+                        </if>
+                        <if condition="$ogs['style'] eq 5">
+                            {$ogs["message"]["name"]}
+                        </if>
+                        <if condition="$ogs['style'] eq 6"> 
+                            {$ogs["mbtext"]}
+                        </if>
+              </td>       
+              <td>
+                  <if condition="$orderfind['status'] eq 0">未支付</if>
+                  <if condition="$orderfind['status'] eq 1">已支付</if>
+
+              </td>
+              <td class="trr">￥{$ogs['service_price']}</td>
+            </tr>
+           </foreach>          
+          <tr>
+            <td class="tr_bgc1 sf" colspan="4">实付总额：<span>￥{$orderfind['totalprice']}</span></td>
+          </tr>       
+        </tbody>
+      </table>
+    </div>
+  </div>
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}order.js"></script>
+</body>

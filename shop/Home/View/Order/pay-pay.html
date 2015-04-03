@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>订单提交成功——支付</title>
+<link href="{$Think.HOME_CSS}style.css" rel="stylesheet" type="text/css">
+<!--tab页签JS 结束-->
+</head>
+
+<body>
+<!--顶部导航 开始-->
+<include file="Public/pay_header" />
+<!--顶部导航 结束-->
+
+<!--顶部logo 开始-->
+<div class="container top-search">
+	<div class=" float-left">
+    	<a href="{$Think.DOMAIN}"><img src="{$Think.HOME_IMAGES}logo.png"></a>
+    </div>
+    <div class=" float-left">
+    	<a class="mallname" href="{$Think.DOMAIN}">服务商城</a>
+    </div>
+    <div class="float-right"><img src="{$Think.HOME_IMAGES}pay_process3.png" /></div>
+</div>
+<!--顶部logo 结束-->
+
+<!--订单提交成功-支付 开始-->
+<div class="container pay_pay">
+	<div class="submitted">
+    	<div class="float-left">
+        	<p>亲，您的订单已经提交成功了哦~请仔细查看订单详情哦~</p>
+        </div>
+        <div class="float-right">
+        	<p class="orderinfo">订单号：{$order.order_card}<br> 应付金额：￥{$order.totalprice}&nbsp;&nbsp;&nbsp;  <!-- <a href="">订单号详情</a> --></p>
+            <p>亲，请您在提交订单后24小时内完成支付，否则订单会自动取消。</p>
+            <p>订单生成时间 : {$order.createtime|date='Y-m-d H:i:s',###}</p>
+        </div>
+        <div style="clear:both;"></div>    
+    </div>
+    
+    <div class="tab1" id="tab1">
+        <div class="menu">
+            <ul>
+               <li id="one1" class ='off' onclick="setTab('one',1)">快钱</li>
+               <li id="one2" class ='' onclick="setTab('one',2)">财付通</li>
+               <li id="one3" class ='' onclick="setTab('one',3)">支付宝</li>
+
+            </ul>
+        </div>
+        <div class="menudiv">
+            <div id="con_one_1">
+                <form   action="https://www.99bill.com/gateway/recvMerchantInfoAction.htm"  method='post' id='kuaiqian_order' target="_blank" >
+            	<p class="alipay"><input type="radio"  checked/> &nbsp; <img src="{$Think.HOME_IMAGES}kuaiqian.png" /></p>
+                <p class="alipay_amount">支付：<span>￥{$order.totalprice}</span></p>
+                <if condition="(1 eq $is_user )">
+	                <input  class="alipay_button01" style='cursor:pointer' type='submit' name='payfrom' value ='确认付款'>
+	                
+	                <foreach name='data' key='key' item='val'>
+	                 <input type='hidden' name='{$key}' value ='{$val}'>
+	                </foreach>
+                <else/>
+                  <p class="alipay_button"><a style='cursor:pointer' href="javascript:payfrom();"  >确认付款</a> <div style="clear:both;"></div></p>  
+                </if>
+                <div style="clear:both;"></div>
+               </form>
+            </div>
+              <div id="con_one_2" style="display:none;">
+                 <form  action ='/home/tenpay/tenpay/' method='post' id='order' target="_blank" >
+            	<p class="alipay"><input type="radio"  checked/> &nbsp; <img src="{$Think.HOME_IMAGES}caifutong.png" /></p>
+                <p class="alipay_amount">支付：<span>￥{$order.totalprice}</span></p>
+                <if condition="(1 eq $is_user )">
+	                <input  class="alipay_button01" style='cursor:pointer' type='submit' name='payfrom' value ='确认付款'>
+	                <input type='hidden' name='order_no' value ='{$order.order_card}'>
+                <else/>
+                  <p class="alipay_button"><a style='cursor:pointer' href="javascript:payfrom();"  >确认付款</a> <div style="clear:both;"></div></p>  
+                </if>
+                <div style="clear:both;"></div>
+               </form>
+                
+            </div> 
+            
+                <div id="con_one_3" style="display:none;">
+                 <form  action ='/home/Zhifubao/zhifubaoPay/' method='post' id='order' target="_blank" >
+            	<p class="alipay"><input type="radio"  checked/> &nbsp; <img src="{$Think.HOME_IMAGES}alipay.png" /></p>
+                <p class="alipay_amount">支付：<span>￥{$order.totalprice}</span></p>
+                <if condition="(1 eq $is_user )">
+	                <input  class="alipay_button01" style='cursor:pointer' type='submit' name='payfrom' value ='确认付款'>
+	                <input type='hidden' name='order_no' value ='{$order.order_card}'>
+                <else/>
+                  <p class="alipay_button"><a style='cursor:pointer' href="javascript:payfrom();"  >确认付款</a> <div style="clear:both;"></div></p>  
+                </if>
+                <div style="clear:both;"></div>
+               </form>
+                
+            </div> 
+  
+        </div>
+	</div>
+</div>
+<!--订单提交成功-支付 结束-->
+<!--页脚 开始-->
+<include file="Public/footer" />
+<!--页脚 结束-->
+</body>
+</html>
+  <script language="JavaScript" src="{$Think.HOME_JS}package.js"></script>
+<script language="javascript">
+    var name_0='one';
+    var cursel_0=1;
+    var links_len,iIntervalId;
+    onload=function(){
+        var links = document.getElementById("tab1").getElementsByTagName('li')
+        links_len=links.length;
+        for(var i=0; i<links_len; i++){
+            links[i].onmouseover=function(){
+                clearInterval(iIntervalId);
+                this.onmouseout=function(){
+                    iIntervalId = setInterval(Next,ScrollTime);;
+                }
+            }
+        }
+        document.getElementById("con_"+name_0+"_"+links_len).parentNode.onmouseover=function(){
+            clearInterval(iIntervalId);
+            this.onmouseout=function(){
+                iIntervalId = setInterval(Next,ScrollTime);;
+            }
+        }
+        setTab(name_0,cursel_0);
+        iIntervalId = setInterval(Next,ScrollTime);
+    }
+  </script>
+

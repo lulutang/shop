@@ -1,0 +1,316 @@
+<link href="{$Think.ADMIN_CSS}style.css" rel="stylesheet" type="text/css">
+
+<div class="wapper">
+    <div class="wapper-right">
+    <div class="right_inner">
+    	<div class="path">您的位置：<a href="#">工作台</a>》<a href="#">商品服务管理</a>》<a href="#">商品管理</a></div>
+		<form action="/Admin/Goods/Goods_list" method="get" name="search" target="">
+        <div class="search_dh">
+                	<div class="sstj" style="padding-left:0;">
+                    	<p><span>业务类型：</span>
+                    	<select name="server">
+							<option value="">请选择</option>
+							<volist name="Pserver" id="Ps">
+							<if condition="$map['server'] eq $Ps['id']">
+							<option value="{$Ps['id']}" selected>{$Ps['server_name']}</option>
+							<else/>
+							<option value="{$Ps['id']}">{$Ps['server_name']}</option>
+							</if>
+							</volist> 
+						</select>
+                           <span>商品状态：</span>
+                    	<select name="status">
+							<option value="">请选择</option>
+                                                        <if condition="$map['status'] eq '1|status'">
+                                                            <option value="1|status" selected>已上架</option>
+                                                            <else/>
+                                                            <option value="1|status">已上架</option>
+                                                        </if>
+							<if condition="$map['status'] eq '2|status'">
+                                                            <option value="2|status" selected>已下架</option>
+                                                            <else/>
+                                                            <option value="2|status">已下架</option>
+                                                        </if>
+                                                        <if condition="$map['status'] eq '0|status'">
+                                                           <option value="0|status" selected>待上架</option>
+                                                            <else/>
+                                                           <option value="0|status">待上架</option>
+                                                        </if>
+                                                        <if condition="$map['status'] eq '1|is_index'">
+                                                           <option value="1|is_index" selected>首页推广</option>
+                                                            <else/>
+                                                           <option value="1|is_index">首页推广</option>
+                                                        </if>
+                                                        <if condition="$map['status'] eq '1|is_hot'">
+                                                           <option value="1|is_hot" selected>热门推荐</option>
+                                                            <else/>
+                                                           <option value="1|is_hot">热门推荐</option>
+                                                        </if>
+                                                        
+							</volist>
+						</select>
+                         
+            			<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;关键词：</span>
+						<input name="keyword" type="text" onclick="javascript:this.value='';" value="{$map['keyword']}" size="30" maxlength="20" placeholder="请输入商品编码、商品简称"/>
+						</p>
+                    </div>
+                    
+		      		<div class="search_btn"><input type="submit" value="搜索" /></div>
+                    <div class="clear"></div>
+		  			
+        </div>
+        <div class="clear"></div>
+       	<div class="operation">
+        	<a href="/Admin/Goods/Goods_add"><div class="tisp">添加商品</div></a>
+			<div id="systembox02" class="systembox02">
+
+    <div id="systembtn02" class="systembtn02">
+        <a href="javascript:;" id="p" class="abtn"><span>批量操作</span></a>
+        <div id="menu_xl02" class="menu_xl02">
+          <dl>
+             <dt><a href="javascript:;" onclick="Batch('1@status')">批量上架</a></dt>
+          </dl>
+          <dl>
+             <dt><a href="javascript:;" onclick="Batch('2@status')">批量下架</a></dt>
+             
+          </dl>
+           <dl>
+             <dt><a href="javascript:;" onclick="Batch('del')">批量删除</a></dt>
+             
+          </dl>
+
+		  <dl>
+             <dt><a href="javascript:;" onclick="Batch('1@is_index')">批量首页推荐</a></dt>
+             
+          </dl>
+
+		  <dl>
+             <dt><a href="javascript:;" onclick="Batch('1@is_hot')">批量热门推荐</a></dt>
+             
+          </dl>
+                
+        </div>
+    </div>
+</div>
+<table class="ddlc spgl">
+            	<th  class="col_01"><input type="checkbox" name="top_gods" id="top_ids" value='' onclick="xuan()"/>商品信息</th>
+                <th  class="col_02">业务类型</th>
+                <th  class="col_03">现价</th>
+                <th  class="col_04">状态</th>
+                <th  class="col_05">操作</th>
+            </tr>
+			
+		<volist name="Goods_arr" id="goods">
+            <tr class="shop_name">
+            	<td class="shop_num" colspan="2">
+                	<label>
+                    	<input type="checkbox" value='{$goods["goods_id"]}' name="goods_top"/>
+                	</label>
+                	<p>商品编码：{$goods["goods_code"]}</p></td>
+                <td class="shop_info" colspan="3">创建人：{$goods["truename"]}      创建时间：<php>echo date("Y-m-d H:i:s",$goods["goods_addtime"]);</php></td>
+            </tr>
+            <tr>
+           	  <td><p><img src="{$current|current_cdn_img}{$goods['goods_thumb']}" width="97" height="96"/></p> <p class="service">{$goods["short_title"]}<br /><if condition="!empty($goods['attr_name'])"><span>[{$goods["attr_name"]}]</span></if></p></td>
+                <td>{$goods["now_servername"]}</td>
+                <td>￥{$goods["now_price"]}</td>
+                <td class="sytg">
+				<if condition='$goods["goods_status"] eq 0'>
+				<span class="bxs">待上架</span><br>
+				</if>
+				<if condition='$goods["goods_status"] eq 1'>
+				<span class="dsj">已上架</span><br>
+					<if condition='$goods["is_index"] eq 1'>
+						<span class="dsj">首页推广</span><br>
+					</if>
+					<if condition='$goods["is_hot"] eq 1'>
+						<span class="dsj">热门推荐</span><br>
+					</if>
+				</if>
+				<if condition='$goods["goods_status"] eq 2'>
+				<span class="sytg">已下架</span><br>
+				</if>
+				</td>
+                <td>
+				<a title="修改商品" alt="修改商品" href="/Admin/Goods/Goods_listUp/goods_id/{$goods['goods_id']}"><img src="{$Think.ADMIN_IMAGES}1_05.png"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
+				<a title="删除商品" alt="删除商品" href="javascript:;" onclick="del_Goods({$goods['goods_id']} , {$goods['goods_status']})">
+				<img src="{$Think.ADMIN_IMAGES}1_07.png"/></a>
+				<a title="预览商品" alt="预览商品" href='javascript:;' onclick="preview({$goods['goods_id']})"><img src="{$Think.ADMIN_IMAGES}view.png"/></a>
+				</td>
+            </tr>
+			</volist>
+        </table>
+			<div class="clear"></div>
+        </div>
+    <div class="neir">
+    {$page}
+        </div>	
+		</form>
+        <!--table end-->
+        </div>
+    <!--right_inner end-->
+    </div><!--wapper-right end-->
+</div><!--wapper end-->
+<!--头部 开始-->
+</body>
+</html>
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script src="{$Think.ADMIN_JS}ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}Calendar1.js"></script>
+<script src="{$Think.ADMIN_JS}tab02.js" type="text/javascript"></script>
+<script>
+    function xuan()
+    {
+        var child = document.getElementsByName("goods_top");
+        var top = document.getElementById("top_ids");
+
+        if(top.checked){
+                for(var i = 0;i<child.length;i++){
+                   child[i].checked = true;	
+                }
+        }
+        else{
+                for(var i = 0;i<child.length;i++){	
+                  child[i].checked = false;	
+                }
+        }
+    }
+	//删除
+	function del_Goods(gid , sts)
+	{
+            if(sts == 0)
+            {
+                if(confirm("确认删除吗")){
+			location.href ="/Admin/Goods/Goods_del/goods_id/"+gid;
+		  }
+		  else{
+			return;
+		  }
+            }else{
+                alert("已上架或是已下架商品不可进行删除");
+            }	
+	}
+	function Batch(Bat)
+	{
+            var goods_id = checkbox();
+            if(goods_id.length != 0)
+            {
+                var goods_o = goods_id.split(",");
+                var goods_l = parseInt(goods_o.length)- parseInt(1);
+                var Bat_name = Bat.split("@");
+                var Bat_ssna = "";
+                if(Bat_name[1] == 'status' && Bat_name[0] == 1)
+                {
+                    Bat_ssna = "批量上架";
+                }else if(Bat_name[1] == 'status' && Bat_name[0] == 2){
+                    Bat_ssna = "批量下架";
+                }else if(Bat_name[1] == 'is_index'){
+                    Bat_ssna = "批量首页推广";
+                }else if(Bat_name[1] == 'is_hot'){
+                    Bat_ssna = "批量热门推荐";
+                }else if(Bat == 'del'){
+                    Bat_ssna = "批量删除";
+                }
+		if(confirm("您确认将选择的"+goods_l+"条数据进行"+Bat_ssna+"吗?")){
+				
+				var p = $("#page").val();
+				if(p == '' )
+				{
+					var str_p = 1;
+				}else {
+					var str_p = p;
+				}
+				if(Bat == "del")
+				{
+                                        var d = '@';
+					var url = "__APP__/Admin/Goods/Goods_del";
+				}else{
+					var url = "__APP__/Admin/Goods/Goods_upstatus";
+				}
+				if(goods_id == '')
+				{
+					alert("请选择你要操作的商品");
+				}else{
+					$.ajax({
+						url:url,
+						type:"post",
+						data:{"Bat":Bat , "goods_id":goods_id ,"p":str_p,"d":d},
+						success:function(e){
+							var o = eval("("+e+")");
+							if(o["data"].length != 0)
+							{
+								alert("批量中有套餐商品，请先让套餐下架后在进行操做");
+							}else{
+								alert("商品操作成功");
+							}
+							location.href='__APP__/Admin/Goods/Goods_list';//alert(e);
+
+						}
+					});
+				}
+		  }
+		  else{
+			$("#menu_xl02").hide();
+		  }
+            }else {
+                alert("请选择商品");
+            }
+            
+		
+		
+	}
+	function checkbox()
+	{
+
+		var string = '';
+		var inps = document.getElementsByTagName('input');
+		for(var i = 0 ; i < inps.length ; i++)
+		{
+			if(inps[i].type == 'checkbox' && inps[i].name != "is_lim" && inps[i].id != "top_ids")
+			{
+				if(inps[i].checked == true)
+				{
+					string += inps[i].value + ',';
+				} 
+			}
+		}
+		return string;
+	}
+	function Lotzuo()
+	{
+           // $("#menu_xl02").attr("style" , "display:block");
+		$("#menu_xl02").toggle();
+	}
+	//预览数据
+	function preview(gid)
+	{
+		window.open ('__APP__/Home/Goods/gooddetails/id/'+gid,'newwindow'+gid,'height=648,width=1052,top=150,left=500,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');//写成一行
+
+	}
+        document.onclick=function()
+        {
+            //$("#menu_xl02").attr("style" , "display:none");
+        }
+        
+
+    $(document).click(function(){
+        if($("#menu_xl02").css('display') == 'block'){
+            $("#menu_xl02").hide();
+        }else{
+            $("#p").click(function(){
+               $("#menu_xl02").attr('style' , "display:block");
+               return false;
+            });
+            
+        }
+    });  
+    function hidec()
+    { 
+        var s= $("#menu_xl02").attr("style");
+        if(s == 'display:block')
+        {
+           // var s= $("#menu_xl02").attr("style" , "display:none");
+        }
+    }
+</script>
+
+

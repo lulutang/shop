@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title> 添加购物车商品成功</title>
+<link href="{$Think.ADMIN_CSS}global.css" rel="stylesheet" type="text/css">
+<link href="{$Think.ADMIN_CSS}m_style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+
+</head>
+
+<body>
+<div class="content_right addproducts_success">
+    <div id="indent" class="indent" onClick="changeWin()"></div>
+    <div class="link_path">您所在的位置：<a href="customer_list.html">客官管理 </a>&nbsp;>&nbsp;<a href="javascript:void(0)">添加购物车商品成功</a></div>
+	<table class="addproducts_successbox">
+    	<tr>
+        	<td width="313" class="icon_bg" rowspan="4"></td>
+            <td class="text-left success_title" colspan="2"><span>恭喜您</span>，为客官【孙小姐-15201110631】创建购物车商品成功！</td>
+        </tr>
+        <tr>
+        	<td class="text-right ver_top" width="129">服务信息：</td>
+            <td  class="text-left" width="1131">
+            	<p>商标注册[天利-33类-￥1590.00]</p>
+                <p>商标注册[天利-33类-￥1590.00]</p>
+            </td>
+        </tr>
+        <tr>
+        	<td class="text-right">总额：</td>
+            <td  class="text-left"><span class="colf00">￥3180.00</span></td>
+        </tr>
+        <tr>
+        	<td class="text-right"></td>
+            <td  class="text-left">
+            	<p>短信通知客官立即付款 <a href="">[发送短信]</a></p>
+                <p><a href="">复制付款链接</a> <a href="customer_list.html">查看客户</a></p>
+            </td>
+        </tr>
+    
+    </table>
+</div>
+
+<script type="text/javascript">
+//菜单缩放
+  openclose=true;
+  function changeWin(){ 
+      parent.bodyFrame.cols =openclose?"1,*":"210,*";//这句话有报错
+      $(".indent").toggleClass('ind');
+      openclose=!openclose;
+  }
+</script>
+</body>

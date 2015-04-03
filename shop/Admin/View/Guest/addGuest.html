@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>新增客官</title>
+<link href="{$Think.ADMIN_CSS}global.css" rel="stylesheet" type="text/css">
+<link href="{$Think.ADMIN_CSS}m_style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}guest.js?aa=<?php echo mt_rand(10000000,99999999);?>"></script>
+</head>
+
+<body>
+<div class="content_right addnew">
+    
+    
+    <div id="indent" class="indent" onClick="changeWin()"></div>
+    <div class="link_path">您所在的位置：<a href="customer_list.html">客官管理 </a>&nbsp;>&nbsp;<a href="javascript:void(0)">添加购物车商品</a></div>
+    <div class="addnew_box">
+        <form id="subfrm" name="subfrm" action="/index.php/Admin/Guest/addGuest" method="post" >
+    	<div class="title">个人客官 </div>
+        <div class="addnewinfo">
+            <p><span>客官昵称:</span><input class="text300" id="user_name" name="user_name" type="text"  value="请输入客官昵称"   style="color:#ccc;" onFocus="javascript:this.style.color='#333';if(this.value=='请输入客官昵称')this.value='';" onBlur="javascript:if(this.value==''){this.value='请输入客官昵称';this.style.color='#ccc';}"  /></p>
+            <p><span>客官姓名:</span><input class="text300" id="truename" name="truename" type="text" value="请输入客官姓名"  style="color:#ccc;" onFocus="javascript:this.style.color='#333';if(this.value=='请输入客官姓名')this.value='';" onBlur="javascript:if(this.value==''){this.value='请输入客官姓名';this.style.color='#ccc';}"  /></p>
+            <p id="mobile"><span><font class="colf00">*</font>手机号码:</span><input class="text300" id="mobile_phone" name="mobile_phone" type="text" value="请输入手机号码"  style="color:#ccc;" onFocus="javascript:this.style.color='#333';if(this.value=='请输入手机号码')this.value='';" onBlur="javascript:if(this.value==''){this.value='请输入手机号码';this.style.color='#ccc';}"  />  </p>
+            <p><span>电子邮箱:</span><input class="text300" id="email" name="email" type="text" value="请输入正确的邮箱格式"  style="color:#ccc;" onFocus="javascript:this.style.color='#333';if(this.value=='请输入正确的邮箱格式')this.value='';" onBlur="javascript:if(this.value==''){this.value='请输入正确的邮箱格式';this.style.color='#ccc';}"  /> </p>
+            <p><span>QQ:</span><input class="text300" id="qq" name="qq" type="text" value="请输入正确格式的QQ号码"  style="color:#ccc;" onFocus="javascript:this.style.color='#333';if(this.value=='请输入正确格式的QQ号码')this.value='';" onBlur="javascript:if(this.value==''){this.value='请输入正确格式的QQ号码';this.style.color='#ccc';}"  /> </p>
+            <p class="btn"> 
+                <input type="hidden" id='hid' name='hid' value='' />
+                <input class="btn_confirm" onclick="checkGuest(1);" id="sub" name="sub" type="button" value="保存" /> <input class="save_go" id="sub1" onclick="checkGuest(2);" name="sub1" type="button" value="保存并发送短信" /> <input id="sub2" name="sub2" class="unsave" onclick="checkGuest(3);" type="button" value="保存并添加订单" /> <input id="sub3" name="sub3" onclick="javascript:history.go(-1);" class="back" type="button" value="返回" />
+            </p>       	
+        </div>   
+    </div>
+
+</div>
+
+<script type="text/javascript">
+//菜单缩放
+  openclose=true;
+  function changeWin(){ 
+      parent.bodyFrame.cols =openclose?"1,*":"210,*";//这句话有报错
+      $(".indent").toggleClass('ind');
+      openclose=!openclose;
+  }
+</script>
+</body>

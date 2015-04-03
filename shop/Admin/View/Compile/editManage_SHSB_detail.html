@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>工作台</title>
+<link href="{$Think.ADMIN_CSS}s_style.css" rel="stylesheet" type="text/css">
+<link href="{$Think.ADMIN_CSS}global.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{$Think.ADMIN_JS}Calendar1.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+</head>
+
+<body>
+  <div class="content_right">
+    <div class="indent" onclick="changeWin()"></div>
+    <div class="link_path">您所在的位置：<a href="/Admin/Compile/comshsb">编修管理</a>&nbsp;>&nbsp;<a href="/Admin/Compile/comshsb">服务结束</a>&nbsp;>&nbsp;{$minfo['order_code']}</div>
+    <ul class="s_state_link clearfix">
+      <li class="s_stated">
+        <p class="p1"><span>下单时间</span></p>
+        <p class="p2">{$minfo['addtime']|date='Y-m-d',###}<br>{$minfo['addtime']|date='H : i : s',###}<br>{$minfo['user_name']}</p>
+      </li>
+      <li class="s_stated">
+        <p class="p1"><span>支付时间</span></p>
+        <p class="p2">{$minfo['pay_time']|date='Y-m-d',###}<br>{$minfo['pay_time']|date='H : i : s',###}<br>{$minfo['user_name']}</p>
+      </li>
+      <li class="s_stated">
+        <p class="p1"><span>服务开始</span></p>
+        <p class="p2">{$minfo['server_starttime']|date='Y-m-d',###}<br>{$minfo['server_starttime']|date='H : i : s',###}<br>{$minfo['server_starthuman']}</p>
+      </li>
+      <li class="s_stated">
+        <p class="p1"><span>信息初审通过</span></p>
+        <p class="p2">{$minfo['infomationtime']|date='Y-m-d',###}<br>{$minfo['infomationtime']|date='H : i : s',###}<br>{$minfo['informationhuman']}</p>
+      </li>
+      <li class="s_stated cured">
+        <p class="p1"><span>编修审核</span></p>
+        <p class="p2">{$minfo['into_time']|date='Y-m-d',###}<br>{$minfo['into_time']|date='H : i : s',###}<br>{$minfo['run_name']}</p>
+      </li>
+      <li class="cur">
+        <p class="p1"><span>编修审核失败</span></p>
+        <p class="p2"></p>
+      </li>
+      <li class="">
+        <p class="p1"><span>报件</span></p>
+        <p class="p2"></p>
+      </li>
+      <li class="">
+        <p class="p1"><span>下发受理通知书</span></p>
+        <p class="p2"></p>
+      </li>
+      <li class="">
+        <p class="p1"><span>初审公告</span></p>
+        <p class="p2"></p>
+      </li>
+      <li class="">
+        <p class="p1"><span>下发注册证</span></p>
+        <p class="p2"></p>
+      </li>
+      <li class="last">
+        <p class="p1"><span>服务结束</span></p>
+        <p class="p2"></p>
+      </li>
+    </ul>
+    <div class="s_detail">
+     <div class="s_title">
+        <p class="s_pcaseid">商标注册基础信息--{$minfo['run_branch']}</p>
+        <p class="s_pcasestate" style="width:16%">跑堂：{$minfo['run_name']}</p>
+        <p class="s_pgoods">合同编号：{$minfo['order_code']}</p>
+        <p class="s_pprice" style="width:26%">订单编号：{$minfo['order_code']}</p>
+      </div>
+      <div class="s_content">
+          <a href="javascript:void(0)" class="s_a_sqs">申请书</a>
+          <a href="javascript:void(0)" class="s_a_wts">委托书</a>
+        <div class="s_dtr">
+          <p class="s_pn">商标名称：</p>
+          <p class="s_pd">
+            <b>{$minfo['goods_name']}</b><b>商标类别：{$minfo['style_name']}</b>
+            <a href="{$minfo['enroll']}" target="_blank">商标图样</a>
+            <if condition="$minfo['is_person'] eq 2">
+            <a href="{$minfo['trader_fbfphoto']}" target="_blank">企业主体资格</a>
+            </else>
+          
+          <a href="{$minfo['trader_photo']}" target="_blank">身份证</a><a href="{$minfo['trader_fbfphoto']}" target="_blank">个体执照</a>
+          </if>
+          </p>
+        </div>
+        <div class="s_dtr clearfix" style='height: auto'><p class="s_pn">商品/服务项目：</p><p class="s_pd">{$minfo['subd']}</p></div>
+        <div class="s_line"></div>
+        <div class="s_dtr"><p class="s_pn">申请人名称（中文）：</p><p class="s_pd">{$minfo['trader_name']}</p></div>
+        <div class="s_dtr"><p class="s_pn">申请人名称（英文）：</p><p class="s_pd">{$minfo['e_trader_name']}</div>
+        <div class="s_dtr"><p class="s_pn">申请人国际/地区：</p><p class="s_pd">{$minfo['trader_province']}{$minfo['trader_city']}</p></div>
+        <div class="s_dtr"><p class="s_pn">申请人地址（中文）：</p><p class="s_pd">{$minfo['trader_address']}</p></div>
+        <div class="s_dtr"><p class="s_pn">申请人地址（英文）：</p><p class="s_pd">{$minfo['e_trader_address']}</p></div>
+        <div class="s_dtr"><p class="s_pn">邮政编码：</p><p class="s_pd">{$minfo['postcode']}</p></div>
+        <div class="s_dtr"><p class="s_pn">联系人：</p><p class="s_pd">{$minfo['run_name']}</p></div>
+        <div class="s_dtr"><p class="s_pn">电话：</p><p class="s_pd">{$minfo['run_phone']}</p></div>
+        <if condition="$minfo['is_inland'] eq 2">
+        <div class="s_dtr"><p class="s_pn">外国申请人的国内接收人：</p><p class="s_pd">{$minfo['in_accept_name']}</p></div>
+        <div class="s_dtr"><p class="s_pn">国内接收人地址：</p><p class="s_pd">{$minfo['in_accept_address']}</p></div>
+        <div class="s_dtr"><p class="s_pn">邮政编码：</p><p class="s_pd">{$minfo['in_accept_postcode']}</p></div>
+        </if>
+        <div class="s_dtr"><p class="s_pn">代理机构名称：</p><p class="s_pd">{$Think.COMPANY}</p></div>
+        <div class="s_dtr">
+          <p class="s_pn">商标申请声明：</p>
+          <p class="s_pd">{$minfo['need_state']}</p>
+        </div>
+        <div class="s_dtr">
+          <p class="s_pn">要求优先权声明：</p>
+          <p class="s_pd">{$minfo['need_prior']}</p>
+        </div>
+        <div class="s_dtr"><p class="s_pn">申请/展出国家/地区：</p><p class="s_pd">{$minfo['area']}</p></div>
+        <div class="s_dtr"><p class="s_pn">申请/展出日期：</p><p class="s_pd"><if condition="empty($minfo['need_time'])"><else/>{$minfo['need_time']|date='Y-m-d H:i:s',###}</if></p></div>
+        <div class="s_dtr"><p class="s_pn">申请号：</p><p class="s_pd">{$minfo['need_number']}</p></div>
+      </div>
+      <div class="s_title">
+        <p class="s_pcaseid">编修审核</p>
+      </div>
+      <div class="s_content">
+        <div class="s_edit_btns">
+          <p>
+            <foreach name="log" item="lo">
+                <p>
+                    状态：<span style="color:red">审核不通过</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    审核人：{$lo['auditor']}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    审核日期：<if condition="empty($lo['time'])"><else/>{$lo['time']|date='Y-m-d H:i:s',###}</if>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    原因：{$lo['causes']}
+                </p>
+         </foreach>
+          </p>
+        </div>
+      </div>  
+    </div>
+
+  </div>
+<script type="text/javascript"> 
+  //菜单缩放
+  openclose=true;
+  function changeWin(){ 
+      parent.bodyFrame.cols =openclose?"1,*":"210,*";//这句话有报错
+      $(".indent").toggleClass('ind');
+      openclose=!openclose;
+  }
+  $(function(){
+    //列表标题排序
+    $(".casePay table.spffxx tr th a").bind("click",function(){
+      $(this).toggleClass("cur"); 
+    });
+  });
+</script>
+</body>

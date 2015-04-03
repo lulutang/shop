@@ -1,0 +1,399 @@
+<link href="{$Think.ADMIN_CSS}style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}xial.js"></script>
+<script type="text/javascript" src="layer/layer.min.js"></script>
+
+<script type="text/javascript"> 
+function change(){
+		$.layer({
+		type: 2,
+		shadeClose: true,
+		title: '添加主业务类型',
+		shadeClose: true,
+		closeBtn: [0, true],
+		shade: [0.8, '#000'],
+		border: [0],
+		offset: ['20px',''],
+		area: ['400px', ($(window).height() - 50) +'px'],
+		//iframe: {src: 'test33.html'},
+		//page :{dom : '#taobao'},
+		page: {
+        html: '<\div style="width:460px; height:280px; background-color:#81BA25; color:#fff;"><\div style="padding:20px;">里面传入任何html元素<\/div><\/div>' //此处放了防止html被解析，用了\转义，实际使用时可去掉
+    },
+
+	}); 
+}
+
+</script>
+<script>
+   function showOne(){
+       $("#server_id").attr("value",'');
+       $("#server_name").attr("value",'');
+       $("#description").attr("value",'');
+       $('.addmain').show();
+   }
+   function hideOne(){
+       $('.addmain').hide();
+   }
+   function addSon(p_id){ //添加一级或二级
+       $("#server_id").attr("value",'');
+       $("#server_name").attr("value",'');
+       $("#description").attr("value",'');
+       $("#parent_id").attr("value",p_id);
+       $('.addmain').show();
+   }
+  function editSon(id){
+       
+       $("#id").attr("value",id);
+       //异步获取数据
+       $.ajax({
+         type: 'POST',
+         url:"__URL__/getOneInfo", 
+         data:{"type":"showEdit","id":id},
+        
+         success: function(result){
+              //  alert(result);
+                var obj = eval('(' + result + ')'); 
+              //  $("#server_id").attr("value",obj.server_id);
+                $("#parent_id").attr("value",obj.parent_id);
+                $("#server_name").attr("value",obj.server_name);
+                $("#description").attr("value",obj.description);
+            }
+        });
+       $('.addmain').show();
+   }
+
+   function showAttr(id){
+       
+        $("#cur_id").attr("value",id);
+       //异步获取数据
+        $.ajax({
+          type: 'POST',
+          url:"__URL__/getAttrList", 
+          data:{"type":"showAttr","id":id},
+
+          success: function(result){
+              //   alert(result);
+               $("#attr_list").empty();
+                var obj = eval('(' + result + ')');  
+                if(obj.data.length){
+                    var j=1;
+                    for (var i=0; i < obj.data.length; i++){  
+                       // alert(obj[i].user_name);                
+                       // $("#attr_list").append('<tr id="aa_'+obj.data[i].id+'"><td>'+obj.data[i].id+'</td><td>'+obj.data[i].attr_id+'</td><td>'+obj.data[i].attr_name+'</td><td>'+obj.data[i].vals+'</td> <td>'+obj.data[i].is_sale+'</td><td>'+obj.data[i].attr_type+'</td><td><a onclick="addattr('+obj.data[i].id+');">编辑</a>|<a onclick="delattr('+obj.data[i].id+');">删除</a></td></tr>');
+                        $("#attr_list").append('<tr id="aa_'+obj.data[i].id+'"><td>'+j+'</td><td>'+obj.data[i].attr_name+'</td><td>'+obj.data[i].vals+'</td> <td><a onclick="addattr('+obj.data[i].id+');">编辑</a>|<a onclick="delattr('+obj.data[i].id+');">删除</a></td></tr>');
+                        j++;
+                    }
+                }
+             }
+         });
+       $('.addtype').show();
+   }
+   function hideSon(){
+       $('.addtype').hide();
+   }
+   function addattr(id){ //添加和编辑放一块了
+       
+       if(id){
+         var pid = $("#cur_id").val();
+           // alert(pid);
+        $("#hi_p_id").attr('value',pid);      
+        $.ajax({
+          type: 'POST',
+          url:"__URL__/getAttrOne", 
+          data:{"type":"editAttr","id":id},
+
+          success: function(result){
+
+                var obj = eval('(' + result + ')');
+               
+                $("#attr_id").attr("value",obj.data[0].attr_id);
+//                $("#hi_p_id").attr("value",obj.data.s_id);
+                $("#attr_name").attr("value",obj.data[0].attr_name);
+                $("#aid").attr("value",obj.data[0].id);
+                
+                $("#appendinput").empty();
+                for (var i=0; i < obj.vals.length; i++){ 
+
+                   $("#appendinput").append('<tr id=l_'+i+'><td><input style="width:120px;" type=text id='+obj.vals[i].id+' name="T_values" value='+obj.vals[i].value+'></td><td><a onclick="removeinput('+i+','+obj.vals[i].id+');">删除</a></td></tr>');
+                }
+             }
+         });  
+       }else{
+           if($("#attr_list").html()){
+               alert('当前业务只支持添加一种属性，如有疑问请联系超级管理员！'); return;
+           }
+           //("#attr_id").attr('value','');
+           $("#attr_name").attr('value','');
+           $("#appendinput").empty();
+           
+           $("#aid").attr('value','');
+            var pid = $("#cur_id").val();
+           // alert(pid);
+            $("#hi_p_id").attr('value',pid);
+           
+     }
+     $('.edit').show();
+   }
+   function hideattr(){
+       $('.edit').hide();
+   }
+   
+   function appendinput(){
+       
+       var  valueArr = document.getElementsByName("T_values") ;
+       var len = valueArr.length;
+   
+        len = len+1;
+       $("#appendinput").append('<tr id=l_'+len+'><td><input style="width:120px;" type=text id="T_values" name="T_values" value=\'\'/></td><td><a href="javascript:removeinput('+len+');">删除</a></td></tr>');
+   }
+   function removeinput(i,id){
+            if( id ){
+                //验证此属性下有没有商品
+                $.ajax({
+                type: 'POST',
+                url:"__URL__/IsattrGoods", 
+                data:{"type":"IsattrGoods","id":id},
+
+                success: function(result){
+                       if(result ==='99'){
+                           alert('此属性下含有商品！不能删除！');
+                       }else{
+                           $("#l_"+i).remove();
+                       }
+                   }
+               });
+            }else{
+              $("#l_"+i).remove();
+            }
+   }
+   function sumValue()
+   {
+        var  valueArr = document.getElementsByName("T_values") ;
+        var sumValue='';
+        for (var i=0;i<valueArr.length;i++ )
+        {           
+            sumValue += valueArr[i].value +',';
+        }
+       return sumValue;
+    }
+    
+    function sumVV()
+   {
+        var  valueArr = document.getElementsByName("T_values") ;
+        var sumVv='';
+        for (var i=0;i<valueArr.length;i++ )
+        {           
+            sumVv += valueArr[i].id +',';
+        }
+       return sumVv;
+    }
+    
+    function addDatAattr(){
+       if($("#attr_name").val() == '') {
+        alert('属性名称不能为空哦！');
+        return false;
+       } else {
+            var id= $("#aid").val();
+            var s_id= $("#hi_p_id").val();
+            var attr_id= $("#attr_id").val();
+            var attr_name= $("#attr_name").val();
+            var values= sumValue();
+            var aid = sumVV();
+
+            $.ajax({
+              type: 'POST',
+              url:"__URL__/addattrvalue", 
+              data:{"type":"addDatAattr","s_id":s_id,"attr_id":attr_id,"attr_name":attr_name,"values":values,"id":id,"aid":aid},
+
+              success: function(result){
+                     if(result){
+                         hideattr();
+                         showAttr(result);
+                     }
+
+                 }
+             });
+       }
+    }
+    function delattr(attr_id){
+       if(confirm('确认是否要删除?')){ 
+            if( attr_id ){
+             $.ajax({
+               type: 'POST',
+               url:"__URL__/delTypeAttr", 
+               data:{"type":"delTypeAttr","id":attr_id},
+
+               success: function(result){
+                   
+                      if(result==='1'){
+                          alert('删除成功！');
+                          $("#aa_"+attr_id).remove();
+                      }else if( result==='99' ){
+                          alert('此属性下含有商品不能删除！');
+                      }
+                  }
+              });
+             }
+       }
+   }
+   
+   function checkserver(){
+
+       if($("#server_name").val() == '') {
+        alert('业务类型不能为空哦！');
+        return false;
+       } else {
+          $('#addzyw').submit(); 
+      //  return true;
+       }
+   }
+</script>
+<!--头部 开始-->
+
+<div class="wapper">
+    
+
+    
+    <div class="wapper-right">
+    <div class="right_inner">
+    	<div class="path">您的位置：<a  href="/index.php/Admin/Index/main">工作台</a>》<a href="/index.php/Admin/Server/serverlist">业务管理</a>》<a>业务类型管理</a></div>
+<!--        <p class="tjyjyw">
+            <a href="javascript:showOne();">添加一级业务类型</a>
+        </p>-->
+        <div class="table">
+        <ul class="title">
+<!--    		<li class="wp20"><div>业务ID</div></li>-->
+    		<li class="wp20"><div>业务类型名称</div></li>
+            <li class="wp30"><div>业务类型描述</div></li>
+            <li class="wp20"><div>操作</div></li>
+    	</ul>
+                <?php
+                    if( $data ){
+                        foreach( $data as $value ){
+                        
+                 ?>
+		<dl>
+                 
+    		<dt class="sub">
+            	<ul>
+<!--    				<li class="wp20"><div class="first"><?php echo $value['server_id'];?></div></li>-->
+        			<li class="wp20"><div><?php echo $value['server_name'];?></div></li>
+                                <li class="wp30"><div title="<?php echo $value['description'];?>" alt="<?php echo $value['description'];?>" ><?php echo sub_str($value['description'],30);?></div></li>
+        			<li class="wp20">
+                                    <div><a href="javascript:addSon(<?php echo $value['id'];?>);"><img title="添加二级业务" alt="添加二级业务" src="{$Think.ADMIN_IMAGES}1_03.png"></a>
+                                        <a href="javascript:editSon(<?php echo $value['id'];?>);"><img title="编辑业务" alt="编辑业务" src="{$Think.ADMIN_IMAGES}1_05.png"></a>
+                                    <?php if( $value['server_name'] !='商标服务' && $value['server_name'] !='专利服务' && $value['server_name'] !='版权服务'){?>    <a onclick="{if(confirm('确认是否要删除?')){this.document.formname.submit();return true;}return false;}" href="__URL__/delserver/id/<?php echo $value['id'];?>"><img src="/Application/Admin/Static/image/1_07.png"></a><?php } ?>
+                                    </div></li>
+    			</ul>
+            </dt>
+               <?php 
+             
+                if( $value['two']){
+                    foreach( $value['two'] as $val ){
+               ?>
+    		<dd>
+            	<ul>
+<!--                    <li class="wp20"><div class="first"><?php echo $val['server_id'];?></div></li>-->
+                    <li class="wp20"><div><?php echo $val['server_name'];?></div></li>
+                    <li class="wp30"><div title="<?php echo $val['description'];?>" alt="<?php echo $val['description'];?>" ><?php echo sub_str($val['description'],30);?></div></li>
+                    <li class="wp20">
+                        <div>
+<!--                            <a href="javascript:addSon(<?php echo $val['id'];?>);"><img src="{$Think.ADMIN_IMAGES}1_03.png"></a>-->
+                            <a href="javascript:showAttr(<?php echo $val['id'];?>);"><img title="设置属性值" alt="设置属性值" src="{$Think.ADMIN_IMAGES}icon10.png"></a>
+                            <a href="javascript:editSon(<?php echo $val['id'];?>);"><img title="编辑业务" alt="编辑业务" src="{$Think.ADMIN_IMAGES}1_05.png"></a>
+<!--                            <a href="javascript:editAttr(<?php echo $val['id'];?>);">编辑属性</a>-->
+                            <a onclick="{if(confirm('确认是否要删除?')){this.document.formname.submit();return true;}return false;}" href="__URL__/delTwoserver/id/<?php echo $val['id'];?>"><img src="{$Think.ADMIN_IMAGES}1_07.png"></a>
+                        </div>
+                    </li>
+    		</ul>
+            </dd>
+            <?php }} ?>
+		</dl>
+            <?php }  } ?>
+
+        <div class="clear"></div>
+	</div><!--table end-->
+        </div>
+    <!--right_inner end-->
+    <!--addmain begin-->
+    <div class="addmain" style="display: none;">
+    	<h3>添加业务类型<span class="guanbi" onclick="hideOne();">X</span></h3>
+        <form action="/index.php/Admin/Server/addOne" method="post" name="addzyw" id="addzyw" >
+            <input type="hidden" id='parent_id' name="parent_id" value='' />
+            <input type="hidden" id='id' name="id" value='' />
+            	<table class="tjzy_02">
+<!--                    <tr><td><p><span>业务类型id</span><input id="server_id" name="server_id" type="text" value="" size="20" maxlength="20" placeholder="请输入两位大写字母进行前缀标识如'SB'" ></p></td></tr>-->
+                    <tr><td><span>*</span><span class="tjzy_02_name">业务类型名称:</span><input  id="server_name" name="server_name" type="text" value="" size="20" maxlength="20" placeholder="请输入业务类型名称"></td></tr>
+                    <tr><td><span></span><span class="tjzy_02_name">业务类型描述:</span>
+                  <textarea id="description" name="description" cols="20" rows="3"></textarea></td></tr>
+                    <tr><td class="add_zywlx"><input name="sub" onclick="checkserver()" type="button" value="提交" />
+                <input name="colse" onclick="hideOne();" type="button" value="关闭" /></td></tr>
+                </table>
+                  
+        </form>
+    </div>
+    <!--addmain end-->
+    <!--addtype begin-->
+    <div  class="addtype" style="display: none;">
+    	<div  style="height:auto!important; height:500px; min-height:300px;" class="backcolor">
+    	<h3>设置业务属性规格<span class="guanbi" onclick="hideSon();">X</span></h3>
+        
+            <form action="index.php/Admin/Server/serverlist/addAttr/" method="post" name="addzyw">
+            <input type="hidden" id="cur_id" name="cur_id" value="" />    
+            <p><a href="javascript:addattr();">添加属性</a></p>
+
+            <table  >
+        	<tr>
+                    <th>序号</th>
+<!--                    <th>属性ID</th>-->
+                    <th>属性名称</th>
+                    <th>属性值</th>
+<!--                    <th>是否销售属性</th>
+                    <th>属性规格类型</th>-->
+                    <th>操作</th>
+  		</tr>
+                <tbody id="attr_list">
+
+               </tbody>
+
+            </table>
+            <br />
+            <div class="anniu_1220"><input name="colse" onclick="hideSon();" type="button" value="关闭" /></div>
+          </form>
+        </div>
+    </div>
+    <!--addtype end-->
+    <!--edit begin-->
+    <div class="edit">
+    	<div class="backcolor">
+    	<h3>添加属性值<span class="guanbi" onclick="hideattr();">X</span></h3>
+        <form action="" method="post" name="edit">
+            <input type="hidden" id="aid" name="aid" value="" />
+            <input type="hidden" id="hi_p_id" name="hi_p_id" value="" />
+<!--           <p><span>属性ID</span><input id="attr_id" name="attr_id" type="text" value="" size="20" maxlength="20" placeholder="请输入属性ID"></p>-->
+<p><span class="xing">*</span><span class="sxmc_name">属性名称:</span><input id="attr_name" name="attr_name" type="text" value="" size="20" maxlength="20" placeholder="请输入属性名称"></p>
+
+        
+        <p class="add_property"><a href="javascript:appendinput();">新增</a></p>
+        <table>
+        	<tr>
+    			<th>值名称</th>
+    			<th>操作</th>
+                
+  			</tr>
+                        <tbody id="appendinput">
+ 
+                        </tbody>
+        </table>
+        <input name="sub" type="button" onclick="addDatAattr()" value="提交" />
+        <input name="colse" onclick="hideattr();" type="button" value="关闭" />
+         </form>
+        </div> 
+    </div>
+    <!--edit end-->
+    </div><!--wapper-right end-->
+</div><!--wapper end-->
+<!--头部 开始-->
+</body>
+</html>

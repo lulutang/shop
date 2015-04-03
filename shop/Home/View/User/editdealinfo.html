@@ -1,0 +1,107 @@
+<include file="Public/header" />
+<script type="text/javascript" src="{$Think.HOME_JS}ucenter/editdealinfo.js"></script>
+<script type="text/javascript" src="{$Think.HOME_JS}jsAddress.js"></script>
+<if condition="$dealinfo['is_self'] eq 1">
+<body onload="one1show()">
+<else />
+<body onload="one2show()">
+</if>
+<!--个人中心交易人信息添加 开始-->
+<div class="container">
+	<div class="crumbs">
+    	您的位置：
+        <a href="{$Think.DOMAIN}">中细软服务商城</a>&gt;
+        <a href="{$Think.DOMAIN}Home/User/userhome">个人中心</a>&gt;
+        <a href="javascript:void()">交易人信息</a>
+       
+    </div>
+	<include file="Public/ucenter_left" />
+    <div class="members_right trader  float-right">
+    	<p class="members_right_title">交易人信息</p>
+        <div class="tab1" id="tab1">
+            <div class="menu">
+                <ul>
+                    <li id="one1" onclick="one1show()">个人申请人信息</li>
+                    <li id="one2" onclick="one2show()">企业申请信息</li>
+                </ul>
+            </div>
+            <div class="menudiv">
+                <div id="con_one_1">
+                    <table>
+                        <form action="/Home/User/editselfdealinfos/id/{$dealinfo['id']}" method="post" onsubmit="return CheckTrue()">
+                    	<tr>
+                        	<td width="100" class="text-right"><span></span>真实姓名:</td>
+                            <td width="314" class="text-left"><input class="lineheight29" type="text" size="50" name="self_name" value="{$dealinfo['self_name']}"/></td>
+                            <td width="252" class="text-left color9">请填写真实有效的姓名</td>
+                        </tr>
+                        <tr>
+                        	<td class="text-right"><span></span>个人所在地:</td>
+                            <td class="text-left">
+                            	<select class="padding_l20" id="cmbProvince" name="province"></select>
+                                <select class="padding_l20" id="cmbCity" name="city"></select>
+                                <select class="padding_l20" id="cmbArea" name="area"></select>
+                                <br />
+                                <script type="text/javascript">
+                                addressInit('cmbProvince', 'cmbCity', 'cmbArea', '{$dealinfo.province}', '{$dealinfo.city}', '{$dealinfo.area}');
+                                addressInit('Select1', 'Select2', 'Select3');
+                                </script>
+                            </td>
+                            <td class="text-left color9"></td>
+                        </tr>
+                        <tr>
+                        	<td class="text-right"><span>*</span>详细地址:</td>
+                            <td class="text-left"><input class="lineheight29" type="text" size="50" name="minute_address" value="{$dealinfo['minute_address']}" id="minute_address"/></td>
+                            <td class="text-left color9">请填写真实有效的地址</td>
+                        </tr>
+                        <tr>
+                        	<td class="text-right"><span>*</span>手机号码:</td>
+                            <td class="text-left"><input class="lineheight29" type="text" size="50" name="phone" value="{$dealinfo['phone']}" id="phone"/></td>
+                            <td class="text-left color9"></td>
+                        </tr>
+                         <tr>
+                        	<td class="text-right"></td>
+                            <td class="text-left"><input class="button_save" type="submit" value="确认"></td>
+                            <td class="text-left color9"></td>
+                        </tr>
+                        </form>                   
+                    </table>
+                </div>
+                <div id="con_one_2" style="display:none;">
+                	<table>
+                        <form action="/Home/User/editcomdealinfos/id/{$dealinfo['id']}" method="post" onsubmit="return CheckFalse()">
+                    	<tr>
+                        	<td width="86" class="text-right padding_bottom50"><span></span>企业名称:</td>
+                            <td width="500" class="text-left">
+                            	<input class="lineheight29" type="text" size="50" name="company_name" value="{$dealinfo['company_name']}"/>
+                            	<p class="lineheight20 color9">以营业执照上的公司名称（包括个体工商户）开设财付通账户，此类账户需拥有对公银行转账。您填写的公司信息将会严格保密，不会在任何场所公开。</p>
+                            </td>        
+                        </tr>
+                     
+                        <tr>
+                        	<td class="text-right"><span></span>企业联系人:</td>
+                            <td class="text-left"><input class="lineheight29" type="text" size="50" name="self_name" value="{$dealinfo['self_name']}"/></td
+                        ></tr>
+                        <tr>
+                        	<td class="text-right"><span>*</span>企业联系方式:</td>
+                            <td class="text-left"><input class="lineheight29" type="text" size="50" name="phone" value="{$dealinfo['phone']}" id="q_phone"/></td>
+                        </tr>
+                         <tr>
+                        	<td class="text-right"></td>
+                            <td class="text-left"><input class="button_save" type="submit" value="确认"></td>
+                        </tr>
+                        </form>
+                    </table>
+                </div>
+               
+            </div>
+	    </div>
+        
+    </div>
+    <div style="clear:both;"></div> 
+
+
+</div>
+</body>
+<!--个人中心交易人信息添加 结束-->
+<include file="Public/footer" />
+

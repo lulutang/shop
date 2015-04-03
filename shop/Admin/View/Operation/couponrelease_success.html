@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>优惠券-发布</title>
+<link href="{$Think.ADMIN_CSS}global.css" rel="stylesheet" type="text/css">
+<link href="{$Think.ADMIN_CSS}g_style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+<div class="content_right">
+    <div id="indent" class="indent" onClick="changeWin()"></div>
+    <div class="link_path">您所在的位置：<a href="/Admin/Operation/coupon">运营管理</a>&nbsp;>&nbsp;<a href="/Admin/Operation/coupon">优惠券</a>&nbsp;>&nbsp;<a href="javascript:void(0)">发布成功</a></div>
+		<table class="g_release">
+			<tr><td class="gtr_left"><img align="right" src="{$Think.ADMIN_IMAGES}success.png"/></td><td class="gtr_right"><span class="gr_success">恭喜您，发布成功！</span></td></tr>
+			<tr><td colspan="2">您所发布的活动标题为<span class="gr_span">&#147;{$info['name']}&#148;</span></td></tr>
+			<if condition="('2' neq $info['type'])">
+			<tr><td colspan="2">商品数为<span class="gr_span">{$info['count']}</span>件</td></tr>
+			</if>
+			<tr><td class="last" colspan="2">活动起止时间：<span>{$info['startTime']|date='Y-m-d',###}</span>&nbsp;&nbsp;至&nbsp;&nbsp;<span>{$info['endTime']|date='Y-m-d',###}</span></td></tr>
+			
+		</table>
+		<div class="ga_link"><a href="/Admin/Operation/coupon"><span id="mes">60</span>秒之后返回创建促销页面</a></div>
+</div>
+
+</body>
+
+</html>
+
+<script type="text/javascript" src="{$Think.ADMIN_JS}Calendar1.js"></script>
+<script type="text/javascript">
+var i = 60;
+var intervalid;
+intervalid = setInterval("fun()", 1000);
+function fun() {
+if (i == 0) {
+window.location.href = "/Admin/Operation/coupon";
+clearInterval(intervalid);
+}
+document.getElementById("mes").innerHTML = i;
+i--; 
+}
+//菜单缩放
+  openclose=true;
+  function changeWin(){ 
+      parent.bodyFrame.cols =openclose?"1,*":"210,*";//这句话有报错
+      $(".indent").toggleClass('ind');
+      openclose=!openclose;
+  }
+</script>

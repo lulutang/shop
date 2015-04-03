@@ -1,0 +1,176 @@
+<!--顶部导航 开始-->
+<include file="Public/header" />
+
+<!--个人中心交易人信息添加 开始-->
+<div class="container">
+	<div class="crumbs">
+    	您的位置：
+        <a href="">中细软服务平台</a>&gt;
+        <a href="">个人中心</a>&gt;
+        <a href="">我的订单</a>&gt;
+        <a href="">订单管理</a>
+        </div>
+	<include file="Public/ucenter_left"/>
+    <div class="members_right trader  float-right">
+			           
+      <div id="tab">
+            <ul class="tab_menu">
+                <li class="selected">申请人信息录入</li>
+            </ul>
+            <div class="tab_box">
+                <div id="con">
+                    <div id="tagContent">
+                        <form method="post" enctype="multipart/form-data" name="action">
+                      <div class="tagContent selectTag" id="tagContent0">
+                      <table>
+			<tr>
+                        <td class="text-right"><span class="colorf00">*</span> 类型：</td>
+                        <td><input type="radio" id="self" value="1" name="is_person" checked/>个人 <input  class="radio"  type="radio" id="company" value="2" name="is_person"/>企业</td>
+                        </tr>
+                        <tr>  
+                        <td class="text-right"><span class="colorf00">*</span> 地区：</td>
+                        <td><input  type="radio" id="inland" value="1" name="is_inland" checked/>国内 <input  class="radio"  type="radio" id="foreign" value="2" name="is_inland"/>国外</td>
+                        </tr>
+                                <tr>
+                                	<td width="17%"></td>
+                                	<td width="83%">
+                                    	<ul class="upload">
+                                        	<li>
+                                            	<p><img src="{$Think.HOME_IMAGES}charter001.png" id="y_image" height="252px" width="172px"/></p>
+                                                <p><input name="y_file" type="file" id="y_file"/></p>
+                                            </li>
+                                            <li id="indent_src">
+                                            	<p><img src="{$Think.HOME_IMAGES}charter002.png" id="s_image" height="252px" width="172px"/></p>
+                                                <p><input name="s_file" type="file" id="s_file"/></p>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr>
+                                	<td class="text-right"><span class="colorf00">*</span> 申请人名称（中文）：</td>
+                                    <td><input class="text300_30" type="text" name="t_name" id="t1_name"/> <span class="prompt">必须与营业执照上的公司名称一致</span></td>
+                                </tr>
+                                <tr>
+                                	<td class="text-right"><span class="colorf00">*</span> 申请人电话：</td>
+                                    <td><input class="text300_30" type="text" name="t_phone" id="t1_phone"/> <span class="prompt"></span></td>
+                                </tr>
+                                
+                                 <tr>
+                                	<td class="text-right"><span class="colorf00"></span> （英文）：</td>
+                                    <td><input class="text300_30" type="text" name="t_e_name" id="t1_e_name"/> <span class="prompt">必须与营业执照上的公司名称一致</span></td>
+                                </tr>
+                                
+                                <tr id="indent">
+                                	<td class="text-right"><span class="colorf00">*</span> 身份证号：</td>
+                                    <td><input class="text300_30" type="text" name="t_num" id="t1_num"/> <span class="prompt">必须与个人身份证上面的一致</span></td>
+                                </tr>
+                                <tr>
+                                	<td class="text-right"><span class="colorf00">*</span> 申请人国籍 / 地区 ：</td>
+                                        <td>
+                                        <select id="s1" class="select130_30" name="country"> <option>国家 </option> </select> 
+                                        <select id="s2" class="select130_30" name="province"> <option>省份、州 </option> </select> 
+                                        </td>
+                                </tr>
+                                <tr>
+                                	<td class="text-right"><span class="colorf00">*</span> 申请人地址（中文）：</td>
+                                    <td><input class="text300_30" type="text" name="t_address" id="t1_address"/> <span class="prompt">必须与营业执照上的公司名称一致，如营业执照上不带省市的申请书中必须加上省市</span></td>
+                                </tr>
+                                <tr>
+                                	<td class="text-right">（英文）：</td>
+                                    <td><input class="text300_30" type="text" name="t_e_address" id="t1_e_address"/> <span class="prompt">必须与营业执照上的公司名称一致，如营业执照上不带省市的申请书中必须加上省市</span></td>
+                                </tr>
+                                <tr>
+                                	<td class="text-right"><span class="colorf00">*</span>邮政编码：</td>
+                                    <td><input class="text150_30" type="text" name="t_dawk" id="t1_dawk"/> <span class="prompt">请输入与营业执照上公司地址相对的邮政编码</span></td>
+                                </tr>
+                               
+                                <tr id="tr1" style="display: none">
+                            
+                                	<td class="text-right"><span class="colorf00">*</span>外国申请人的国内接收人：</td>
+                                    <td><input class="text150_30" type="text"  name="t_ac_name" id="t1_ac_name"/><span class="no_bor"><img src="{$Think.HOME_IMAGES}icon13.png" /></span></td>
+                                </tr>  
+                                 <tr id="tr2" style="display: none">
+                                	<td class="text-right"><span class="colorf00">*</span>*国内接收人地址：</td>
+                                    <td><input class="text300_30" type="text" name="t_ac_adress" id="t1_ac_address"/><span class="no_bor"><img src="{$Think.HOME_IMAGES}icon13.png" /></span></td>
+                                </tr> 
+                                 <tr id="tr3" style="display: none">
+                                	<td class="text-right"><span class="colorf00">*</span>邮政编码：</td>
+                                    <td><input class="text150_30" type="text" name="t_ac_dwak" id="t1_ac_dwak"/> <span class="no_bor"><img src="{$Think.HOME_IMAGES}icon13.png" /></span></td>
+                                </tr>
+                                
+                                <tr>
+                                	<td></td>
+                                    <td><input type="checkbox" id="t_checkbox"/> 已阅读并同意<a class="color2566d0" href="">《同意并阅读中细软相关服务协议》</a></td>
+                                </tr>
+                                <tr>
+                                	<td></td>
+                                    <td><input class="btn_confirm" type="button" value="确认" id="button" /></td>
+                                </tr>                            
+                            
+                            </table>
+                          </form>
+                        </div>
+                </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <div style="clear:both;"></div> 
+
+
+</div>
+<!--个人中心交易人信息添加 结束-->
+<!--页脚 开始-->
+<include file="Public/footer" />
+<script type="text/javascript" src="{$Think.HOME_JS}ucenter/tab.js" ></script>
+<script type="text/javascript" src="{$Think.HOME_JS}ucenter/tab11.js" ></script>
+<script type="text/javascript" src="{$Think.HOME_JS}ucenter/tab12.js" ></script>
+<script type="text/javascript" src="{$Think.HOME_JS}ucenter/members_trader.js" ></script>
+<script language="JavaScript" src="{$Think.HOME_JS}ucenter/area.js"></script>
+<script type="text/javascript">
+    $("#y_file").change(function(){
+        setImagePreview('y_file', 'y_image');
+    })
+    $("#s_file").change(function(){
+        setImagePreview('s_file', 's_image');
+    })
+    /**              
+    * js 图片上传前预览
+    * @var obj docobj 获取到的图片对象
+    * @var obj imgObjPreview 获取到的DIV对象               
+    * @return bool              
+    */
+    function setImagePreview(file,image){ 
+       var docObj=document.getElementById(file); 
+       var imgObjPreview=document.getElementById(image); 
+       if(docObj.files && docObj.files[0]){ 
+       //火狐下，直接设img属性 
+       //imgObjPreview.style.display = 'block'; 
+       //imgObjPreview.style.width = '300px'; 
+       //imgObjPreview.style.height = '120px'; 
+       //imgObjPreview.src = docObj.files[0].getAsDataURL(); 
+       //火狐7以上版本不能用上面的getAsDataURL()方式获取，需要一下方式 
+       imgObjPreview.src = window.URL.createObjectURL(docObj.files[0]); 
+       }else{ 
+       //IE下，使用滤镜 
+       docObj.select(); 
+       var imgSrc = document.selection.createRange().text; 
+       var localImagId = document.getElementById("localImag"); 
+       //必须设置初始大小 
+       localImagId.style.width = "172px"; 
+       localImagId.style.height = "252px"; 
+       //图片异常的捕捉，防止用户修改后缀来伪造图片 
+       try{ 
+       localImagId.style.filter="progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)"; 
+       localImagId.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = imgSrc;
+       }catch(e){ 
+       alert("您上传的图片格式不正确，请重新选择!"); 
+       return false; 
+       } 
+       imgObjPreview.style.display = 'none'; 
+       document.selection.empty(); 
+       } 
+       return true; 
+    }
+    </script>

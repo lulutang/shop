@@ -1,0 +1,37 @@
+<include file="Public/header" />
+<!--个人中心 安全中心 我的购物车 开始-->
+<div class="container">
+	<div class="crumbs">
+    	您的位置：
+        <a href="{$Think.DOMAIN}">中细软服务商城</a>&gt;
+        <a href="">订单管理</a>&gt;
+        <a href="">我的优惠卷</a>
+    </div>
+	<include file="Public/ucenter_left"/>
+	 <div class="members_right  coupon  float-right">
+    	<p class="members_right_title coupon_title"> <span>优惠券</span> </p>
+        <ul>
+          <foreach name="lists" item="val" key="k">
+            <li id='del_{$val.id}'>
+               <if condition="(200 eq $val['sale_money']) ">
+               		<div class="coupon_info info1">
+               	<else/>
+               		<div class="coupon_info info2">
+               	</if>
+                  <p class="font36">￥{$val['sale_money']}</p>
+                  <p>发&nbsp;行&nbsp;商 ：中细软集团</p>
+                  <p>使用条件：满{$val['is_where']}</p>
+                  <p>有效时间：{$val['startTime']|date='Y-m-d',###} 至 {$val['endTime']|date='Y-m-d',###} </p>
+                  <p>有效范围：全场</p>
+            	</div>
+                <div class="coupon_edit"><a href="javascript:delOnsale({$val.id})"><img src="{$Think.HOME_IMAGES}delete.png" /></a></div>
+            </li>
+   
+            </foreach>
+           
+        </ul>
+    </div>
+    <div style="clear:both;"></div>  
+</div>
+<include file="Public/footer"/>
+<script language="javascript" src="{$Think.HOME_JS}top.js"></script>

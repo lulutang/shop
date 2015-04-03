@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>所有客官</title>
+<link href="{$Think.ADMIN_CSS}global.css" rel="stylesheet" type="text/css">
+<link href="{$Think.ADMIN_CSS}m_style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+
+</head>
+
+<body>
+<div class="content_right customer_list">
+    <div id="indent" class="indent" onClick="changeWin()"></div>
+    <div class="link_path">您所在的位置：<a href="javascript:void(0)">客官管理 </a>&nbsp;>&nbsp;<a href="javascript:void(0)">所有客官</a></div>
+    <table class="customer_listbox">
+    	<tr>
+        	<td class="meter_search" colspan="9">
+            <a href="/index.php/Admin/Guest/addGuest">新增</a> 
+            <p class="search">
+            	<select class="select200" onchange="searchSelect()">
+                	<option value="1">手机号码</option>
+                    <option value="2">客官姓名</option>
+                    <option value="3">客官昵称</option>
+                    <option value="4">QQ</option>
+                    <option value="5">订单（总）</option>
+                    <option value="6">商品服务（总）</option>
+                    <option value="7">消费总额以下</option>
+                    <option value="8">创建时间</option>
+                    <option value="9">最后登录时间</option>
+                </select>
+                <input class="text200" type="text" placeholder="请选择手机号码"/>
+                <input class="btn_search" type="button" value="搜索" />
+            </p>
+            </td>
+        </tr>
+        
+        <tr>
+        	<th width="12%">客官昵称</th>
+            <th width="7%">客官姓名</th>
+            <th width="13%">手机号码</th>
+            <th width="10%">QQ</th>
+            <th width="8%">订单（总）</th>
+            <th width="12%">商品服务（总）</th>
+            <th width="12%">消费总额（元）</th>
+            <th width="12%">创建时间 <a href="javascript:void(0)"><b></b></a></th>
+            <th width="14%">最后登录时间 <a href="javascript:void(0)"><b></b></a></th>
+        </tr>
+        
+        <foreach name="userinfo" item="vo" >
+        <tr>
+            <td><a href="/Admin/Guest/detail/uid/{$vo.user_id}" target="main">{$vo.user_name}</a></td>
+            <td>{$vo.truename}</td>
+            <td>{$vo.mobile_phone}</td>
+            <td>{$vo.qq}</td>
+            <td>9</td>
+            <td>12</td>
+            <td>￥{$vo.user_money}</td>
+            <td><php>echo date('Y-m-d H:i:s',$vo['reg_time'])</php></td>
+            <td><php>if($vo['last_login']!='0'){ echo date('Y-m-d H:i:s',$vo['last_login']); }</php></td>
+        </tr>
+        </foreach>
+
+    </table>
+	<div class="pageNew">
+            {$page}
+        </div>
+
+</div>
+
+<script type="text/javascript">
+//菜单缩放
+  openclose=true;
+  function changeWin(){ 
+      parent.bodyFrame.cols =openclose?"1,*":"210,*";//这句话有报错
+      $(".indent").toggleClass('ind');
+      openclose=!openclose;
+  }
+  function searchSelect(){    
+    var selectedVal = $('.meter_search .search').find("option:selected").val();
+    var inputPObj = $('.meter_search .search .text200');
+    if(selectedVal=='1'){
+        inputPObj.attr('placeholder','请输入手机号码');
+    }else if(selectedVal=='2'){
+        inputPObj.attr('placeholder','请输入客官姓名');
+    }else if(selectedVal=='3'){
+        inputPObj.attr('placeholder','请输入客官昵称');
+    }else if(selectedVal=='4'){
+        inputPObj.attr('placeholder','请输入QQ');
+    }else if(selectedVal=='5'){
+        inputPObj.attr('placeholder','请输入订单数量');
+    }else if(selectedVal=='6'){
+        inputPObj.attr('placeholder','请输入商品服务数量');
+    }else if(selectedVal=='7'){
+        inputPObj.attr('placeholder','请输入消费总额');
+    }else if(selectedVal=='8'){
+        inputPObj.attr('placeholder','请输入创建时间');
+    }else if(selectedVal=='9'){
+        inputPObj.attr('placeholder','请输入最后登录时间');
+    }else{
+        inputPObj.attr('placeholder','请输入搜索关键字');
+    }
+  }
+  
+  $(function(){
+    //列表标题排序
+    $(".customer_list .customer_listbox tr th").bind("click",function(){
+      $(this).find('a').toggleClass("cur"); 
+    });
+  });
+</script>
+</body>

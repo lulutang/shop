@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>跑堂管理</title>
+<link href="{$Think.ADMIN_CSS}g_style.css" rel="stylesheet" type="text/css">
+<link href="{$Think.ADMIN_CSS}global.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}waiter.js?a=<?php echo mt_rand(10000000,99999999);?>"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}Calendar1.js"></script>
+
+</head>
+
+<body>
+  <div class="content_right">
+    <div class="indent"></div>
+    <div class="link_path">您所在的位置：<a href="javascript:void(0)">跑堂管理</a>&nbsp;>&nbsp;<a href="javascript:void(0)">招募跑堂</a></div>
+    <ul class="g_edit_tab clearfix">
+      <li><a href="/index.php/Admin/Waiter/lists">现有跑堂</a></li>
+      <li><a href="/index.php/Admin/Waiter/activityWaiter">激活跑堂</a></li>
+      <li class="cur"><a href="/index.php/Admin/Waiter/addWaiter">招募跑堂</a></li>
+    </ul>
+    <div class="table_list casePay s" style="border:none;padding-top:10px;">
+        <form id="subfrm" name="subfrm" action="" method="post">
+		<div id="g1" class="g1_inf"><span>跑堂信息</span></div>
+		<div id="g2" class="g2_div">
+			<table class="g2_table">
+				<tr>
+					<td class="gt_td1">姓名：</td>
+					<td><input type="text" id='truename' name='truename' placeholder="请输入跑堂工牌号的姓名" value="" /></td>
+				</tr>
+				<tr>
+					<td class="gt_td1">邮箱：</td>
+                                        <td><input type="text" id="email" name="email" placeholder="请输入跑堂的邮箱" value=""  /></td>
+				</tr>
+				<tr>
+					<td class="gt_td1">手机号：</td>
+					<td><input type="text" id="mobile" name="mobile" placeholder="请输入跑堂的手机号码" value="" /></td>
+				</tr>
+				<tr>
+					<td class="gt_td1">招牌：</td>
+					<td><input type="text" id="shopsign" name="shopsign" placeholder="请输入业务组的组名" value="{$shopsign}"  readonly="readonly" /></td>
+				</tr>
+				<tr>
+					<td class="gt_td1">工号：</td>
+					<td><input type="text" id="card" name="card" placeholder="请输入跑堂的工号" value="" /><span>工牌号可直接作为登录号码</span></td>
+				</tr>
+			</table>
+		</div>
+	
+		<div id="g1" class="g1_inf"><span>更多信息</span></div>
+		<div class="g8_div">
+                    <div  style="margin: 20px 0;width: 100%">
+                            
+                         <div>
+                                <script type="text/javascript" src="{$Think.ADMIN_JS}swfobject.js?a=<?php echo mt_rand(10000000,99999999);?>"></script>
+                                <script type="text/javascript" src="{$Think.ADMIN_JS}fullAvatarEditor.js?a=<?php echo mt_rand(10000000,99999999);?>"></script>
+                                <input type="hidden" id="hsourceimg" name="pic" value=''/>
+                                <input type="hidden" id="img0" name="img0" value=''/>
+                                <input type="hidden" id="img1" name="img1" value=''/>
+                                <input type="hidden" id="img2" name="img2" value=''/>
+                                <div>
+                                        <p id="swfContainer">
+                            本组件需要安装Flash Player后才可使用，请从<a href="http://www.adobe.com/go/getflashplayer">这里</a>下载安装。
+                                        </p>
+                                </div>
+<!--        			<p style="text-align:center"><button type="button" id="upload">自定义上传按钮</button></p>-->
+        </div>
+		<script type="text/javascript">
+            swfobject.addDomLoadEvent(function () {
+                var swf = new fullAvatarEditor("swfContainer", {
+					    id: 'swf',
+						upload_url: '/Application/Common/Common/upload.php',
+						src_upload:2
+					}, function (msg) {
+						switch(msg.code)
+						{
+							//case 1 : alert("页面成功加载了组件！");break;
+							//case 2 : alert("已成功加载默认指定的图片到编辑面板。");break;
+							case 3 :
+								if(msg.type == 0)
+								{
+                                                                    
+									alert("摄像头已准备就绪且用户已允许使用。");
+								}
+								else if(msg.type == 1)
+								{
+									alert("摄像头已准备就绪但用户未允许使用！");
+								}
+								else
+								{
+									alert("摄像头被占用！");
+								}
+							break;
+							case 5 : 
+								if(msg.type == 0)
+								{
+									if(msg.content.sourceUrl)
+									{
+                                                                            document.getElementById("pic").value=msg.content.sourceUrl;
+									   //alert("原图已成功保存至服务器，url为：\n" +　msg.content.sourceUrl);
+									}
+                                                                        var jsonobj=eval(msg.content.avatarUrls); 
+                                                                        
+                                                                        for( var i = 0; i < jsonobj.length; i++){
+                                                                            document.getElementById("img"+i).value = jsonobj[i];
+                                                                        }   
+                                                                     
+									//alert("头像已成功保存至服务器，url为：\n" + msg.content.avatarUrls.join("\n"));
+								}
+							break;
+						}
+					}
+				);
+//				document.getElementById("upload").onclick=function(){
+//					swf.call("upload");
+//				};
+            });
+        </script>
+                            
+                            
+                            
+
+			</div>
+<!--			<div><button class="btn_sumit">保存头像</button><button class="btn_reset">重新选择</button></div>-->
+			<div class="g8_inf">
+				<table>
+					<tr>
+						<td class="g8_trd">性别：</td>
+						<td><select id='sex' name='sex' ><option  value="">请选择性别</option><option  value="1">男</option><option value="0">女</option></select></td>
+						<td class="g8_trd">登录密码：</td>
+                                                <td><input id='password' name='password' type="password" placeholder="请输入密码" value=""/></td>
+					</tr>
+					<tr>
+						<td class="g8_trd">出生日期：</td>
+                                                <td><input class="g_date" type="text" id="birth" name="birth" onclick="SelectDate(this,'yyyy-MM-dd')" placeholder="请选择日期" value=""/></td>
+						<td class="g8_trd">确认密码：</td>
+						<td><input id='repassword' name='repassword'  type="password" placeholder="请再次输入密码" value="" /></td>
+					</tr>
+					<tr>
+						<td class="g8_trd">证件信息：</td>
+						<td><select id="identitytype" name="identitytype"><option value="0">请选择证件</option><option  value="1">身份证</option><option  value="2">军官证</option></select><input id="IDnum" name="IDnum" type="text" placeholder="请输入证件号码" value=""  /></td>
+						<td class="g8_trd">员工描述：</td>
+						<td><input id="desc" name="desc" type="text"/></td>
+					</tr>
+					<tr>
+                                            <td class="gt_last" colspan="4"><button type="button" onclick="checkWaiter();" class="btn_save">保存</button></td>
+					</tr>
+				</table>
+			</div>
+			<div class="clear"></div>
+		</div>    
+    
+  </div>
+  </form>
+
+</body>
+</html>

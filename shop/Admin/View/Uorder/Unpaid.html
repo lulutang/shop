@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>工作台</title>
+<link href="{$Think.ADMIN_CSS}global.css" rel="stylesheet" type="text/css">
+<link href="{$Think.ADMIN_CSS}s_style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <div class="content_right">
+    <div class="indent" onclick="changeWin()"></div>
+    <div class="link_path">您所在的位置：<a href="/admin/Uorder/judge">订单管理</a>&nbsp;>&nbsp;<a href="/admin/Uorder/judge">所有订单</a>&nbsp;>&nbsp;未支付 <a class="download" href="/admin/Uorder/down/starttime/{$get['starttime']}/endtime/{$get['endtime']}/ordertime/createtime/pay/0">下载excel</a></div>
+    
+    <div class="table_list casePay">
+      <ul class="tab_list">
+        <li><a href="/admin/Uorder/judge">已支付</a></li>
+        <li class="hover"><a href="/admin/Uorder/judge/pay/0">未支付</a></li>
+      </ul>    
+      <div class="case_search">
+          <form method="get" action="/admin/Uorder/judge">
+            下单时间：<input type="text" class="input_d" name="starttime" value="{$get['starttime']}" onclick="SelectDate(this,'yyyy-MM-dd hh:mm:ss')" id="sstarttime"/>&nbsp;至&nbsp;
+            <input type="text" class="input_d" name="endtime" value="{$get['endtime']}" onclick="SelectDate(this,'yyyy-MM-dd hh:mm:ss')" id="sstarttime"/>
+            <input type="text" class="input" placeholder="请输入订单号" name="order_card" value="{$get['order_card']}"/>
+            <input type="hidden" name="ordertime" value="createtime">
+            <input type="hidden" name="status" value="0">
+            <input name="input" type="submit" value="搜索" class="search_btn">
+        </form>
+      </div>
+      <table class="spffxx">
+        <tbody>
+          <tr>
+               
+            <th width="13%" id="th" value="{$cate}" style="cursor:Pointer">下单时间
+                 <if condition="$sortorder eq desc">
+                    <a class="cur">
+                <else/>
+                <a>
+                </if>
+                <b></b></a></th>
+            <th width="25%">订单信息</th>
+            <th width="20%">商品信息</th>
+            <th width="10%">服务信息</th>
+            <th width="12%">服务价（元）</th>
+            <th width="20%">应付款（元）</th>
+          </tr>
+           <foreach name="orderall" item="oa">
+              <tr class="{$oa['trcolor']}">
+                    <td rowspan="{$oa['count']}">
+                        <if condition="!empty($oa['createtime'])">
+                        {$oa["createtime"]|date="Y-m-d",###}<br>{$oa["createtime"]|date="H:i:s",###}
+                        </if>
+                    </td>
+                    <td rowspan="{$oa['count']}"><a href="/admin/Uorder/orderdetailed/pay/0/orderid/{$oa['order_id']}" target="main">{$oa["order_card"]}</a><br>客官昵称：{$oa["user_name"]}<br>手机号码：{$oa["phone"]}<br>跑堂：{$oa["salesman"]}</td>
+                    <td><a href="/Home/Goods/gooddetails/id/{$oa['orderfind']['goods_id']}" target="_blank">{$oa['orderfind']['message']['short_title']}<br>[￥{$oa['orderfind']['goods_price']}]</a></td>
+                    <td>
+                        <if condition="$oa['orderfind']['style'] eq 38">
+                           {$oa["orderfind"]["message"]["name"]} <br>
+                           {$oa["orderfind"]["message"]["style"]}
+                        </if>
+                        <if condition="$oa['orderfind']['style'] eq 5">
+                            {$oa["orderfind"]["message"]["name"]}
+                        </if>
+                        <if condition="$oa['orderfind']['style'] eq 6"> 
+                            {$oa["orderfind"]["mbtext"]}
+                        </if>
+                    </td>
+                    <td class='price'>
+                        <if condition="0 lt $oa['orderfind']['subd_num']">
+                            <b class="add">增+{$oa['orderfind']['subd_num']}</b>
+                        </if>
+                        ￥{$oa['orderfind']['service_price']}</td>
+                    <td rowspan="{$oa['count']}">
+                        <if condition="$oa['is_package'] eq 1"><b class="tc">套餐</b></if>
+                        <b>￥{$oa["totalprice"]}</b><br>
+                        <if condition="$oa['onsale_money'] neq null && $oa['onsale_money'] neq '0.00'">
+                        （优惠劵：{$oa["onsale_money"]}）<br>
+                        </if>
+                        <a href="/admin/Uorder/orderdetailed/pay/0/orderid/{$oa['order_id']}"><button>订单详情</button></a><br>
+                        <a style="cursor:pointer" onclick="javaScript:payOrder('{$oa[order_card]}','{$oa[totalprice]}')">测试环境-支付订单</a>
+                    </td>
+                    
+		</tr>
+		<foreach name="oa['orderg']" item="oog" >
+			<tr class="{$oa['trcolor']}">
+                            <td><a href="/Home/Goods/gooddetails/id/{$oa['orderfind']['goods_id']}" target="_blank">{$oog['message']['short_title']}[￥{$oog["goods_price"]}]</a></td>
+                            <td>
+                                <if condition="$oog['style'] eq 38">
+                                    {$oog["message"]["style"]}
+                                    <br>{$oog["message"]["name"]}
+                                </if>
+                                <if condition="$oog['style'] eq 5">
+                                    {$oog["message"]["name"]}
+                                </if>
+                                <if condition="$oog['style'] eq 6"> 
+                                    {$oog["mbtext"]}
+                                </if>
+                            </td>
+                            <td class='price'>
+                                 <if condition="0 lt $oog['subd_num']">
+                                       <b class="add">增+{$oog['subd_num']}</b>
+                                </if>
+                            <if condition="!empty($oog['service_price'])">
+                                ￥{$oog["service_price"]}
+                            </if></td>
+			</tr>
+		</foreach>
+		
+</foreach> 
+          <if condition="empty($orderall)">
+            <tr class="tr_bgc1 no_data">
+                  <td  colspan="8">未找到符合该条件的数据，尝试<a href="http://zhikubao.net/#/Search" target="_blank">平台搜索！</a></td>
+            </tr>
+          </if>
+        </tbody>
+      </table>
+    </div>    
+    <div class="pageNew">
+       <form method="get" action="/admin/Uorder/judge/pay/0">
+             {$pages}
+        </form>
+    </div>
+  </div>
+    
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+ <script type="text/javascript" src="{$Think.ADMIN_JS}Calendar1.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}order.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}cart.js"></script>
+</body>

@@ -1,0 +1,51 @@
+<!--顶部导航 开始-->
+<include file="Public/header" />
+
+
+<!--个人中心 安全中心 所有订单 开始-->
+<div class="container">
+	<div class="crumbs">
+    	您的位置：
+        <a href="">中细软服务平台</a>&gt;
+        <a href="">个人中心</a>&gt;
+        <a href="">我的订单</a>&gt;
+        <a href="">订单管理</a>
+    </div>
+	<include file="Public/ucenter_left"/>
+    <div class="members_right  account  float-right">
+    	<p class="members_right_title">我的账号</p>
+        <table>
+        	<tr>
+            	<td width="160" class="text-right">账户名：</td>
+                <td width="628">{$acinfo['user_name']}</td>
+            </tr>
+            <tr>
+            	<td class="text-right">账户类型：</td>
+                <td>个人账户</td>
+            </tr>
+            <tr>
+            	<td class="text-right">中细软-盘缠：</td>
+                <td>{$acinfo['travelling']}盘缠</td>
+            </tr>
+            <tr>
+            	<td class="text-right">可用盘缠：</td>
+                <td>{$acinfo['travelling']}盘缠</td>
+            </tr>
+            <tr>
+            	<td class="text-right">手机号码：</td>
+                <td>{$acinfo['mobile_phone']}<a class="change_phone" href="/Home/User/bindphone">修改手机号码</a></td>
+            </tr>
+            <tr>
+            	<td class="text-right">邮箱绑定：</td>
+                <td>直接使用“邮箱”登录中细软网，并收到相关重要的提醒。<a class="bind_mail" href="/Home/User/bindemail">马上绑定</a></td>
+            </tr>
+        </table>
+    </div>
+    <div style="clear:both;"></div> 
+    
+</div>
+
+
+
+
+<include file="Public/footer" />

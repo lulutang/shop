@@ -1,0 +1,203 @@
+<include file="Public/header" />
+
+<body onload="DivShow(0)">
+<!--主要内容 开始-->
+<div class="mainbody" style=" margin-bottom:120px;">
+    <div class="container">
+    	<!--消息提示 开始-->
+        <p class="main-info">
+            您的位置：<a href="{$Think.DOMAIN}">中细软服务商城</a>><a href="{$Think.DOMAIN}Home/Goods/goods_list/id/{$info[0].server_pid}">{$info[0].server_name}</a><a href="javascript:void(0)">>{$info[0].title}</a>
+        </p>
+        <!--消息提示 结束-->
+        
+    	<!--优惠选择 开始-->
+    	<div class="bigbox">
+            <div class="preferential-banner">
+                <img src="{$current|current_cdn_img}{$info[0].goods_pic}" height="375px" width="566px">
+            </div>
+            <div class="preferential-info">
+            	<h3>{$info[0].title} 
+            	   <foreach name="hasAct" item="act" >
+            	  <li> <a href='{$Think.DOMAIN}Home/Goods/gooddetails/id/{$act}'>赠</a> </li>
+            	   </foreach>
+            	</h3>
+                <h4>编码：<span>{$info[0].goods_code}</span></h4>
+
+		<h4>{$info[0]['description']}</h4>
+                <if condition="$info[0]['is_gift'] eq 0">
+                <div class="preferential-choose">
+                    <ul>
+						<li>原价：<s>￥{$info[0].old_price}</s></li>
+						<li class="simg"><img style="margin-top:3px;" src="{$Think.HOME_IMAGES}sale_03.png"/></li>
+						<li class="sale">销售量：{$info[0].number}</li>
+						<li class="clear"></li>
+					</ul>
+                	<ul>
+						<li>优惠价：<b id='youhuijia'>￥{$info[0].now_price}</b></li>
+					</ul>
+				<input type='hidden' value='{$info[0].now_price}' name='youhui_jia' id='youhui_jia'>
+                
+                </div>
+                <div class="preferential-type">
+					
+					
+					   <if condition="$is_attr eq 0">
+                       <foreach name="goodsinfo" item="val">
+					       <div class="pt_left">{$val['attr_name']}：</div>
+					       <div class="pt_right">
+                       		<php> unset($val['attr_name']);</php>
+	                        <foreach name="val" item="vo" >
+	                            <if condition="$info[0]['goods_id'] eq $vo['goods_id'] "> 
+	                                <a  href="/home/Goods/gooddetails/id/{$vo.goods_id}" class="discolor">{$vo.value_name}</a>
+	                            <else/>
+	                                <a href="/home/Goods/gooddetails/id/{$vo.goods_id}">{$vo.value_name}</a>
+	                            </if>
+	                        </foreach>
+                          </div>
+					<div class="clear"></div>
+                        </foreach>
+                    
+                    </if>   
+
+				</div>
+				
+				<div class="preferential-number">
+					<div class="pn_left">购买数量：</div>
+					<div class="pn_right">
+						<a href="javascript:;" class="reduce">-</a>
+						<input type="text" id="num" value="1" />
+						<a href="javascript:;" class="add">+</a>
+                    </div>
+                    <div class="clear"></div>
+				</div>
+               <div style="clear:both"></div>
+                
+                <input type='hidden' value='{$info[0]['goods_id']}' name='youhui_id' id='youhui_id'>
+                
+                <ul class="preferential-icon">
+                    <li><a href="javascript:void(0)" id='shengqi_app' class="button" ><img src="{$Think.HOME_IMAGES}button08.png"></a></li>
+                    <li><a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=2355928254&site=qq&menu=yes" class="button" ><img src="{$Think.HOME_IMAGES}button09.png"></a></li>
+                    <div style="clear:both"></div>
+                </ul>
+                </if>
+            	<div style="clear:both"></div>
+            </div>
+        </div> 
+         
+      	<!--优惠选择 结束-->
+      	
+        <!--优惠套餐 开始-->
+        <php>if(!empty($package)){</php>
+        <div class="preferential-package" style="margin-top:45px;">
+            <ul class="preferential-packagebox">
+                <li class="pp_package"><a href="javascript:void(0)">优惠套餐</a></li>
+               
+                <foreach name="package" item="p" key="k">
+                        <php>if(count($package)>1){</php>
+                    <li id="a{$k}" <if condition="$k eq 0">class="ppp_package"</if>><a href="javascript:DivShow({$k})">套餐{$k+1}</a></li>
+                    <php>}</php>
+                  
+                    </foreach>
+                <div style="clear:both"></div>
+            </ul>
+            
+            <div class="pref-pkg-bigbox" style="height:150px;">
+                <input type="hidden" id="hidden" value="{$p_num}">
+                <foreach name="package" item="p" key="k">
+                <div class="pref-pkg-smallbox" id="div{$k}" style="display:none">
+                	<ul>
+                        <foreach name="p.shop" item="sh" key="n">
+                    	<li>
+                            <a href="/home/Goods/gooddetails/id/{$sh.goods_id}" target="_blank"><img src="{$current|current_cdn_img}{$sh['thumb']}" height="120px" width="170px"></a>
+                            <p>{$sh['short_title']}</p>
+                        </li>
+                        <php>if($n<(count($p['shop'])-1)){</php>
+                        <li >
+                        	<h3>+</h3>
+                        </li>
+                        <php>}</php>
+                        </foreach>
+                       	<li class="pref-pkg-price" style="float: right;margin-right: 50px;">
+                        	<h4>原价：<s>￥{$p.old_price}</s></h4>
+                            <h2>优惠价：<b>￥{$p.now_price}</b></h2>
+                            <a class="pref-pkg-button button" href="/home/package/details/id/{$p.package_id}" style="width:130px;"><img src="{$Think.HOME_IMAGES}button08.png"></a>
+                        </li>
+                    </ul>
+                
+                </div>
+                </foreach>
+            </div>             
+        </div>
+        <php>}</php>   
+        <!--优惠套餐 结束-->
+        
+        <!--产品介绍 攻略问答 开始-->
+        <div class="preferential-package" style="margin-top:15px;">
+            <if condition="!empty($info[0]['content']) || !empty($info[0]['answer']) || !empty($info[0]['success'])">
+            <ul class="preferential-packagebox" id="ul_li">
+                <if condition="!empty($info[0]['content'])">
+                <li id="ca"><a href="javascript:void(0)" onclick="product()" >产品介绍</a></li>
+                </if>
+                <if condition="!empty($info[0]['answer'])">
+                <li id="gb"><a href="javascript:void(0)" onclick="answer()" >攻略问答</a></li>
+                </if>
+                <if condition="!empty($info[0]['success'])">
+                <li id="sc"><a href="javascript:void(0)" onclick="success()" >成功案例</a></li>
+                </if>
+                <div style="clear:both"></div>
+            </ul>
+            <div class="pref-pkg-bigbox" >
+            	<!--产品介绍 开始-->
+            	<div class="product" class="bianse"  id="product">
+                	<!-- {$info[0].content} -->
+                	
+                	  <include file="Public/info" />
+                	   
+                </div>
+                <!--产品介绍 结束--> 
+                 <!--攻略问答 开始-->
+                <div class="question" style="display:none;"  id="answer">
+                	{$info[0].answer}
+                </div>
+                <!--攻略问答 结束-->
+                   <!--成功案例 开始-->
+                <div class="question" style="display:none;"  id="success">
+                	{$info[0].success}
+                </div>
+                <!--成功案例 结束-->
+            </div>
+            </if>
+        </div>
+        <!--产品介绍 攻略问答 结束-->
+       
+      	<!--成功案例 开始-->
+       <!-- <div class="preferential-package" style="margin-top:15px;">
+            <ul class="preferential-packagebox">
+                <li><a href="">成功案例</a></li>
+                <div style="clear:both"></div>
+            </ul>
+            <div class="pref-pkg-bigbox" >
+            	<div class="case-position">
+                    <a href="" class="case-left"><img src="{$Think.HOME_IMAGES}icon18.png"></a>
+                    <a href="" class="case-right"><img src="{$Think.HOME_IMAGES}icon19.png"></a>
+                </div>
+            	<ul class="case">
+                	<a href=""><li class="case-img01"></li></a>
+                    <a href=""><li class="case-img01"></li></a>
+                    <a href=""><li class="case-img01"></li></a>
+                    <a href=""><li class="case-img01"></li></a>
+                    <a href=""><li class="case-img01"></li></a>
+                    <a href=""><li class="case-img01"></li></a>
+                </ul>
+                
+            </div>
+        </div>    -->
+        <!--成功案例 结束-->
+        
+       
+</div>
+ 
+<!--主要内容 结束-->
+<include file="Public/footer" />
+</body>
+<script type="text/javascript" src="{$Think.HOME_JS}gooddetails.js"></script>

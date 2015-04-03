@@ -1,0 +1,206 @@
+<link href="{$Think.ADMIN_CSS}style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}Calendar1.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}activity.js"></script>
+<script src="{$Think.ADMIN_JS}ckeditor/ckeditor.js"></script>
+<script src="{$Think.ADMIN_JS}ckeditor/ckfinder.js"></script>
+<div class="wapper">
+    <div class="wapper-right">
+        <div class="right_inner">
+            <div class="path">您的位置：<a href="#">工作台</a>》<a href="#">促销管理</a>》<a href="#">创建促销</a></div>
+            <tr>
+                <td><if condition="$info['act_type'] eq 1 "><input type="radio" name="act_type" id="mai"  <if condition="$info['act_type'] eq 1 "> checked </if> /> 商品服务买赠 </if><if condition="$info['act_type'] eq 2 "> <input type="radio" name="act_type" id="dan" <if condition="$info['act_type'] eq 2 "> checked </if> /> 单品促销 </if></td>
+            </tr>
+            
+            <form action="/Admin/Activity/activityupdatedata" method="post" enctype="multipart/form-data" onsubmit="return ZuFormSubmit()">
+            <input type="hidden" id='hid' name='hid' value='{$id}' />
+            <table class="create_promotion" id="dandiv" <if condition="$info['act_type'] eq 1 "> style="display: none" </if> >
+                <tr>
+                    <td class="text-right">活动名称：</td>
+                    <td><input class="text300_30" type="text" id="dan_name" name="dan_name" value="{$info['act_name']}" /><span id="message"></span></td>
+                </tr>
+                <tr>
+                    <td class="text-right">活动时间：</td>
+                    <td><input class="text150_30"  type="text" value="{$info['act_starttime']|date='Y-m-d H:i:s',###}"  onclick="SelectDate(this,'yyyy-MM-dd hh:mm:ss')" id="dan_starttime" name="dan_starttime"/> 至 <input class="text150_30" type="text" value="{$info['act_endtime']|date='Y-m-d H:i:s',###}" onclick="SelectDate(this,'yyyy-MM-dd hh:mm:ss')" id="dan_endtime" name="dan_endtime"/> <span id="message1"></span></td>
+                </tr>
+                <tr>
+                	<td class="text-right">活动商品：</td>
+                    <td>
+                    	<select class="select150_30" id='dan_goods' name="dan_goods">
+                            <option value="">请选择主商品</option>
+                            <foreach name="goodsinfo" item="val">
+                                <option value="{$val['goods_id']}" <if condition="$info['act_goodsid'] eq $val['goods_id'] "> selected </if> >{$val['short_title']}&nbsp;&nbsp;&nbsp;{$val['now_price']}元</option>
+                            </foreach>
+                        </select>
+                        <span id="message2"></span>
+                    </td>
+                </tr>
+                 <tr>
+                	<td  class="text-right">活动价：</td>
+                    <td><input  class="text150_30" type="text" id="dan_price" name="dan_price" value="{$info['act_goodsprice']}" /><span id="message3"></span></td>
+                </tr>
+                 <tr>
+                	<td class="text-right">客官限购量：</td>
+                    <td><input  class="text150_30" type="text" id="dan_buy" name="dan_buy" value="{$info['act_quoto']}"/> <span class="colorf00" id="message4">0为不限购</span></td>
+                </tr>
+                <tr>
+                	<td class="text-right">活动数量：</td>
+                    <td><input  class="text150_30" type="text" id="dan_number" name="dan_number" value="{$info['act_number']}"/><span id="message5"></span></td>
+                </tr>
+                <tr>
+                	<td class="text-right">活动图片：</td
+                        <input type="hidden" id="hphoto" name="hphoto" value="{$info['act_photo']}" />
+                        <td><if condition="$info['act_photo']"> <img width="100" height="100" src="{$info['act_photo']}" /> <else /><img width="100" height="100" id="dan_images" src="{$Think.ADMIN_IMAGES}img0127.png" /></if><input name="dan_file" id="dan_file" type="file" /></td>
+                </tr>
+                <tr>
+                	<td class="text-right">活动内容：</td>
+                    <td><textarea name="dan_content" rows="5" cols="10" id="dan_content">{$info['act_content']}</textarea></td>
+                </tr>
+                <tr>
+                	<td></td>
+                    <td><input type="submit" value="确定" /> <input type="button" onclick="" value="取消" /></td>
+                </tr>
+            </table>
+                </form>
+            <!--table end-->
+            
+            
+                
+            <form action="/Admin/Activity/activityupdate" method="post" enctype="multipart/form-data" onsubmit="return ZuFormSubmits()">
+                <input type="hidden" id='hid' name='hid' value='{$id}' />
+            <table class="create_promotion"  id="maidiv" <if condition="$info['act_type'] eq 2 ">  style="display: none" </if> >
+                <tr>
+                	<td class="text-right">活动名称：</td>
+                    <td><input class="text300_30" type="text" id="mai_name" name="mai_name" value="{$info['act_name']}"/><span id="message6"></span></td>
+                </tr>
+                <tr>
+                	<td class="text-right">活动时间：</td>
+                    <td><input class="text150_30"  type="text" value="{$info['act_starttime']|date='Y-m-d H:i:s',###}"   id="mai_starttime" onclick="SelectDate(this,'yyyy-MM-dd hh:mm:ss')" name="mai_starttime"/> 至 <input class="text150_30" type="text" value="{$info['act_endtime']|date='Y-m-d H:i:s',###}"  id="mai_endtime" onclick="SelectDate(this,'yyyy-MM-dd hh:mm:ss')" name="mai_endtime"/> <span id="message7"></span></td>
+                </tr>
+                <tr>
+                	<td class="text-right">活动商品：</td>
+                    <td>
+                    	<select class="select150_30" name="mai_goods">
+                        	<option value="">请选择主商品</option>
+                            <foreach name="goodsinfo" item="val">
+                                <option value="{$val['goods_id']}" <if condition="$info['act_goodsid'] eq $val['goods_id'] "> selected </if> >{$val['short_title']}&nbsp;&nbsp;&nbsp;{$val['now_price']}元</option>
+                            </foreach>
+                        </select>
+                    </td>
+                </tr>
+                <foreach name="giftid" item="v" key="kk">
+                 <tr id="ids">
+                     <td  class="text-right">活动赠品：</td>
+                        
+                        <td>
+                            <select class="select150_30" name="zeng[]">
+                                <option value="">请选择赠品</option>
+                                <foreach name="giftinfo" item="val">
+
+                                    <option value="{$val['goods_id']}" <if condition="$v['giftid'] eq $val['goods_id'] "> selected </if>>{$val['short_title']}&nbsp;&nbsp;&nbsp;{$val['now_price']}元</option>
+                                    </foreach>
+                            </select>
+                            赠品活动量：<input class="text100_30" type="text" value="{$v['giftnumber']}" name="zeng_number[]"/> /个 <if condition="$kk lt 1 "> <a class="add01" href="javascript:void(0)" id="addnote"><img src="{$Think.ADMIN_IMAGES}icon33.png" /></a><else /> <a onclick="delnote(this)" href="javascript:void(0)" class="add01"><img src="/Application/Admin/Static/image/icon34.png"></a> </if>
+                        </td>
+                </tr>
+                </foreach>
+
+                <tr>
+                	<td class="text-right">活动图片：</td>
+                        <input type="hidden" id="hphoto" name="hphoto" value="{$info['act_photo']}" />
+                    <td><if condition="$info['act_photo']"> <img width="100" height="100" src="{$info['act_photo']}" /> <else /><img width="100" height="100" id="mai_images" src="{$Think.ADMIN_IMAGES}img0127.png" /></if><input name="mai_file" id="mai_file" type="file" /></td>
+                </tr>
+                <tr>
+                	<td class="text-right">活动内容：</td>
+                    <td><textarea name="mai_content" rows="5" cols="10" id="mai_content">{$info['act_content']}</textarea></td>
+                </tr>
+                <tr>
+                	<td></td>
+                    <td><input type="submit" value="确定" /> <input type="button" value="取消" /></td>
+                </tr>
+            </table>
+            </form>
+
+         </div>
+    <!--right_inner end-->
+    </div>
+    <!--wapper-right end-->
+</div>
+<!--wapper end-->
+<!--头部 开始-->
+<script type="text/javascript">
+    $("#addnote").click(function(){
+        $("#ids").last().after("<tr><td  class='text-right'>活动赠品：</td><td><select class='select150_30' name='zeng[]'><option value=''>请选择赠品</option><foreach name='giftinfo' item='val'><option value={$val['goods_id']}>{$val['short_title']}&nbsp;&nbsp;&nbsp;{$val['now_price']}元</option></foreach></select>赠品活动量：<input class='text100_30' type='text' name='zeng_number[]'/> /个 <a class='add01' href='javascript:void(0)' onclick='delnote(this)'><img src='{$Think.ADMIN_IMAGES}icon34.png' /></a></td></tr>");
+                                      
+    })
+    function delnote(obj){
+        $(obj).parents("td").parents("tr").remove();
+    }
+    $("#dan_file").change(function(){
+        setImagePreview('dan_file', 'dan_images');
+    })
+    $("#mai_file").change(function(){
+        setImagePreview('mai_file', 'mai_images');
+    })
+    /**              
+    * js 图片上传前预览
+    * @var obj docobj 获取到的图片对象
+    * @var obj imgObjPreview 获取到的DIV对象               
+    * @return bool              
+    */
+    function setImagePreview(file,image){ 
+       var docObj=document.getElementById(file); 
+       var imgObjPreview=document.getElementById(image); 
+       if(docObj.files && docObj.files[0]){ 
+       //火狐下，直接设img属性 
+       //imgObjPreview.style.display = 'block'; 
+       //imgObjPreview.style.width = '300px'; 
+       //imgObjPreview.style.height = '120px'; 
+       //imgObjPreview.src = docObj.files[0].getAsDataURL(); 
+       //火狐7以上版本不能用上面的getAsDataURL()方式获取，需要一下方式 
+       imgObjPreview.src = window.URL.createObjectURL(docObj.files[0]); 
+       }else{ 
+       //IE下，使用滤镜 
+       docObj.select(); 
+       var imgSrc = document.selection.createRange().text; 
+       var localImagId = document.getElementById("localImag"); 
+       //必须设置初始大小 
+       localImagId.style.width = "250px"; 
+       localImagId.style.height = "200px"; 
+       //图片异常的捕捉，防止用户修改后缀来伪造图片 
+       try{ 
+       localImagId.style.filter="progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)"; 
+       localImagId.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = imgSrc;
+       }catch(e){ 
+       alert("您上传的图片格式不正确，请重新选择!"); 
+       return false; 
+       } 
+       imgObjPreview.style.display = 'none'; 
+       document.selection.empty(); 
+       } 
+       return true; 
+    }
+</script>
+<script>
+CKEDITOR.replace( 'dan_content', {
+        filebrowserBrowseUrl        : '{$Think.ADMIN_JS}ckfinder/ckfinder.html',
+        filebrowserImageBrowseUrl   : '{$Think.ADMIN_JS}ckfinder/ckfinder.html?Type=Images',
+        filebrowserFlashBrowseUrl   : '{$Think.ADMIN_JS}ckfinder/ckfinder.html?Type=Flash',
+        filebrowserUploadUrl    : '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+        filebrowserImageUploadUrl   : '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
+        filebrowserFlashUploadUrl   : '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
+    }
+);
+
+CKEDITOR.replace( 'mai_content', {
+        filebrowserBrowseUrl        : '{$Think.ADMIN_JS}ckfinder/ckfinder.html',
+        filebrowserImageBrowseUrl   : '{$Think.ADMIN_JS}ckfinder/ckfinder.html?Type=Images',
+        filebrowserFlashBrowseUrl   : '{$Think.ADMIN_JS}ckfinder/ckfinder.html?Type=Flash',
+        filebrowserUploadUrl    : '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+        filebrowserImageUploadUrl   : '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
+        filebrowserFlashUploadUrl   : '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
+    }
+);
+</script>
+</body>
+</html>

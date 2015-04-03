@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>中细软服务商城-第一家知识产权在线服务商城</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name = "keywords" content = "商标注册,商标设计,商标异议申请,专利申请,实用新型专利,版权申请"/>
+<meta name = "description" content = "就找中细软服务商城,线上知识产权平台,明码标价,最快捷的全国第一家知识产权服务商城,认准中细软"/>
+<link href="{$Think.ADMIN_CSS}s_style.css" rel="stylesheet" type="text/css">
+<link href="{$Think.ADMIN_CSS}global.css?<?php echo rand(10000);?>" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{$Think.ADMIN_JS}Calendar1.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+</head>
+
+<body>
+  <div class="content_right">
+    <div class="indent" onclick="changeWin()"></div>
+    <div class="link_path">您所在的位置：<a href="/Admin/Compile/combxsh">编修管理</a>&nbsp;>&nbsp;<a href="javascript:void(0)">编修审核</a></div>
+    <ul class="s_edit_tab clearfix">
+    <li><a href="/Admin/Compile/combxsh">编修审核<b></b></a></li>
+    <li><a href="/Admin/Compile/combxbj">编修报件<b></b></a></li>
+    <li><a href="/Admin/Compile/comxfsl">下发受理<b></b></a></li>
+    <li><a href="/Admin/Compile/comcsgg">初审公告<b></b></a></li>
+    <li><a href="/Admin/Compile/comzcxf">注册下发<b></b></a></li>
+    <li><a href="/Admin/Compile/comfwjs">服务结束<b></b></a></li>
+    <li class="cur s_red"><a href="/Admin/Compile/comshsb">审核失败</a></li>
+    </ul>
+    <form action="/Admin/Compile/combxsh" method="post" name="search">
+    <div class="table_list casePay s" style="border:none;padding-top:49px;">
+      <div class="case_search" style="left:0">
+        <select onchange="searchSelectE()" name="onetype">
+          <option value="A" <php> if($map['onetype']=='A'){echo 'selected';}</php>>订单编号</option>
+          <option value="B" <php> if($map['onetype']=='B'){echo 'selected';}</php>>合同编号</option>
+          <option value="C" <php> if($map['onetype']=='C'){echo 'selected';}</php>>商标名称</option>
+          <option value="D" <php> if($map['onetype']=='D'){echo 'selected';}</php>>服务项目</option>
+          <option value="E" <php> if($map['onetype']=='E'){echo 'selected';}</php>>申请人名称</option>
+          <option value="F" <php> if($map['onetype']=='F'){echo 'selected';}</php>>申请人地址</option>
+          <option value="G" <php> if($map['onetype']=='G'){echo 'selected';}</php>>跑堂</option>
+          <option value="H" <php> if($map['onetype']=='H'){echo 'selected';}</php>>跑堂电话</option>
+        </select>
+        <input type="text" class="input" placeholder="请输入订单编号" name="oneval" value="{$map['oneval']}"/>
+        <select name="two"><option value="">商标类型</option>
+            <foreach name='style' item='sty'>
+                <if condition="$map['two'] eq $sty">
+                    <option value="{$sty}" selected="selected">{$sty}</option>
+                <else/>
+                    <option value="{$sty}">{$sty}</option>
+                </if>
+            </foreach>
+        </select>
+        <select name="threetype">
+            <option value="I" <php> if($map['threetype']=='I'){echo 'selected';}</php>>支付时间</option>
+            <option value="P" <php> if($map['threetype']=='P'){echo 'selected';}</php>>进入编修审核</option>
+        </select>
+        &nbsp;<input type="text" class="input_d" name="threeval" value="{$map['threeval']}" onclick="SelectDate(this,'yyyy-MM-dd hh:mm:ss')"/>
+              <input type="text" class="input_d" name="threevals" value="{$map['threevals']}" onclick="SelectDate(this,'yyyy-MM-dd hh:mm:ss')"/>
+        
+        <input type="submit" value="搜索" class="search_btn">
+      </div>
+      <table class="spffxx">
+        <tbody>
+          <tr>            
+            <th width="20%">合同编号</th>
+            <th width="10%">服务详情</th>
+            <th width="10%">编修状态</th>
+            <th width="15%">
+                <select name="store" onchange="SeachStore()">
+                    <option value="">全部店铺</option>
+                    <foreach name="obj" item="o">
+                        <if condition="$map['store'] eq $o['shopsign']">
+                            <option value="{$o['shopsign']}" selected>{$o['shopsign']}</option>
+                        <else/>
+                            <option value="{$o['shopsign']}">{$o['shopsign']}</option>
+                        </if>
+                    </foreach>
+                </select>
+            </th>
+            <th width="15%">
+                <select name="cause" onchange="SeachCause()">
+                    <option value="">失败原因</option>
+                    <foreach name="cause" item="v">
+                        <if condition="$map['cause'] eq $v">
+                            <option value="{$v}" selected>{$v}</option>
+                        <else/>
+                            <option value="{$v}">{$v}</option>
+                        </if>
+                    </foreach>
+                </select>
+            </th>
+            <th width="15%">支付时间</th>
+            <th width="20%" id="jt" style="cursor: pointer">编修审核时间<a href="javascript:void(0)" class="<if condition="( 'QQ' eq $sort )">cur</if>"><b></b></a></th>
+            <input type='hidden' name='sort' id='sort' value='{$sort}'>
+          </tr>
+        <foreach name="compileinfo" item="com">
+          <tr class="tr_bgc1">
+            <td><a href="/Admin/Compile/comminute/oid/{$com['id']}/cid/{$com['co_id']}/type/7/order_code/{$com['order_code']}/rtype/<if condition="$com['res_status'] eq 1">1<elseif condition="$com['res_status'] eq 2"/>2<else/>3</if>">{$com['order_code']}</a></td>
+            <td>{$com['short_title']}<br/>{$com['style_name']}</td>
+            <td>审核失败</td>
+            <td>{$com['run_branch']}</td>
+            <td>{$com['why_pass']}</td>
+            <td><if condition="empty($com['pay_time'])"><else/>{$com['pay_time']|date='Y-m-d H:i:s',###}</if></td>
+            <td><if condition="empty($com['com_time'])"><else/>{$com['com_time']|date='Y-m-d H:i:s',###}</if></td>
+          </tr>
+        </foreach>
+          <if condition="empty($compileinfo)">
+              <tr class="tr_bgc1 no_data">
+                <td  colspan="9">未找到符合该条件的数据，尝试<a href="http://zhikubao.net/#/Search" target="_blank">平台搜索！</a></td>
+              </tr>
+          </if>
+        </tbody>
+      </table>
+    </div>    
+    {$page}
+  </div>
+<script type="text/javascript"> 
+  //菜单缩放
+  openclose=true;
+  function changeWin(){ 
+      parent.bodyFrame.cols =openclose?"1,*":"210,*";//这句话有报错
+      $(".indent").toggleClass('ind');
+      openclose=!openclose;
+  }
+  function searchSelectE(){    
+    var selectedVal = $('.s .case_search select').find("option:selected").val();
+    var inputPObj = $('.s .case_search input.input');
+    if(selectedVal=='1'){
+        inputPObj.attr('placeholder','请输入订单编号');
+    }else if(selectedVal=='2'){
+        inputPObj.attr('placeholder','请输入合同号');
+    }else if(selectedVal=='3'){
+        inputPObj.attr('placeholder','请输入商标名称');
+    }else if(selectedVal=='4'){
+        inputPObj.attr('placeholder','请输入服务项目');
+    }else if(selectedVal=='5'){
+        inputPObj.attr('placeholder','请输入申请人名称');
+    }else if(selectedVal=='6'){
+        inputPObj.attr('placeholder','请输入申请人地址');
+    }else if(selectedVal=='7'){
+        inputPObj.attr('placeholder','请输入联系人');
+    }else if(selectedVal=='8'){
+        inputPObj.attr('placeholder','请输入联系电话');
+    }else{
+        inputPObj.attr('placeholder','请输入搜索关键字');
+    }
+  }
+ $(function(){
+   //列表标题排序
+   $("#jt").bind("click",function(){
+       $(this).toggleClass("cur"); 
+       var flag = $('#sort').val();
+   	if(flag =='QQ'){
+   		 $('#sort').val("Q");
+   	}else{
+   		 $('#sort').val("QQ");
+   	}
+   	document.search.action = "/admin/Compile/comshsb";
+	document.search.submit();
+ });
+ });
+ 
+ function SeachStore(){
+     document.search.action = "/admin/Compile/comshsb";
+     document.search.submit();
+ }
+ 
+ 
+ function SeachCause(){
+     document.search.action = "/admin/Compile/comshsb";
+     document.search.submit();
+ }
+</script>
+</body>

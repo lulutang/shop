@@ -1,0 +1,62 @@
+<include file="Public/header" />
+<div class="special_bg">
+	<div class="container">
+    	<div><!--<img src="{$Think.HOME_IMAGES}{$getone['act_photo']}" />-->
+            <div style ="background: url({$Think.HOME_IMAGES}special_banner.png); height:437px; width:1200px">
+          <ul>
+            <li style="float:left;width:100px;margin:370px 0px 100px 370px;"><font style="font-size:18px; color:#FFFFFF;" >{$datatime[9]}</font></li>
+            <li style ="float:left;width:100px;margin:370px 0px 100px 140px "> <font style="font-size:18px; color:#FFFFFF;" >{$datatime[10]}</font></li>
+            <li style ="float:left;width:100px;margin:370px 0px 100px 150px "><font style="font-size:18px; color:#FFFFFF;"  >{$datatime[14]}</font></li>
+          </ul>
+        </div>
+        </div>
+        <div class="special_box">
+        	<p class="explain">活动说明 : {$getone["act_content"]}</p>
+            
+            <!--优惠选择 开始-->
+            <div class="bigbox">
+                <div class="preferential-banner">
+                    <a href="/home/Goods/gooddetails/id/{$getone['act_goodsid']}">
+                        <img src="{$current|current_cdn_img}{$getone['goods_pic']}">
+                    </a>
+                </div>
+                <div class="preferential-info" amount="{$getone['act_purchase_amount']}"  endtime="{$getone['act_endtime']}" starttime="{$getone['act_starttime']}" value="{$getone['act_id']}" id="{$Think.HOME_IMAGES}">
+                	<p class="timelimit" id="geton"> 
+                        <if condition="$getone['act_endtime'] eq 0">
+                             {$ga['act_id']}剩余：<span>00</span>天<span>00</span>时<span>00</span>分<span>00</span>秒           
+                        </if>  
+                        </p>
+                    <h3><span></span>{$getone["title"]}</h3>
+                    <h4>{$getone["description"]}</h4>
+                    <div class="preferential-choose">
+                        <p style="margin-bottom:5px;">抢购价：<b>￥{$getone["act_goodsprice"]}</b></p>
+                        <p><s>本站原价：￥{$getone["now_price"]}</s></p>
+                        <p  class="purchase">还剩{$getone["act_purchase_amount"]}件活动商品</p>
+                    </div>
+                    <ul class="preferential-icon">
+                        <li id="getpu">
+                        <if condition="$getone['act_endtime'] eq 0 || $getone['act_purchase_amount'] eq 0 || $flag[0] eq 1">
+                                      <img src="{$Think.HOME_IMAGES}button_end.png"  />   
+                                    <else/>
+                                     <a href="/Home/order/actInfo/aid/{$getone['act_id']}"><img src="{$Think.HOME_IMAGES}button08.png"  /></a>
+                             </if>  
+                        </li>
+                        <li><a href="javascript:;" class="button" onclick="line({$getone['act_goodsid']})"><img src="{$Think.HOME_IMAGES}button09.png"></a></li>
+                        <div style="clear:both"></div>
+                    </ul>
+                    <div style="clear:both"></div>
+                </div>
+            </div> 
+            <!--优惠选择 结束-->
+            
+           
+            
+        </div>
+    </div>
+</div>
+
+<include file="Public/footer" />
+<script src="{$Think.HOME_JS}activity.js"></script>
+
+
+

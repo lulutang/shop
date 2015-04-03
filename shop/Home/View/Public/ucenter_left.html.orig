@@ -1,0 +1,26 @@
+<SCRIPT TYPE="text/javascript">
+    $(function(){
+    $(".left_nav>ul>li").bind("click",function(){
+      //  $(".left_nav>ul>li>a").css("color","");
+        $(this).find('a').attr("style","color:red");
+    });
+});
+</SCRIPT>
+<div class="left_nav float-left">
+    	<h2 class="h2_bg1"><a href="javascript:void(0)">个人中心</a></h2>
+        <ul>
+        	<li><a href="/Home/User/userhome" <?php if(ACTION_NAME=='userhome' || ACTION_NAME=='showeditpage'){echo "style='color:red'";}?>>个人资料</a></li>
+            <li><a href="/Home/User/getdealinfo" <?php if(ACTION_NAME=='getdealinfo' || ACTION_NAME=='editdealinfo'){echo "style='color:red'";}?>>交易人信息</a></li>
+            <li><a href="/Home/User/shipadresslist" <?php if(ACTION_NAME=='shipadresslist'){echo "style='color:red'";}?>>收货人地址</a></li>
+            <li><a href="/Home/User/safetypage" <?php if(ACTION_NAME=='safetypage' || ACTION_NAME=='changepassword' || ACTION_NAME=='bindphone' ||ACTION_NAME=='bindemail'){echo "style='color:red'";}?>>安全设置</a></li>
+            <li class="last"><a href="/Home/Package/myOnsale" <?php if(ACTION_NAME=='myOnsale'){echo "style='color:red'";}?>>我的优惠券</a></li>
+        
+        </ul>
+        <h2 class="h2_bg2"><a href="javascript:void(0)">订单管理</a></h2>
+        <ul>
+        	<li><a href="/Home/User/mycart" <?php if(ACTION_NAME=='mycart'){echo "style='color:red'";}?>>我的购物车</a></li>
+                 <li><a href="/Home/User/getallorderpay" <?php if(ACTION_NAME=='getallorderpay'){echo "style='color:red'";}?>>未支付的订单</a></li>
+            <li  class="last"><a href="/Home/User/allorder" <?php if(ACTION_NAME=='allorder' || ACTION_NAME=='lookorder'){echo "style='color:red'";}?>>我的订单</a></li>
+           
+        </ul>
+    </div>

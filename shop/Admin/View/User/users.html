@@ -1,0 +1,353 @@
+<link href="{$Think.ADMIN_CSS}style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+
+<script>
+    function setImagePreview() { 
+        var docObj=document.getElementById("file"); 
+        var imgObjPreview=document.getElementById("images"); 
+        if(docObj.files && docObj.files[0]){ 
+         //火狐7以上版本不能用上面的getAsDataURL()方式获取，需要一下方式 
+        imgObjPreview.src = window.URL.createObjectURL(docObj.files[0]); 
+        }else{ 
+        //IE下，使用滤镜 
+        docObj.select(); 
+        var imgSrc = document.selection.createRange().text; 
+        var localImagId = document.getElementById("localImag"); 
+        //必须设置初始大小 
+        localImagId.style.width = "250px"; 
+        localImagId.style.height = "200px"; 
+         //图片异常的捕捉，防止用户修改后缀来伪造图片
+        try{ 
+        localImagId.style.filter="progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)"; 
+        localImagId.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = imgSrc;
+        }catch(e){ 
+        alert("您上传的图片格式不正确，请重新选择!"); 
+        return false; 
+        } 
+        imgObjPreview.style.display = 'none'; 
+        document.selection.empty(); 
+        } 
+        return true; 
+        }
+
+    function addmember(){
+        $(":input[type=text]").attr('value','');
+        $('#addmember').show();
+    }
+    function hidemember(){
+        $('#addmember').hide();
+    }
+    function editMember(id){
+        if( id ){
+            $('#id').val(id);
+             $.ajax({
+               url:"__URL__/edituserinfo",
+               type:'post',
+               data:{"type":"editMember","id":id},
+               success:function(result){
+                   if( result ){
+                       var obj = eval('(' + result + ')'); 
+                       $('#card').val(obj.card);
+                       $("#role_id").find("option[id=role_"+obj.role_id+"]").attr("selected",true);
+                       $('#truename').val(obj.truename);
+                       $('#mobile').val(obj.mobile);
+                       $('#email').val(obj.email);
+                       $('#qq').val(obj.qq);
+                       if( obj.sex ==='1')  $("input:radio[name=sex]").eq(0).attr("checked",'checked');
+                       if( obj.sex ==='0')  $("input:radio[name=sex]").eq(1).attr("checked",'checked');
+                       $('#images').attr("src",obj.thumb);
+                       $('#himg').val(obj.thumb);
+                       $('#desc').val(obj.desc);
+                       $('#username').val(obj.username);
+                       $('#desc').val(obj.desc);
+                   }
+                   $('#addmember').show();
+               }
+           }); 
+        }
+    }
+    
+    function delMember(id){
+        if( id ){
+             $.ajax({
+               url:"__URL__/delMember",
+               type:'post',
+               data:{"type":"delMember","id":id},
+               success:function(result){
+                   if( result==='1' ){
+                       alert('删除成功！');
+                       location.reload();
+                   		}
+               }
+           }); 
+        }
+    }
+    
+    function selectAll(){  
+        if ($("#All").attr("checked")) {  
+            $(":checkbox").attr("checked", true);  
+        } else {  
+            $(":checkbox").attr("checked", false);  
+        }  
+    } 
+    
+    function changeStatus(status){
+       
+        var s = '';
+        $('input[name="role"]:checked').each(function(){
+//            alert($(this).val());
+          s+=$(this).val()+',';
+        }); 
+        
+        //根据id执行更新数据库操作； 
+        if( s ){
+            if(confirm('确认是否要操作?') ){
+                $.ajax({
+                   url:"__URL__/changeStatus",
+                   type:'post',
+                   data:{"type":"changeStatus","id":s,"status":status},
+                   success:function(result){
+                      if( result ==='1'){
+                          alert('操作成功！');
+                          location.reload();
+                      }
+                      $(":checkbox").attr("checked", false);  
+                   }
+               });
+            }
+        }
+    }
+
+    function checkData(){
+        
+        var isMobile=/^(?:13\d|15\d|18\d)\d{5}(\d{3}|\*{3})$/; //手机号码验证规则
+        var dianhua = $("#mobile").val();
+        
+        var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/;
+        var email = $("#email").val();
+       if($("#card").val() == '') {
+            alert('员工工号不能为空哦！');
+            return false;
+       }else if( $("#truename").val() == '' ){
+            alert('请填写真实姓名！');
+            return false; 
+       }else if( $("#role_id  option:selected").val() == '' || $("#role_id  option:selected").val() == '请选择' ){
+            alert('请选择角色！');
+            return false; 
+       }else if(  dianhua == '' ){
+            alert('请填写正确的手机号码！');
+            return false; 
+       }else if( !isMobile.test(dianhua) ){
+            alert('手机号码格式不对！');
+            return false; 
+       }else if( email == '' ){         
+            alert('邮箱不能为空哦！');
+            return false; 
+       }else if( !reg.test(email) ){         
+            alert('邮箱格式不对！');
+            return false; 
+       }else if( $("#qq").val() == '' ){
+            alert('QQ不能为空哦！');
+            return false; 
+       }else if( $("input[name='sex']:checked").val() === '' ){
+            alert('请选择性别！');
+            return false; 
+//       }else if( $("#file").val() == '' ){
+//            alert('请上传头像！');
+//            return false; 
+       }else if( $("#username").val() == '' ){
+            alert('系统姓名不能为空哦！');
+            return false; 
+       }else if( $("#desc").val() == '' ){
+            alert('员工描述不能为空哦！');
+            return false; 
+
+       }else if( $("#password2").val() != $("#password").val() ){
+            alert('请确认密码！');
+            return false; 
+       } else {
+          $('#addform').submit(); 
+      //  return true;
+       }
+   }
+   
+   //员工工号唯一性判断
+   function checkOlayOne(){
+       $('#showmessage').text('');
+       var card = $("#card").val();
+       if( card ){
+               $.ajax({
+                    url:"__URL__/checkOlayOne",
+                    type:'post',
+                    data:{"type":"checkOlayOne","card":card},
+                    success:function(result){
+                       if( result ==='1'){
+                           $('#showmessage').text('已存在！');
+                           return false;
+                       }
+                    }
+            });
+       }
+   }
+</script>
+
+<div class="wapper">
+    
+    <div class="wapper-right">
+    <div class="right_inner">
+    	<div class="path">您的位置：<a href="/index.php/Admin/Index/main">工作台</a>》<a href="/index.php/Admin/User/userinfo">系统管理</a>》<a href="/index.php/Admin/User/userinfo">员工管理</a></div>
+        <div class="search_dh">
+            <form action="__URL__/userinfo" method="post" name="search" >
+                <p class="jjss"><span>关键字：</span><input name="keywords" type="text" value="<?php if( $map['keywords']){ echo $map['keywords']; }?>" placeholder="请输入员工号、员工姓名进行查询" size="30" maxlength="20" /><input name="input" type="submit" value="搜索" /></p>
+                    
+            </form>
+        </div>
+        <div class="clear"></div>
+       	<div class="operation">
+            <a href="javascript:addmember();"><div class="tisp" style="margin-right:20px;">添加员工</div></a>
+                <div class="tisp" style="margin-right:20px;"><a href="javascript:changeStatus(1);">批量启用</a></div>
+                <div class="tisp" style="margin-right:20px;"><a href="javascript:changeStatus(2);">批量停用</a></div>
+<!--	<div id="systembox02">
+
+            <div id="systembtn02" class="systembtn02">
+                <a href="#" class="abtn"><span>批量操作</span></a>
+
+            </div>
+
+        </div>-->
+	<div class="clear"></div>
+        </div>
+        <div class="neir">
+        <table class="ddlc jsgl">
+        	<tr>
+            	<th  class="col_01"><label>
+                    	<input type="checkbox"  id="All" onclick="selectAll();" />
+                	</label></th><th class="col_02">序号</th>
+                <th  class="col_03">员工号</th>
+                <th  class="col_04">员工姓名</th>
+                <th  class="col_05">所属角色</th>
+                <th  class="col_01">状态</th>
+                <th  class="col_06">操作</th>
+            </tr>
+            <?php 
+            if( $userinfo ){
+                $i = 1;
+                foreach( $userinfo as $value ){
+            ?>
+            <tr <?php if( $i%2==0 ){?> class="tr_bgcolor" <?php } ?> >
+           	  <td><label>
+                    	<input type="checkbox"  name="role"  value="<?php echo $value['id'];?>"/>
+                	</label></td><td>
+                	<?php echo $value['id'];?></td>
+                <td><?php echo $value['card'];?></td>
+                <td><?php echo $value['truename'];?></td>
+                <td><?php echo $value['role_name'];?></td>
+                <?php if( $value['status']==='0' ){ ?>
+                <td  class="cunp"> 存盘 </td>
+                <?php } ?>
+                 <?php if( $value['status']==='1' ){ ?>
+                <td  class="qiyong"> 启用 </td>
+                <?php } ?>
+                <?php if( $value['status']==='2' ){ ?>
+                <td  class="tingy"> 停用 </td>
+                 <?php } ?>
+                <td class="pic_op"><a href="javascript:editMember(<?php echo $value['id'];?>);">修改</a>&nbsp;&nbsp;&nbsp;&nbsp;<a onclick="{if(confirm('确认是否要删除?')){this.document.formname.submit();return true;}return false;}" href="javascript:delMember(<?php echo $value['id'];?>);">删除</a></td>
+                
+            </tr>
+            <?php 
+                $i++;
+            }} ?>
+
+        </table>
+    </div>	
+        <?php echo $page;?>
+        <!--table end-->
+        </div>
+    <!--right_inner end-->
+    <!--添加员工 开始-->
+    <div id="addmember" class="add role" style="display:none;" >
+       
+    	<div class="backcolor">
+       	  <h3>添加员工<span class="guanbi" onclick="hidemember()">X</span></h3>
+          <div class="role_con">
+              
+          <form id="addform" name="addform" action="__URL__/adduserinfo"  method='post' enctype="multipart/form-data">
+              <input type="hidden" value="" id="id" name="id">
+                <table>
+                  <tr>
+                    <td class="role_name"><span>*</span>&nbsp;&nbsp;员工工号</td>
+                    <td><input type="text" name='card' id="card" onblur="checkOlayOne()"/><span id="showmessage" name="showmessage" ></span></td>
+                    <td class="role_name"><span>*</span>&nbsp;&nbsp;所属角色</td>
+                    <td>
+                        <select id="role_id" name="role_id" >
+                            <option> 请选择 </option>
+                            <?php 
+                                if( $roleinfo ){
+                                    foreach( $roleinfo as $vv){
+                            ?>
+                            <option id="role_<?php echo $vv['role_id']?>" value="<?php echo $vv['role_id']?>" ><?php echo $vv['name'];?></option>
+                            <?php }} ?>
+                        </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="role_name"><span>*</span>&nbsp;&nbsp;员工姓名</td>
+                    <td><input type="text" name='truename'  id="truename"/></td>
+                    <td class="role_name"><span>*</span>&nbsp;&nbsp;手机号码</td>
+                    <td><input type="text" name='mobile' id="mobile"/></td>
+                  </tr>
+                  <tr>
+                    <td class="role_name"><span>*</span>&nbsp;&nbsp;电子邮箱</td>
+                    <td><input type="text" name='email' id="email"/></td>
+                    <td class="role_name"><span>*</span>&nbsp;&nbsp;QQ</td>
+                    <td><input type="text" name='qq' id="qq"/></td>
+                  </tr>
+                  <tr>
+                    <td class="role_name"><span>*</span>&nbsp;&nbsp;性别</td>
+                    <td colspan="3"><label>
+                      <input type="radio" name="sex"  id="sex" value="1" checked="checked"/>
+                      男</label>
+                      <label>
+                        <input type="radio" name="sex"  id="sex" value="0" />
+                        女</label></td>
+                  </tr>
+                  <tr>
+                    <td class="role_name"><span>*</span>&nbsp;&nbsp;头像</td>
+                    
+                    <td colspan="3"><img width="100" height="100" id="images" src="{$Think.ADMIN_IMAGES}tx.png" />
+                     <input type="file" name="file" id="file" size="30" style="margin-top:10px; margin-left:20px; margin-bottom:10px;" onchange="javascript:setImagePreview();"/></td>
+                  </tr>
+                  <tr class="xian">
+                    <td class="role_name"><span>*</span>&nbsp;&nbsp;员工描述</td>
+                    <td  colspan="3"><textarea name="desc" id="desc" rows="3"></textarea></td>
+                  </tr>
+<!--                  <tr>
+                    <td class="role_name"><span>*</span>&nbsp;&nbsp;系统登录名</td>
+                    <td class="xian" colspan="3"><input type="text" name="username" id="username"/></td>
+                  </tr>-->
+                  <tr>
+                    <td class="role_name"><span>*</span>&nbsp;&nbsp;登录密码</td>
+                    <td><input type="password"  name='password' id='password' /></td>
+                    <td class="role_name"><span>*</span>&nbsp;&nbsp;确认密码</td>
+                    <td ><input type="password" name='password2' id='password2'/></td>
+                  </tr>
+
+                 <tr>
+                     <td colspan="4" class="qd"><input onclick="checkData()" type="button" value="保存" />
+                      &nbsp;&nbsp;
+                      <input type="button" name="save" onclick="hidemember()" value="关闭" /></td>
+                  </tr>
+                </table>
+              
+            </form>
+          </div>
+        </div>
+    </div>
+    
+    <!--添加员工 结束-->
+    
+    </div><!--wapper-right end-->
+</div><!--wapper end-->
+<!--头部 开始-->
+</body>
+</html>

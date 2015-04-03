@@ -1,0 +1,58 @@
+<include file="Public/header" />
+<!--个人中心信息 开始-->
+<div class="container">
+	<div class="crumbs">
+    	您的位置：
+        <a href="{$Think.DOMAIN}">中细软服务商城</a>&gt;
+        <a href="{$Think.DOMAIN}Home/User/userhome">个人中心</a>&gt;
+        <a href="javascript:void()">个人资料</a>
+    </div>
+	<include file="Public/ucenter_left" />
+    
+    <div class=" members_right float-right">
+    	<p class="members_right_title">
+        	<span class="float-left">个人资料</span>
+            <span class="float-right"><a href="/Home/User/showeditpage"><img src="{$Think.HOME_IMAGES}compile.png" /></a></span>
+            <div style="clear:both;"></div>
+        </p>
+        <table>
+        	<tr>
+            	<td class="text-right padding_top30" style="width:200px;"><span></span>头像：</td>
+                <td class="text-left padding_top30">
+                	<if condition="empty($userinfo['avatar'])">
+                	<img src="{$Think.HOME_IMAGES}member_head01.png" id="images" height="100px" width="100px"/>
+                    <else />
+                    {$userinfo['avatar']}
+                    </if></td>
+            </tr>
+             <tr>
+            	<td class="text-right"><span></span>性别：</td>
+            	<if condition="$userinfo['sex'] eq 0">
+                <td class="text-left">男</td>
+                <else />
+                <td class="text-left">女</td>
+                </if>
+            </tr>
+             <tr>
+            	<td class="text-right"><span></span>手机号码：</td>
+                <td class="text-left">{$userinfo['mobile_phone']}</td>
+            </tr>
+             <tr>
+            	<td class="text-right"><span></span>生日：</td>
+                <td class="text-left">{$userinfo['birthday']}</td>
+            </tr>
+            <tr>
+            	<td class="text-right"><span></span>居住地：</td>
+                <td class="text-left">{$userinfo['address']}</td>
+            </tr>
+        </table>
+    </div>
+    <div style="clear:both;"></div>
+
+</div>
+
+
+<!--个人中心信息 结束-->
+<include file="Public/footer" />
+
+

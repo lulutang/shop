@@ -1,0 +1,92 @@
+<include file="Public/header" />
+<script type="text/javascript" src="{$Think.HOME_JS}ucenter/showeditpage.js"></script>
+<!--个人中心信息修改 开始-->
+<div class="container">
+	<div class="crumbs">
+    	您的位置：
+        <a href="{$Think.DOMAIN}">中细软服务商城</a>&gt;
+        <a href="{$Think.DOMAIN}Home/User/userhome">个人中心</a>&gt;
+        <a href="javascript:void()">个人资料</a>
+    </div>
+	<include file="Public/ucenter_left" />
+    
+    <div class="members_right members_info_change float-right">
+    	<p class="members_right_title">个人资料</p>
+        <form action="edituserinfo" method="post" enctype="multipart/form-data" onsubmit="return CheckPhone()">
+        <table>
+            
+        	<tr>
+            	<td class="text-right padding_top30" style="width:200px;"><span></span>头像：</td>
+                <td class="text-left padding_top30 header_button">
+                    {$userinfo['avatar']}
+                    <!--
+                    <if condition="empty($userinfo['photo_add'])">
+                	<!--<img id="preview" height="100px" width="100px"/>
+                    <img id="images" src="{$Think.HOME_IMAGES}member_head01.png" width="100px" height="100px"/>
+                    <else />
+                    <img src="{$current|current_cdn_img}{$userinfo['photo_add']}" id="images" height="100px" width="100px"/>
+                    </if>
+                    <input type="file" name="file" id="file" size="18" style="margin-top:80px; margin-left:20px; background-color:#fff;" onchange="javascript:setImagePreview();"/> 
+                   
+                    
+                    <div style="clear:both;"></div>  
+                    -->
+                </td>
+            </tr>
+            
+          
+             <tr>
+            	<td class="text-right"><span></span>性别：</td>
+                <td class="text-left">
+                    <if condition="$userinfo['sex'] eq 0">
+                    <input type="radio" name="sex" value="0" checked /> 男&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="sex" value="1" /> 女
+                    <else />
+                    <input type="radio" name="sex" value="0" /> 男&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="sex" value="1" checked/> 女
+                    </if>
+                </td>
+            </tr>
+             <tr>
+            	<td class="text-right"><span>*</span>手机号码：</td>
+                <td class="text-left"><input class="lineheight29" type="text" size="50" value="{$userinfo['mobile_phone']}" name="mobile_phone" id="mobile_phone"/></td>
+            </tr>
+             <tr>
+            	<td class="text-right"><span></span>生日：</td>
+                <td class="text-left">
+                    <select id="birthyear" name="birthyear" onchange="showbirthday();">
+                        <option value="0">请选择</option>
+                        {$birthyeayhtml}
+                    </select> 年 
+                    <select id="birthmonth" name="birthmonth" onchange="showbirthday();">
+                        <option value="0">请选择</option>
+                        {$birthmonthhtml}
+                    </select> 月 
+                    <select id="birthday" name="birthday">
+                        <option value="0">请选择</option>
+                        {$birthdayhtml}
+                    </select> 日
+                    
+                    
+                </td>
+            </tr>
+            <tr>
+            	<td class="text-right"><span></span>居住地：</td>
+                <td class="text-left"><input class="lineheight29" type="text" size="50" value="{$userinfo['address']}" name="address"/></td>
+            </tr>
+            <tr>
+                <td class="text-right padding_bottom50"></td>
+                <td class="text-left padding_bottom50"><input class="button_save" type="submit" value="保存信息"></td>
+            </tr>
+        
+        </table>
+        </form>
+    </div>
+    <div style="clear:both;"></div>
+
+</div>
+<!--个人中心信息修改 结束-->
+<include file="Public/footer" />
+
+
+

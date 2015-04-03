@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>添加购物车商品03</title>
+<link href="{$Think.ADMIN_CSS}global.css" rel="stylesheet" type="text/css">
+<link href="{$Think.ADMIN_CSS}m_style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}guest.js"></script>
+
+</head>
+
+<body>
+<div class="content_right addproducts addproducts02">
+    <div id="indent" class="indent" onClick="changeWin()"></div>
+    <div class="link_path">您所在的位置：<a href="javascript:void(0)">客官管理 </a>&nbsp;>&nbsp;<a href="javascript:void(0)">添加购物车商品</a></div>
+    <div class="addproducts_box">
+    	<div class="title"><span>{$user.truename}  {$user.mobile}</span>  <a onclick="javascript:history.go(-1);">返回</a></div>
+        <div class="addproductsinfo">
+            <form id="sfrm" name="sfrm" action="/Admin/Guest/addMemOrder" method="post" >
+                <input type="hidden" id="typefrm" name="typefrm" value="" />
+                <div class="filter01">
+                    <select class="select130_30" name="oneType" id="oneType" onchange="addTwo(this.value)">
+                        <option selected="selected">==请选择==</option>
+                        <foreach name="oneType" item="vo" >
+                        <option value="{$vo.id}" <if condition="$oneType eq $vo.id "> selected</if>  >{$vo.server_name}</option>
+                        </foreach>
+                    </select>
+                    <img src="{$Think.ADMIN_IMAGES}w_icon01.png" />
+                    <select id="twoType" name="twoType" class="select130_30" onchange="addThree(this.value)">
+                            <option>==请选择==</option> 
+                    </select>
+                    <img src="{$Think.ADMIN_IMAGES}w_icon01.png" />
+                    <select id="threeType" name="threeType" class="select130_30">
+                            <option>==请选择==</option>
+                    </select>
+                    <input class="btn_confirm" type="button" onclick="typeRrm()" value="确定" />
+                </div>
+            </form>
+            <form id="gwfrm" name="gwfrm" action="/Admin/Guest/addGWMemOrder" method="post" >
+                <input type="hidden" id="cartId" name="cartId" value="{$cartId}" />
+                <input type="hidden" id="short_title" name="short_title" value="{$short_title}" />
+                <input type="hidden" id="orderId" name="orderId" value="{$orderId}" />   
+                <input type="hidden" id="uid" name="uid" value="{$uid}" />
+                <table class="filter06">
+                    <tr>
+                        <td width="30%" class="text-right"><span class="red">*</span>商标名称:</td>
+                        <td class="text-left"><input class="text300" id="name" name="name" type="text" placeholder="输入中文、英文、拼音、数字或上述组合字符"/> </td>
+                    </tr>
+                    <tr>
+                            <td class="text-right"><span class="red">*</span>商标分类:</td>
+                        <td class="text-left">
+                            <div class="brand_type" id="brand_type" onmouseout="this.className='brand_type'" onmouseover="this.className='brand_type active_brand_type'"> 
+                                <p id="update">请选择商标所属行业</p>  
+                                <input type="hidden" value="" id="style" name="style" />                             
+                                <ul class="brand_type_ct" id="selectFenlei" name="selectFenlei"> 
+                                    <li data-cls="第01类-化学原料">第01类-化学原料</li>
+                                    <li data-cls="第02类-颜料油漆">第02类-颜料油漆</li>
+                                    <li data-cls="第03类-日化用品">第03类-日化用品</li>
+                                    <li data-cls="第04类-燃料油脂">第04类-燃料油脂</li>
+                                    <li data-cls="第05类-医药">第05类-医药</li>
+                                    <li data-cls="第06类-金属材料">第06类-金属材料</li>
+                                    <li data-cls="第07类-机械设备">第07类-机械设备</li>
+                                    <li data-cls="第08类-手工器械">第08类-手工器械</li>
+                                    <li data-cls="第09类-科学仪器">第09类-科学仪器</li>
+                                    <li data-cls="第10类-医疗器械">第10类-医疗器械</li>
+                                    <li data-cls="第11类-灯具空调">第11类-灯具空调</li>
+                                    <li data-cls="第12类-运输工具">第12类-运输工具</li>
+                                    <li data-cls="第13类-军火烟火">第13类-军火烟火</li>
+                                    <li data-cls="第14类-珠宝钟表">第14类-珠宝钟表</li>
+                                    <li data-cls="第15类-乐器">第15类-乐器</li>
+                                    <li data-cls="第16类-办公用品">第16类-办公用品</li>
+                                    <li data-cls="第17类-橡胶制品">第17类-橡胶制品</li>
+                                    <li data-cls="第18类-皮革皮具">第18类-皮革皮具</li>
+                                    <li data-cls="第19类-建筑材料">第19类-建筑材料</li>
+                                    <li data-cls="第20类-家具">第20类-家具</li>
+                                    <li data-cls="第21类-厨房洁具">第21类-厨房洁具</li>
+                                    <li data-cls="第22类-绳网袋篷">第22类-绳网袋篷</li>
+                                    <li data-cls="第23类-纱线丝">第23类-纱线丝</li>
+                                    <li data-cls="第24类-布料床单">第24类-布料床单</li>
+                                    <li data-cls="第25类-服装鞋帽">第25类-服装鞋帽</li>
+                                    <li data-cls="第26类-钮扣拉链">第26类-钮扣拉链</li>
+                                    <li data-cls="第27类-地毯席垫">第27类-地毯席垫</li>
+                                    <li data-cls="第28类-健身器材">第28类-健身器材</li>
+                                    <li data-cls="第29类-食品">第29类-食品</li>
+                                    <li data-cls="第30类-方便食品">第30类-方便食品</li>
+                                    <li data-cls="第31类-饲料种籽">第31类-饲料种籽</li>
+                                    <li data-cls="第32类-啤酒饮料">第32类-啤酒饮料</li>
+                                    <li data-cls="第33类-酒">第33类-酒</li>
+                                    <li data-cls="第34类-烟草烟具">第34类-烟草烟具</li>
+                                    <li data-cls="第35类-广告销售">第35类-广告销售</li>
+                                    <li data-cls="第36类-金融物管">第36类-金融物管</li>
+                                    <li data-cls="第37类-建筑修理">第37类-建筑修理</li>
+                                    <li data-cls="第38类-通讯服务">第38类-通讯服务</li>
+                                    <li data-cls="第39类-运输贮藏">第39类-运输贮藏</li>
+                                    <li data-cls="第40类-材料加工">第40类-材料加工</li>
+                                    <li data-cls="第41类-教育娱乐">第41类-教育娱乐</li>
+                                    <li data-cls="第42类-网站服务">第42类-网站服务</li>
+                                    <li data-cls="第43类-餐饮住宿">第43类-餐饮住宿</li>
+                                    <li data-cls="第44类-医疗园艺">第44类-医疗园艺</li>
+                                    <li data-cls="第45类-社会服务">第45类-社会服务</li>   
+                          </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-right ver_top" style="padding-top: 5px;"><span class="red">*</span>需求描述:</td>
+                        <td class="text-left"><textarea id="message" name="message" placeholder="请输入需求描述"></textarea></td>
+                    </tr>
+                </table>
+            <div class="btn">
+                <input type="hidden" id="GWSave" name="GWSave" value="" />
+                <input class="btn_confirm" onclick="saveGW('1')" type="button" value="保存" /> <input class="save_go"  onclick="saveGW('2')"  type="button" value="保存并继续添加" /> <input class="unsave" onclick="javascript:history.go(-1);" type="button" value="不保存返回" />
+            </div>
+            </form>
+        </div>   
+    </div>
+
+</div>
+
+<script type="text/javascript">
+//菜单缩放
+  openclose=true;
+  function changeWin(){ 
+      parent.bodyFrame.cols =openclose?"1,*":"210,*";//这句话有报错
+      $(".indent").toggleClass('ind');
+      openclose=!openclose;
+  }
+  
+
+  $(function(){
+    $("#selectFenlei li").live('click',function(){
+        //此时就可以对你当前点击的元素即li标签做相应的操作了，比如设置选中li的样式
+        var id = $(this).attr('data-cls');
+        $('#update').text(id);
+        $('#style').attr('value', id);
+        $('#brand_type').attr('class', 'brand_type');
+    });
+  });
+</script>
+</body>

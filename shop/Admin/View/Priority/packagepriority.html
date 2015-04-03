@@ -1,0 +1,108 @@
+<link href="{$Think.ADMIN_CSS}style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+
+<script type="text/javascript">
+function is_indexorhot(package_id,val,field){
+    
+    if( package_id ){
+        $.ajax({
+          type: 'POST',
+          url:"__URL__/package_Is_index", 
+          data:{"type":"is_indexorhot","package_id":package_id,"val":val,"field":field},
+
+          success: function(result){
+              
+                 if(result=='1' && val=='1' && field=='is_index' ){
+                     $("#in_"+package_id).attr('class','yesno_zz no');
+                    
+                 }
+                 if(result=='1' && val=='0' && field=='is_index'  ){
+                     $("#in_"+package_id).attr('class','yesno_zz yes');
+                 }
+                 
+                 if(result=='1' && val=='1' && field=='is_hot' ){
+                     $("#ho_"+package_id).attr('class','yesno_zz no');
+                    
+                 }
+                 if(result=='1' && val=='0' && field=='is_hot'  ){
+                     $("#ho_"+package_id).attr('class','yesno_zz yes');
+                 }
+             }
+         });
+    }
+}
+
+   function spanhide(id){
+        $("#span"+id).hide();
+        $("#input"+id).show();
+    }
+    function inputhide(id){
+      var orderid = $("#input"+id).val();
+      if(orderid==0){
+        alert('序列从1开始');
+        return false;
+      }
+      $.ajax({
+        url:"__URL__/editorderid",
+        type:'post',
+        data:{"orderid":orderid,"id":id},
+        success:function(msg){
+          if(msg!=0){
+            $("#span"+id).html(msg);
+          }
+          
+        }
+    })
+    $("#span"+id).show();
+    $("#input"+id).hide();
+  }
+</script>
+
+<div class="wapper">
+
+    <div class="wapper-right">
+    	<div class="right_inner">
+    		<div class="path">您的位置：<a  href="/index.php/Admin/Index/main">工作台</a>》<a  href="__URL__/goods">页面设置</a>》<a href="/index.php/Admin/Priority/package">套装商品优先级设置</a></div>
+        	
+        	<table class="ddlc">
+            	<tr>
+                  <th class="col_01">套装编码</th>
+                  <th class="col_02">序列</th>
+                  <th class="col_03">套装简称</th>
+                  <th class="col_04">首页推广</th>
+                  <th class="col_05">热门推荐</th>
+                  <th class="col_06">活动状态</th>
+                  <th class="col_07">活动起止时间</th>
+<!--                  <th class="col_08">操作</th>-->
+                </tr>
+                <?php 
+                    if( $data ){
+                        foreach( $data as $val){
+                ?>
+                <tr>
+                  <td><?php echo $val['package_code'];?></td>
+                  <td onclick="spanhide(<?php echo $val['package_id'];?>)"><span  id="span<?php echo $val['package_id'];?>"> <?php echo $val['orderid'];?> </span><input type="text" value="<?php echo $val['orderid'];?>" style="height:20px;width:40px;display:none" onblur="inputhide(<?php echo $val['package_id'];?>)" id="input<?php echo $val['package_id'];?>"></td>
+
+<!--                  <td><input type="text" name="" value="<?php echo $val['orderid'];?>" maxlength="5" /></td>-->
+                  <td><?php echo $val['short_title'];?></td>
+                  <td><div  class="yesno"><span onclick="is_indexorhot(<?php echo $val['package_id'];?>,'0','is_index');">是</span>&nbsp;&nbsp;&nbsp;&nbsp;<span onclick="is_indexorhot(<?php echo $val['package_id'];?>,'1','is_index');">否</span><div id="in_<?php echo $val['package_id'];?>" <?php if( $val['is_index']=='1'){ ?>class="yesno_zz no" <?php } if( $val['is_index']=='0' ){?> class="yesno_zz yes" <?php }?> ></div></div></td>
+                  <td><div  class="yesno"><span onclick="is_indexorhot(<?php echo $val['package_id'];?>,'0','is_hot');">是</span>&nbsp;&nbsp;&nbsp;&nbsp;<span onclick="is_indexorhot(<?php echo $val['package_id'];?>,'1','is_hot');">否</span><div id="ho_<?php echo $val['package_id'];?>" <?php if( $val['is_hot']=='1'){ ?>class="yesno_zz no" <?php } if( $val['is_hot']=='0' ){?> class="yesno_zz yes" <?php }?> ></div></div></td>
+                   <td style="color:<?php if( $val['zstatus'] =='1' ){ echo '#008e4d' ;}else{ echo '#f00';}?>" ><?php if( $val['zstatus'] =='1' ){ echo '进行中' ;} if( $val['zstatus'] =='0' ){ echo '已结束' ;}?></td>
+                  <td><?php echo date('Y-m-d H:i:s',$val['starttime']);?>至<?php echo date('Y-m-d H:i:s',$val['endtime']);?></td>
+<!--                  <td><a href=""><img src="{$Think.ADMIN_IMAGES}1_05.png" /></a></td>-->
+                </tr>
+                <?php
+                    }}
+                ?>
+
+            </table>
+            
+        </div>
+   
+    
+    </div>
+    <!--wapper-right end-->
+</div><!--wapper end-->
+<!--头部 开始-->
+</body>
+</html>

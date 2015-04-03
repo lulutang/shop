@@ -1,0 +1,16 @@
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}menu.js"></script>
+
+<link href="{$Think.ADMIN_CSS}style.css" rel="stylesheet" type="text/css">
+
+<script language=javascript>
+openclose=true;
+function changeWin(){    
+    parent.bodyFrame.cols =openclose?"1,16,*":"305,16,*";
+    $(".indent").toggleClass('r');
+    openclose=!openclose;
+}
+</script>
+<body>
+<div class="indent" onclick='changeWin()'></div>
+</body>

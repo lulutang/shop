@@ -1,0 +1,99 @@
+<link href="{$Think.ADMIN_CSS}style.css" rel="stylesheet" type="text/css">
+<h3 >选择套装商品<a href="javascript:;" onclick="removegoods()" style="float:right">x</a></h3>
+<div class="tcsp_search">
+<input type="text" placeholder="请输入商品编码、商品简称" maxlength="20" size="30" value="" name="keyword" id="key">
+<input type="button" value="搜索" onclick="sousuo()" class="tcssan"></div>
+<div id="tat" class="tjtcsp">
+	<table>
+	<tr>
+		<th class="col_01"><input type="checkbox" name="top" id="childtop" onclick="Opt('top')"></th>
+		<th class="col_02">商品编码</th>
+		<th class="col_03">商品简称</th>
+		<th class="col_04">业务类型</th>
+		<th class="col_05">现价</th>
+	</tr>
+	<volist name="Goods_arr" id="Gsa">
+		<tr>
+			<td><input type="checkbox" name="child" value="{$Gsa['goods_id']}"></td>
+			<td>{$Gsa["goods_code"]}</td>
+			<td>{$Gsa["short_title"]}</td>
+			<td>{$Gsa["now_servername"]}</td>
+			<td>{$Gsa["now_price"]}</td>
+		</tr>
+	</volist>
+	</table>
+<input type="hidden" id="gid" value="{$zu_goods}" >
+
+</div>
+<span id="sp" class="fany">{$str}</span>
+
+<div class="tcsp_qd"><input type="button" value="确定" onclick="OPTgoods('{$package_id}')"><input type="button" value="取消" onclick="removegoods()"></div>
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script>
+	function page(str)
+	{
+		var goods_id = checkbox();
+		var hidGid = $("#gid").val();
+                var w = {"str":str , "goods_id":goods_id , "hidGid":hidGid};
+		$.ajax({
+			url:"__APP__/Admin/Package/Interye",
+			type:"post",
+			data:w,
+			success:function(e)
+			{
+				$("#tat").html(e);
+			}
+		});
+	}
+	//搜索
+	function sousuo()
+	{
+		var search = $("#key").val();
+			$.ajax({
+				url:"__APP__/Admin/Package/Goods_search",
+				type:"post",
+				data:{"search":search},
+				success:function(e)
+				{
+					$("#tat").html(e);
+                                        if(search.length != 0){
+                                            $("#sp").hide();
+                                        }else{
+                                            $("#sp").show();
+                                        }
+				}
+			});
+
+	}
+	//删除选中商品
+	function Goods_Del(goods_id)
+	{
+		$.ajax({
+			url:"__APP__/Admin/Package/Inter_Del",
+			type:"post",
+			data:{"Gid_goodsID":goods_id},
+			success:function(e)
+			{
+				$("#twoshow").html(e);
+				$("#sp").hide();
+			}
+		});
+	}
+	//判断隐藏域中的val值
+	function Case(goodsID)
+	{
+		var string ='';
+		var zu_gid  = $("#gid").val();
+		var xzu_gid = zu_gid.split(",");
+		for(var i=0 ;i<xzu_gid.length ;i++)
+		{
+			if(goodsID != xzu_gid[i])
+			{
+				string += xzu_gid[i]+",";
+			}
+		}
+		s=string.substring(0,string.length-1);
+		$("#gid").val(s);
+	}
+</script>
+

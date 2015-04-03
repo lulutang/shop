@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>添加购物车商品02</title>
+<link href="{$Think.ADMIN_CSS}global.css" rel="stylesheet" type="text/css">
+<link href="{$Think.ADMIN_CSS}m_style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}guest.js"></script>
+
+</head>
+
+<body>
+<div class="content_right addproducts addproducts02">
+    <div id="indent" class="indent" onClick="changeWin()"></div>
+    <div class="link_path">您所在的位置：<a href="/index.php/Admin/Guest/lists">客官管理 </a>&nbsp;>&nbsp;<a href="javascript:void(0)">添加购物车商品</a></div>
+    <div class="addproducts_box">
+    	<div class="title"><span>{$user.truename}  {$user.mobile}</span>  <a onclick="javascript:history.go(-1);">返回</a></div>
+        <div class="addproductsinfo">
+            <form id="sfrm" name="sfrm" action="/Admin/Guest/addMemOrder" method="post" >
+                <input type="hidden" id="typefrm" name="typefrm" value="" />
+                <div class="filter01">
+                    <select class="select130_30" name="oneType" id="oneType" onchange="addTwo(this.value)">
+                        <option selected="selected">==请选择==</option>
+                        <foreach name="oneType" item="vo" >
+                        <option value="{$vo.id}" <if condition="$oneType eq $vo.id "> selected</if>  >{$vo.server_name}</option>
+                        </foreach>
+                    </select>
+                    <img src="{$Think.ADMIN_IMAGES}w_icon01.png" />
+                    <select id="twoType" name="twoType" class="select130_30" onchange="addThree(this.value)">
+                            <option>==请选择==</option> 
+                    </select>
+                    <img src="{$Think.ADMIN_IMAGES}w_icon01.png" />
+                    <select id="threeType" name="threeType" class="select130_30">
+                            <option>==请选择==</option>
+                    </select>
+                    <input class="btn_confirm" type="button" onclick="typeRrm()" value="确定" />
+                </div>
+            </form>
+            <form id="zlfrm" name="zlfrm" action="/Admin/Guest/addZLMemOrder" method="post" >
+                <input type="hidden" id="cartId" name="cartId" value="{$cartId}" />
+                <input type="hidden" id="short_title" name="short_title" value="{$short_title}" />
+                <input type="hidden" id="orderId" name="orderId" value="{$orderId}" />   
+                <input type="hidden" id="uid" name="uid" value="{$uid}" />
+            
+                <table class="filter06">
+                    <tr>
+                            <td width="30%" class="text-right">专利名称:</td>
+                            <td class="text-left"><input class="text300" type="text" id="name" name="name" placeholder="请输入专利名称" /> <img src="{$Think.ADMIN_IMAGES}w_icon08.png" /> 请输入专利名称</td>
+                    </tr>
+                    <tr>
+                            <td class="text-right">行业类型:</td>
+                        <td class="text-left"><input type="radio" name="type" value="科技文化业" /> 科技文化业 <input type="radio" name="type" value="服务业" /> 服务业 <input type="radio" name="type" value="商贸业" /> 商贸业 <input type="radio" name="type" value="制造业" /> 制造业 <input type="radio" name="type" value="其他" /> 其他</td>
+                    </tr>
+                    <tr>
+                            <td class="text-right ver_top">需求描述:</td>
+                        <td class="text-left"><textarea id="message" name="message" ></textarea></td>
+                    </tr>
+                </table>
+            <div class="btn">
+                <input type="hidden" id="ZLSave" name="ZLSave" value="" />
+                <input class="btn_confirm" onclick="saveZL('1')" type="button" value="保存" /> <input class="save_go"  onclick="saveZL('2')"  type="button" value="保存并继续添加" /> <input class="unsave" onclick="javascript:history.go(-1);" type="button" value="不保存返回" />
+            </div>
+            </form>
+        </div>   
+    </div>
+
+</div>
+
+<script type="text/javascript">
+//菜单缩放
+  openclose=true;
+  function changeWin(){ 
+      parent.bodyFrame.cols =openclose?"1,*":"210,*";//这句话有报错
+      $(".indent").toggleClass('ind');
+      openclose=!openclose;
+  }
+</script>
+</body>

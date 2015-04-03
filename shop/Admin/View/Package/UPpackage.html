@@ -1,0 +1,404 @@
+<link href="{$Think.ADMIN_CSS}style.css" rel="stylesheet" type="text/css">
+
+ <form action="/Admin/Package/upORadd" method="post" name="tjtc_second" enctype="multipart/form-data" onsubmit="return Packagesub()">
+	<div class="add suit" style="display:block" id="Addone">
+    	<div class="backcolor">
+    		<h3>添加套餐<a href='javascript:;' onclick="Addhide('one')" style="float:right;">x</a></h3>
+            <div class="guides"><ul>
+        	<li class="guide guide_first guide_cur">1.选择商品服务</li>
+			<p><a href="javascript:;"  onclick="Goods_server('{$PackageId}@#@{$Package_Arr['zuhe']}' , '{$Package_Arr['zuhe']}')">选择商品服务</a></p>
+			<li class="guide ">2.录入基本信息</li>
+			<li class="guide guide_last ">3.录入套餐说明</li>
+		</ul></div>
+<!--新添加div--><div id="twoshow">
+		<table>
+					<tr>
+						<th>商品服务信息</th>
+						<th>业务类型</th>
+						<th>价格</th>
+						<th>状态</th>
+						<th>操作</th>
+					</tr>
+					<volist name="Goods_arr" id="Ga">
+						<tr>
+							<td><p><img src="{$Ga['thumb']}" width=96 height=97 /></p> <p class="service">{$Ga["now_servername"]}<br />
+							<if condition="!empty($Ga['attr_name'])">
+							<span>[{$Ga["attr_name"]}]</span>
+							</if>
+							</p></td>
+							<td>{$Ga["server_name"]}</td>
+							<td>￥{$Ga["now_price"]}</td>
+							<td class="open">
+							<if condition="$Ga['is_hot'] eq 1">
+								热门推荐
+							</if>
+							<if condition="$Ga['is_index'] eq 1">
+								首页推广
+							</if>
+							</td>
+							<td class="del"><a href="javascript:;" onclick="GoodsDel({$Ga['goods_id']} , {$PackageId})"><img src="{$Think.ADMIN_IMAGES}1_07.png"></a></td>
+						</tr>
+					</volist>
+	</table>
+        	
+</div>
+      		<div class="next"><input type="button" value="下一步" onclick="Addpacktwou('{$Package_Arr['zuhe']}')"/></div>
+        </div>
+    </div>
+    <!--第一步 结束-->
+    <!--第二步 开始-->
+
+
+
+    <div class="add second" style="display:none" id="Addtwo">
+    	<div class="backcolor">
+    		<h3>添加套餐<a style="float:right;" href='javascript:;' onclick="Addhide('two')">x</a></h3>
+        	
+          <div class="guides"><ul>
+        	<li class="guide ">1.选择商品服务</li>
+			<li class="guide guide_first guide_cur">2.录入基本信息</li>
+			<li class="guide guide_last ">3.录入套餐说明</li>
+		  </ul></div>
+       	 <div style="height:730px;">
+		 <div>
+            	<p><span>*</span><span class="secname">套装商品编码</span><input type="text" name="package_code" value="{$Package_Arr['package_code']}" id="spackage_code" onblur="Packd(this)"/></p>
+                <p><span>*</span><span class="secname">套装商品简称</span><input type="text" name="short_title" value="{$Package_Arr['short_title']}" id="sshort_title"/></p>
+                <p><span>*</span><span class="secname">套装商品全称</span><input type="text" name="title" value="{$Package_Arr['title']}" id="stitle"/></p>
+                <p><span>*</span><span class="secname">套装商品描述</span>
+                  <textarea name="description" cols="200" rows="3" id="sdescription" maxlength="75">{$Package_Arr['description']}</textarea>
+                </p>
+                <p class="present"><span>*</span>现价<input type="text" name="now_price" value="{$Package_Arr['now_price']}" id="snow_price"/>&nbsp;&nbsp;&nbsp;&nbsp;/元</p>
+                <p class="present">原价<input type="text" name="old_price" value="{$Package_Arr['old_price']}" id="sold_price" />&nbsp;&nbsp;&nbsp;&nbsp;/元</p>
+				<p class="present">成本价<input type="text" name="cost" value="{$Package_Arr['cost']}" />&nbsp;&nbsp;&nbsp;&nbsp;/元</p>
+                <p class="time"><span>*</span>套装促销时间<input type="text" name="starttime" value="<php>echo date('Y-m-d H:i:s',$Package_Arr['starttime']);</php>" onclick="SelectDate(this,'yyyy-MM-dd hh:mm:ss')" id="sstarttime"/>&nbsp;&nbsp;&nbsp;&nbsp;至<input type="text" name="endtime" value="<php>echo date('Y-m-d H:i:s',$Package_Arr['endtime']);</php>"   onclick="SelectDate(this,'yyyy-MM-dd hh:mm:ss')" id="sendtime"/></p>
+                <p class="account"><span>&nbsp;</span><span class="secname">默认销售量</span><input type="text" name="sales" value="{$Package_Arr['sales']}" />&nbsp;&nbsp;&nbsp;&nbsp;/个</p>
+                <p class="tj">
+                  <label>
+					<if condition="$Package_Arr['status'] eq 1">
+						<input type="checkbox" name="status" value="1" id="tgsj_0" checked="checked"/>
+						立即上架
+					<else/>
+						<input type="checkbox" name="status" value="1" id="tgsj_0" />
+						立即上架
+					</if>
+					</label>
+
+                  <label>
+					<if condition="$Package_Arr['is_index'] eq 1">
+						<input type="checkbox" name="is_index" value="1" id="tgsj_1" checked="checked"/>
+						首页推广
+					<else/>
+						<input type="checkbox" name="is_index" value="1" id="tgsj_1" />
+						首页推广
+					</if>
+					</label>
+                  
+                  <label>
+					<if condition="$Package_Arr['is_hot'] eq 1">
+						<input type="checkbox" name="is_hot" value="1" id="tgsj_2" checked="checked"/>
+						热门推荐
+					<else/>
+						<input type="checkbox" name="is_hot" value="1" id="tgsj_2" />
+						热门推荐
+					</if>
+					</label>
+                 
+            </p>
+
+            <ul>
+            	<li class="liimg">
+					套餐缩略图<span id="preview1"><img id="imghead1" src="{$Package_Arr['thumb']}" width=97 height=96></span>
+                	
+                   <input type="file" onchange="previewImage(this ,1)" name="thumb" accept="image/*"/>
+                </li> 
+                <li class="liimg">
+                	套餐详情图<span id="preview2"><img id="imghead2" src="{$Package_Arr['pic']}" width=97 height=96></span>
+                	
+                   <input type="file" onchange="previewImage(this ,2)" name="pic" accept="image/*"/>
+                </li>
+                <li class="liimg">
+                	图片暂不使用<span id="preview3"><img id="imghead3" src="{$Package_Arr['cose1_pic']}" width=97 height=96></span>
+                	
+                   <input type="file" onchange="previewImage(this ,3)" name="cose1_pic" accept="image/*"/>
+                </li>
+                <li class="liimg">
+                	图片暂不使用<span id="preview4"><img id="imghead4" src="{$Package_Arr['cose2_pic']}" width=97 height=96></span>
+                	
+                   <input type="file" onchange="previewImage(this ,4)" name="cose2_pic" accept="image/*"/>
+                </li>
+                <li class="liimg">
+                	图片暂不使用<span id="preview5"><img id="imghead5" src="{$Package_Arr['cose3_pic']}" width=97 height=96></span>
+                	
+                   <input type="file" onchange="previewImage(this ,5)" name="cose3_pic" accept="image/*"/>
+                </li>
+            </ul>
+            
+
+<style type="text/css">
+.preview{width:100px;height:100px;overflow:hidden;}
+#imghead1{filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=image);}
+#imghead2{filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=image);}
+#imghead3{filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=image);}
+#imghead4{filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=image);}
+#imghead5{filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=image);}
+</style>
+            <div class="next"><input type="reset" value="上一步" onclick="Onetwo()"/><input type="button" value="下一步" onclick="twothree()"/></div>
+            <div class="clear"></div>
+        	<div>
+            <div class="clear"></div>
+         </div>
+    </div>
+	</div>
+</div>
+    <!--第二步结束-->
+    <!--第三步 开始-->
+    </div>
+	 <div class="add three" style="display:none" id="Addthree">
+    	<div class="backcolor">
+    		<h3>添加套餐<a style="float:right;" href='javascript:;' onclick="Addhide('three')">x</a></h3>
+        	
+            <div class="guides"><ul>
+        	<li class="guide ">1.选择商品服务</li>
+			<li class="guide">2.录入基本信息</li>
+			<li class="guide guide_first guide_cur end ">3.录入套餐说明</li>
+		  </ul></div>
+          <div class="tab1" id="tab1">
+		  	<div class="menu">
+		  	<ul>
+			<li id="one1" onclick="setTab(1)" style="background-color:#C4C4C4">优惠说明</li>
+			<li id="one2" onclick="setTab(2)">攻略问答</li>
+			<li id="one3" onclick="setTab(3)">成功案例</li>
+			</ul>
+		  </div>
+		  	<div class="menudiv">
+			  <div id="one_1">
+        	  	  <p><textarea name="coupon" rows="5">{$Package_Arr['coupon']}</textarea></p>
+        	  </div>
+			  <div id="one_2" style="display:none;">
+        		  <p><textarea name="ask" rows="5">{$Package_Arr['ask']}</textarea></p>
+        	  </div>
+			  <div id="one_3" style="display:none;">
+        	  	  <p><textarea name="case" rows="5">{$Package_Arr['case']}</textarea></p>
+        	  </div>
+		  </div>
+		  </div>
+          <div class="next">
+		  <input type="hidden" name="pakeageID" value="{$PackageId}">
+          	<input type="reset" value="上一步" onclick="threetwo()"/>&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" value="保存" />
+          </div>
+        </div>
+	</form>
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}Calendar1.js"></script>
+<script src="{$Think.ADMIN_JS}ckeditor/ckeditor.js"></script>
+<script src="{$Think.ADMIN_JS}ckeditor/ckfinder.js"></script>
+	<script>
+	CKEDITOR.replace( 'coupon', {
+        filebrowserBrowseUrl        : '{$Think.ADMIN_JS}ckfinder/ckfinder.html',
+        filebrowserImageBrowseUrl   : '{$Think.ADMIN_JS}ckfinder/ckfinder.html?Type=Images',
+        filebrowserFlashBrowseUrl   : '{$Think.ADMIN_JS}ckfinder/ckfinder.html?Type=Flash',
+        filebrowserUploadUrl		: '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+        filebrowserImageUploadUrl   : '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
+        filebrowserFlashUploadUrl   : '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
+    });
+	CKEDITOR.replace( 'ask', {
+        filebrowserBrowseUrl        : '{$Think.ADMIN_JS}ckfinder/ckfinder.html',
+        filebrowserImageBrowseUrl   : '{$Think.ADMIN_JS}ckfinder/ckfinder.html?Type=Images',
+        filebrowserFlashBrowseUrl   : '{$Think.ADMIN_JS}ckfinder/ckfinder.html?Type=Flash',
+        filebrowserUploadUrl		: '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+        filebrowserImageUploadUrl   : '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
+        filebrowserFlashUploadUrl   : '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
+    });
+	CKEDITOR.replace( 'case', {
+        filebrowserBrowseUrl        : '{$Think.ADMIN_JS}ckfinder/ckfinder.html',
+        filebrowserImageBrowseUrl   : '{$Think.ADMIN_JS}ckfinder/ckfinder.html?Type=Images',
+        filebrowserFlashBrowseUrl   : '{$Think.ADMIN_JS}ckfinder/ckfinder.html?Type=Flash',
+        filebrowserUploadUrl		: '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+        filebrowserImageUploadUrl   : '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
+        filebrowserFlashUploadUrl   : '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
+    });
+	</script>
+	<script>
+	function Packagesub()
+	{
+		var code = $("#spackage_code").val();
+		var short_title = $("#sshort_title").val();
+		var title = $("#stitle").val();
+		var descript = $("#sdescription").val();
+		var now_price = $("#snow_price").val();
+		var starttime = $("#sstarttime").val();
+		var endtime = $("#sendtime").val();
+		var old_price = $("#sold_price").val();
+		if(parseInt(now_price) > parseInt(old_price))
+		{
+			alert("现价不能大于原价");
+			return false;
+		}
+		if(code.length == 0 || short_title.length == 0 || title.length == 0 || descript.length == 0 || now_price.length == 0 || starttime.length == 0 || endtime.length == 0)
+		{
+			return false;
+		}else{
+			return true;
+		}
+		
+	}
+	function setTab(num)
+	{
+		if(num == 1)
+		{
+			
+			jq("#one_1").show();
+			jq("#one_2").hide();
+			jq("#one_3").hide();
+			$("#one1").attr("style" , "background-color:#C4C4C4;");
+			$("#one2").removeAttr("style");
+			$("#one3").removeAttr("style");
+		}else if(num == 2)
+		{
+			jq("#one_1").hide();
+			jq("#one_2").show();
+			jq("#one_3").hide();
+			$("#one2").attr("style" , "background-color:#C4C4C4;");
+			$("#one1").removeAttr("style");
+			$("#one3").removeAttr("style");
+		}else if(num == 3)
+		{
+			jq("#one_1").hide();
+			jq("#one_2").hide();
+			jq("#one_3").show();
+			$("#one3").attr("style" , "background-color:#C4C4C4;");
+			$("#one1").removeAttr("style");
+			$("#one2").removeAttr("style");
+		}
+	}
+</script>
+	<script>
+	/*
+		* 删除修改套餐第一步中商品
+	*/
+		function GoodsDel(goods_id , PackageId)
+		{
+                    var pp_zuhe_o = '{$Package_Arr["zuhe"]}';
+                    var zuhe_o = pp_zuhe_o.split(",");
+                    if(parseInt(zuhe_o.length) <= 2)
+                    {
+                        alert("套餐商品不能少于两个");
+                    }else{
+			if(confirm("确认删除吗")){
+				$.ajax({
+					url:"__APP__/Admin/Package/Del_Gp_Inter",
+					type:"post",
+					data:{"Gid_goodsID":goods_id , "PackageId":PackageId},
+					success:function(e)
+					{
+						//alert(e);
+						$("#twoshow").html(e);
+						/*$("#sp").hide();*/
+					}
+				});
+				//alert(goods_id);
+                        }
+                    }
+			
+		}
+	</script>
+
+	<script>
+		var jq = $;
+		//显示添加套装
+		function Addpack()
+		{
+			jq("#Addone").show();
+		}
+		function Addpacktwou(zuhe_num)
+		{
+                    var arrA = zuhe_num.split(",");
+                    var arrstr = arrA.length;
+         
+                  $.ajax({
+                    url:"/Admin/Package/Getinterall",
+                    type:"get",
+                    success:function(e)
+                    {
+                        var o = eval("("+e+")");
+                        var s = parseInt(arrstr) + parseInt(o["data"]);
+                        if(o["data"] > 3){
+                            alert("套餐不能大于三个");
+                        }else if(s > 3)
+                        {
+                            alert("选择商品和已购买商品不能大于三个");
+                        }else{
+                            $("#Addone").hide();
+                            $("#Addtwo").show();
+                        }
+                    }
+                 });
+			
+		}
+		function Onetwo()
+		{
+			jq("#Addone").show();
+			jq("#Addtwo").hide();
+		}
+		function twothree()
+		{
+			var code = $("#spackage_code").val();
+                        var short_title = $("#sshort_title").val();
+                        var title = $("#stitle").val();
+                        var descript = $("#sdescription").val();
+                        var now_price = $("#snow_price").val();
+                        var starttime = $("#sstarttime").val();
+                        var endtime = $("#sendtime").val();
+                        var old_price = $("#sold_price").val();
+                        var flag = 0;
+                        if(parseInt(now_price) > parseInt(old_price))
+                        {
+                                flag = 1;
+                        }
+                        if(starttime.length == 0 || endtime.length == 0)
+                        {
+                                alert("带*为必填项");
+                        }else {
+                                if(code.length == 0 || short_title.length == 0 || title.length == 0 || descript.length == 0 || now_price.length == 0)
+                                {
+                                        alert("带*为必填项");
+                                }else if(flag == 1){
+                                    alert("现价不能大于原价");
+                                }else if(parseInt(descript.length) > parseInt(75)){
+                                    alert("套餐描述不能超过75个字");
+                                }else{
+                                    jq("#Addthree").show();
+                                    jq("#Addtwo").hide();
+                                }
+                        }
+		}
+		function threetwo()
+		{
+			jq("#Addthree").hide();
+			jq("#Addtwo").show();
+		}
+                //验证套餐唯一
+                function Packd(cs)
+                {
+                   var code = $(cs).val();
+                   var p = {$PackageId};
+                   $.ajax({
+                       url:"/Admin/Package/onepackcode",
+                       type:"get",
+                       data:{"code":code,"pid":p},
+                       success:function(e){
+                           var o = eval("("+e+")");
+                           if(o["data"] == '@')
+                           {
+                               alert("套餐编码已存在");
+                               $(cs).val("");
+                           }
+                       }
+                   });
+                }
+		//套餐预览
+		function TC_prover(Pid)
+		{
+			window.open ('/Home/Package/details/id/'+Pid,'newwindow','height=648,width=1052,top=150,left=500,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');//写成一行*/
+		}
+	</script>

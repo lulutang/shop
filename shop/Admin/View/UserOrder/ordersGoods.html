@@ -1,0 +1,201 @@
+<link href="{$Think.ADMIN_CSS}style.css" rel="stylesheet" type="text/css">
+<div class="wapper" >
+
+    <div class="wapper-right">
+    <div class="right_inner cart">
+    	<div class="path">您的位置：<a href="/Admin/Index/main">工作台</a> 》<a href="">订单管理</a> 》<a href="__URL__/OrdersGoods/">订单商品管理</a></div>
+    	 <form action="/admin/userOrder/SearchOrdersGoods" method="get" name="search1">
+	  </form>
+        <form action="/admin/userOrder/SearchOrdersGoods" method="get" name="search" >
+         <div class="search">
+                	<div class="sstj" >
+                    	<p  ><span class="dlspgl">业务类型及状态：</span>
+                    	<select name="ywlx" id="ywlx" onchange='changeYewu()'>
+                    	
+                    	
+                    	 <option>请选择</option>
+	                	   <foreach name='yewu' item='va' >
+	                	   
+	                	      <if condition="(isset($ywlx) && $ywlx == $va['server_name'])">  
+	                	          <option selected='selected' value='{$va.id}_{$va.server_name}' >{$va.server_name}</option>
+	                	      <else/>
+	                	          <option value='{$va.id}_{$va.server_name}' >{$va.server_name}</option>      	   
+	                	      </if>
+	                	    </foreach>
+						</select>
+						
+						<select name="erjiywlx" id="erjiywlx">
+	                	   <if condition="(!empty($yewuErji))">  
+	                	    <foreach name='yewuErji' item='v' >
+	                	   
+	                	      <if condition="(isset($erjiywlx) && $erjiywlx == $v['server_name'])">  
+	                	          <option selected='selected' value='{$v.id}_{$v.server_name}' >{$v.server_name}</option>
+	                	      <else/>
+	                	          <option value='{$v.id}_{$v.server_name}' >{$v.server_name}</option>      	   
+	                	      </if>
+	                	 	</foreach>
+	                	   <else/>
+	                	     <option>请选择</option>
+	                	   
+	                	   </if>
+	                	  
+	                	 
+						</select>
+						<select name="zhuangtai">
+						   <option> 请选择 </option>
+	                	   <if condition="('未操作' eq $zhuangtai)"><option selected>未操作</option> <else/> <option>未操作</option></if> 
+	                	   <if condition="('服务已开始' eq $zhuangtai)"><option selected>服务已开始</option> <else/> <option>服务已开始</option></if> 
+	                	    <if condition="('服务已结束' eq $zhuangtai)"><option selected>服务已结束</option> <else/> <option>服务已结束</option></if> 
+						</select>
+            			<select name="key">
+                    	   <option>关键词</option>
+                    	    <option <if condition="('用户昵称' eq $key1)">selected</if>>用户昵称</option>
+                    	    <option <if condition="('订单编号' eq $key1)">selected</if>>订单编号</option>
+                    	    <option <if condition="('用户联系方式' eq $key1)">selected</if>>用户联系方式</option>
+                    	    
+                    	    
+	                	</select><input name="keywords" type="text" placeholder ='请输入订单编号、用户昵称、用户联系方式'<if condition="( $keywords neq '' )"> value="{$keywords}" </if>  size="30" maxlength="30" /></p>
+                    	<p class="buytime"><span class="dlspgl">订单支付时间：</span>
+                    	<input type="text" <if condition="( $buy_timeb neq '' )"> value="{$buy_timeb}" <else/>value=""</if> id="" name="buy_timeb" onclick="SelectDate(this,'yyyy-MM-dd hh:mm')"/>
+                    	至
+                    	<input type="text" <if condition="( buy_timeend neq '' )"> value="{$buy_timeend}" <else/>value=""</if> id="" name="buy_timeend" onclick="SelectDate(this,'yyyy-MM-dd hh:mm')"/></span>
+                       
+                        
+                        </p>
+                 
+                    </div> 
+                     <input type='hidden' name='sort' id='sort' value='{$sort}'>
+                   <div class='sstj_search_btn'><input name="input" type="submit" value="搜索" /></div> 
+                    <div class="clear"></div>
+		  			</form>
+		      	
+		  		
+        </div>
+       	<div class="operation">
+        	<div id="systembox">
+
+    <div id="systembtn" class="systembtn">
+        <a  href="javascript:void(0)" id='submit_goods' class="abtn"><span>今日新支付订单商品({$dayCount})</span></a>
+        <div id="menu_xl" class="menu_xl">
+          <dl>
+             <dt><a href="#" target="_blank">今日新加入购买商品(200)</a></dt>
+          </dl>
+          <dl>
+             <dt><a href="#" target="_blank">今日新加入购买商品(200)</a></dt>
+          </dl>   
+                
+        </div>
+    </div>
+
+</div>
+			<div id="systembox02" onmouseout="hideShangbiaoInfo()" onmouseover="showShangbiaoInfo()">
+
+    <div id="systembtn02" class="systembtn02"  >
+        <a href="javascript:void(0);" class="abtn" id="submit_2" ><span>批量更新服务状态</span></a>
+        <div  class="menu_xl02" style='position:absolute' id='on_click'>
+          <dl>
+             <dt><a style="cursor:pointer"  id="submit_1" value='0'>服务状态已开始</a></dt>
+          </dl>
+          <dl >
+             <dt><a style="cursor:pointer"  id="submit" value='1'>服务状态已结束</a></dt>
+          </dl>   
+          
+        </div>
+    </div>
+
+</div> 
+			<div class="clear"></div>
+        </div>
+        <table class="cart hydd">
+        	<tr>
+            	<th  class="xuan"><input name="input_hydd" id="select" type="checkbox" value="" /></th>
+            	<th  class="col_01">订单编号</th>
+                <th  class="col_02">业务类型</th>
+                <th  class="col_03">用户昵称</th> 
+                <th  class="col_03">商品简称</th>
+                <th  class="col_02">用户联系方式</th>
+                <th  class="col_04">商品总额</th>
+                <th  class="col_05">目前商品服务状态</th>
+                <th  class="col_06">订单创建时间  <a class="<if condition='( 1 eq $sort )'>px_up<else/>px_down </if>" href='javascript:void(0)' id='sort_goods'>排序</a> </th>
+                <th  class="col_07">操作</th>
+            </tr>
+            <foreach name='orders' item='val' key = 'key'>
+              <tr <if condition="$key%2 neq 0">class="tr_bgcolor" </if>>
+              <td><input name="items" type="checkbox" value="{$val.id}" /></td>
+                  <td>{$val.order_code}</td>
+                  <td>{$val.yiji} </td>
+                  <td>{$val.user_name}</td> 
+                  <td>{$val.short_title}  <if condition="($val.is_zeng neq '')"><font style='color:red'><a hrer='javascript:void()' id ='showZengping' goods_id='{$val.goods_id}' uid ='{$val.user_id}' goods_code='{$val.order_code}'>赠品</a></font></if></td>
+                  <td>{$val.phone}</td>
+                  <td>{$val.goods_price}</td>
+                  <td id='server_{$val.id}' value='{$val.status}'>
+                  <if condition="($val.status eq 1)">中细软流程审核中</if> 
+                  <if condition="($val.status eq 2)">已报至商标局</if> 
+                  <if condition="($val.status eq 3)">等待下发受理</if> 
+                  <if condition="($val.status eq 4)">等待注册公告</if> 
+                  <if condition="($val.status eq 5)">注册成功</if> 
+                   <if condition="($val.status eq 6)">服务已结束</if> 
+                   <if condition="($val.status eq 7)">服务已开始</if>
+                  <if condition="($val.status eq 0)">未操作</if> 
+                  </td>
+                  <td>{$val.addtime|date='Y-m-d H:i:s',###}</td>
+                  <td>
+                  <if condition="(1 neq $val.is_send)">   <a  style="cursor:pointer" onclick="javaScript:showTijiaoOrder({$val.id})">查看需求信息</a>
+                  <else/>
+                  <a style="cursor:pointer" onclick="javaScript:searchOfflinePayment({$val.id})">查看详情</a>
+                  </if>
+               
+                  </td>
+              
+                </tr>
+              </foreach>
+          <if condition="!empty($orders)">
+            <tr>
+            	<td class="hj" colspan="10">商品总数：<span>{$count}</span>&nbsp;&nbsp;&nbsp;&nbsp;  订单总额：<span>￥{$sum}</span></td>
+            </tr>
+            
+             </if>
+            
+           
+        </table>	
+        <!--table end-->
+        </div>
+    <!--right_inner end-->
+    {$pages}
+    <!--弹出二 开始-->
+      <div id="bg"></div>
+    
+    <!--弹出二 结束-->
+    
+<div class="add ddtj" id ='adddetail' style="display:none;">
+    	<div class="backcolor">
+
+        	<h3>商品需求信息<span onclick='guanbi();' class="guanbi">X</span></h3>
+            <div class="ddtj_con" id='ddtj_con'>
+            </div>
+        </div>
+    </div>
+    
+    <div class="add ddtj" id ='addzengping' style="display:none;">
+    	<div class="backcolor">
+
+        	<h3>赠品信息<span onclick='guanbi();' class="guanbi">X</span></h3>
+            <div class="ddtj_con" id='ddtj_con'>
+             <table class="cart hydd" id='zeng_1'>
+        	<tr>
+            	<th  class="col_01">订单编号</th>
+                <th  class="col_03">用户昵称</th> 
+                <th  class="col_03">商品简称</th>
+                <th  class="col_06">购买时间 </th>
+            </tr></table>
+            </div>
+        </div>
+    </div>
+    </div><!--wapper-right end-->
+</div><!--wapper end-->
+<!--头部 开始-->
+</body>
+</html>
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}cart.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}Calendar1.js"></script>

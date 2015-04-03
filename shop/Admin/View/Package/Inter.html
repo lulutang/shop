@@ -1,0 +1,56 @@
+<table>
+            	<tr>
+                	<th>商品服务信息</th>
+                    <th>业务类型</th>
+                    <th>价格</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+				<volist name="Goods_arr" id="Ga">
+					<tr>
+						<td><p><img src="{$Ga['thumb']}" width=96 height=97 /></p> <p class="service">{$Ga["short_title"]}<br />
+						<if condition="!empty($Ga['attr_name'])">
+						<span>[{$Ga["attr_name"]}]</span>
+						</if>
+						</p></td>
+						<td>{$Ga["server_name"]}</td>
+						<td>￥{$Ga["now_price"]}</td>
+						<td class="open">
+						<if condition="$Ga['is_hot'] eq 1">
+							热门推荐
+						</if>
+						<if condition="$Ga['is_index'] eq 1">
+							首页推广
+						</if>
+						</td>
+						<td class="del">
+						<if condition="!empty($PackageId)">
+							<a href="javascript:;" onclick="GoodsDel({$Ga['goods_id']} , '{$PackageId}')"><img src="{$Think.ADMIN_IMAGES}1_07.png">
+						<else/>
+							<a href="javascript:;" onclick="GoodsS({$Ga['goods_id']})"><img src="{$Think.ADMIN_IMAGES}1_07.png">
+						</if>
+						
+						</a>
+						</td>
+					</tr>
+				</volist>
+</table>
+<script>
+	function GoodsS(goods_id)
+	{
+		if(confirm("确认删除吗")){
+			$.ajax({
+				url:"__APP__/Admin/Package/Inter_Del",
+				type:"post",
+				data:{"Gid_goodsID":goods_id},
+				success:function(e)
+				{
+					//alert(e);
+					$("#twoshow").html(e);
+					/*$("#sp").hide();*/
+				}
+			});
+			//alert(goods_id);
+		}
+	}
+</script>

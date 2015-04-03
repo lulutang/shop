@@ -1,0 +1,156 @@
+<link href="{$Think.ADMIN_CSS}style.css" rel="stylesheet" type="text/css">
+<div class="wapper">
+    <div class="wapper-right">
+    <div class="right_inner cart">
+    	<div class="path">您的位置：<a href="/Admin/Index/main">工作台</a> 》 <a href="">订单管理</a> 》 <a href="__URL__/NotPayOrder/">未支付订单管理</a></div>
+    	
+    	 <form action="/admin/userOrder/NotPaysearch" method="get" name="search1">
+	  </form>
+        <form action="/admin/userOrder/NotPaysearch" method="get" name="search" >
+         <div class="search">
+                	<div class="sstj" >
+                    	<p>
+            			<select name="key">
+                    	   <option>关键词</option>
+                    	    <option <if condition="('用户昵称' eq $key1)">selected</if>>用户昵称</option>
+                    	    <option <if condition="('订单编号' eq $key1)">selected</if>>订单编号</option>
+                    	    <option <if condition="('用户联系方式' eq $key1)">selected</if>>用户联系方式</option>
+	                	</select>
+	                	<input placeholder ='请输入订单编号、用户昵称、用户联系方式' name="keywords" type="text"  <if condition="( $keywords neq '' )"> value="{$keywords}" </if>  size="40" maxlength="30" /></p>
+                    	<p class="buytime"><span>订单生成时间：</span>
+                    	<input type="text" <if condition="( $buy_timeb neq '' )"> value="{$buy_timeb}" <else/>value=""</if> id="" name="buy_timeb" onclick="SelectDate(this,'yyyy-MM-dd hh:mm')"/>
+                    	至
+                    	<input type="text" <if condition="( buy_timeend neq '' )"> value="{$buy_timeend}" <else/>value=""</if> id="" name="buy_timeend" onclick="SelectDate(this,'yyyy-MM-dd hh:mm')"/></span>
+                      <span class="buysum"><span>订单金额：</span>     <input type="text"  <if condition="(!empty($money))">value="{$money}" <else/>value=""</if>  name="money"/>  到 
+                        <input type="text"  <if condition="(!empty($money_end))">value="{$money_end}" <else/>value=""</if> name="money_end"/> </span>
+                        </p>
+                 
+                    </div> 
+                    <div class="sstj_search_btn"><input name="input" type="submit" value="搜索" /></div>
+                    <div class="clear"></div>
+                    
+                    <input type='hidden' name='sort' id='sort' value='{$sort}'>
+                    
+		  			</form>
+		      	
+		  		
+        </div>
+       	<div class="operation">
+        	<div id="systembox">
+
+    <div id="systembtn" class="systembtn">
+        <a href="javascript:void(0)" id='submit_notpay' class="abtn"><span>今日新生成订单 ({$dayCount})</span></a>
+        <div id="menu_xl" class="menu_xl">
+          <dl>
+             <dt><a href="#" target="_blank">今日新加入购买商品(200)</a></dt>
+          </dl>
+          <dl>
+             <dt><a href="#" target="_blank">今日新加入购买商品(200)</a></dt>
+          </dl>   
+                
+        </div>
+    </div>
+
+</div>
+<!-- 			<div id="systembox02">
+
+    <div id="systembtn02" class="systembtn02">
+        <a href="#" class="abtn"><span>批量操作</span></a>
+        <div id="menu_xl02" class="menu_xl02">
+          <dl>
+             <dt><a href="#" target="_blank">今日新加入购买商品(200)</a></dt>
+          </dl>
+          <dl>
+             <dt><a href="#" target="_blank">今日新加入购买商品(200)</a></dt>
+          </dl>   
+                
+        </div>
+    </div>
+
+</div> -->
+			<div class="clear"></div>
+        </div>
+        <table class="cart hydd">
+        	<tr>
+            	<th  class="col_01">订单编号</th>
+                <th  class="col_02">用户昵称</th>
+                <th  class="col_02">用户联系方式</th>
+                <th  class="col_03">购买商品数量</th>
+                <th  class="col_04">订单总额</th>
+                <th  class="col_06">订单状态</th>
+                <th  class="col_07">订单生成时间 <a class="<if condition="( 1 eq $sort )">px_up<else/>px_down </if>" href='javascript:void(0)' id='sort_notpay'>排序</a> </th>
+                
+                <th  class="col_08">操作</th>
+            </tr>
+            <foreach name='orders' item='val' key = 'key'>
+              <tr <if condition="$key%2 neq 0">class="tr_bgcolor" </if>>
+                  <td>{$val.order_card}</td>
+                  <td>{$val.truename}</td>
+                   <td>{$val.phone}</td>
+                  <td>{$val.goods_number}</td>
+                  <td>{$val.totalprice}</td>
+                  <td><if condition="($val.status eq 1)">已支付<else/>未支付</if></td>
+                  <td>{$val.createtime|date='Y-m-d H:i:s',###}</td>
+                  <td><a style="cursor:pointer" onclick="javaScript:showOrder({$val.id},{$val.user_id},'{$val.totalprice}')">查看详情</a>
+                       <a style="cursor:pointer" onclick="javaScript:payOrder('{$val.order_card}','{$val.totalprice}')">测试环境-支付订单</a>
+                   </td>
+              
+                </tr>
+              </foreach>
+           <if condition="!empty($orders)">
+            <tr>
+            	<td class="hj" colspan="9">商品总数：<span>{$goods_number}</span>&nbsp;&nbsp;&nbsp;&nbsp;  订单总额：<span>￥{$sum}</span></td>
+            </tr>
+            </if>
+             
+            
+           
+        </table>	
+        <!--table end-->
+        </div>
+    <!--right_inner end-->
+    {$pages}
+    <!--弹出二 开始-->
+    <div class="add detail" id = 'adddetail' style="display:none;">
+    	<div class="backcolor">
+        	<h3>未支付订单详情               <span class="guanbi">  <a onclick='guanbi();'>X</a></span></h3>
+            <div class="jb_info" id= 'jb_info'>
+            	
+            </div>
+            <div>
+            	<ul id ='dingdan'>
+                	
+                </ul>
+            </div>
+
+
+            <table id='con'>
+            </table>
+        </div>
+    </div>
+    <!--弹出二 结束-->
+    <!--delete 开始-->
+    <div class="add delete" style="display:none;">
+    	<div class="backcolor">
+        	<h3>提示</h3>
+            <table>
+            	<tr>
+                <td class="pic"><img src="images/prompt.png" /></td>
+                <td class="text">确定将选择的”5”个商品进行批量操作吗？</td>
+                </tr>
+            </table> 
+            <input type="submit" value="确定" /> 
+            <input type="reset" value="取消" /> 
+        </div>
+    </div>
+      <div id="bg"></div>
+    
+    <!--delete 结束-->
+    </div><!--wapper-right end-->
+</div><!--wapper end-->
+<!--头部 开始-->
+</body>
+</html>
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}cart.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}Calendar1.js"></script>

@@ -1,0 +1,240 @@
+<head>
+<link href="{$Think.ADMIN_CSS}style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}Calendar1.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}cart.js"></script>
+<script src="{$Think.ADMIN_JS}tab02.js" type="text/javascript"></script>
+<script src="{$Think.ADMIN_JS}ckeditor/ckeditor.js"></script>
+<script src="{$Think.ADMIN_JS}ckeditor/ckfinder.js"></script>
+
+<script type="text/javascript">
+
+  function spanhide(id){
+    $("#span"+id).hide();
+    $("#input"+id).show();
+  }
+  function inputhide(id){
+      var orderid = $("#input"+id).val();
+      if(orderid==0){
+        alert('序列从1开始');
+        return false;
+      }
+      $.ajax({
+        url:"editarticleorderid",
+        type:'post',
+        data:{"orderid":orderid,"id":id},
+        success:function(msg){
+          if(msg!=0){
+            $("#span"+id).html(msg);
+          }
+          
+        }
+    })
+    $("#span"+id).show();
+    $("#input"+id).hide();
+  }
+  function showAddArticle(){
+    $("#addarticle").show();
+  }
+  function hideArticle(){
+    $("#addarticle").hide();
+    $("#editarticle").hide();
+  }
+  function editsarticle(id){
+    $.ajax({
+        url:"editarticle",
+        type:'post',
+        data:{"id":id},
+        success:function(msg){
+          src=JSON.parse(msg);
+          $("#art_id").val(src.art_id);
+          $("#short_title").val(src.short_title);
+          $("#title").val(src.title);
+          if(src.is_show==1){
+            $("#is_show").attr("checked","checked");
+          }
+         aeditor.setData(src.content);
+          $("#editarticle").show();
+        }
+    });
+  }
+  function delcolumn(id){
+      if(confirm('您确定要删除此信息吗？')){
+          $.ajax({
+            url:"delarticle",
+            type:"post",
+            data:{"id":id},
+            success:function(e){
+                if(e==1){
+                  $("#deltr"+id).remove();
+                }else{
+                  alert('删除失败');
+                }
+            }
+          })
+      }
+  }
+  function CheckArticle(){
+      var a = $("#parent_id").val();
+      var b = $("#short_titles").val();
+      var c = $("#titles").val();
+      var d = $("#content").val();
+      if(a!="" && b!="" &&c!="" &&d!=""){
+          
+      }else{
+          alert('信息不完整！');
+          return false;
+      }
+  }
+   function CheckArticles(){
+      
+      var a = $("#parent_id").val();
+      var b = $("#short_title").val();
+      var c = $("#title").val();
+      if(a!="" && b!="" &&c!="" ){
+      }else{
+          alert('信息不完整！');
+          return false;
+      }
+  }
+</script>
+</head>
+<div class="wapper">
+
+    <!--right_inner begin-->
+    <div class="wapper-right">
+    	<div class="right_inner">
+    		<div class="path">您的位置：<a href="#">工作台</a>》<a href="#">帮助管理</a>》<a href="#">栏目文章</a></div>
+        <div class="search_dh">
+       <form action="articleshow" method="get">
+                  <p class="jjss"><span>所属栏目：</span>
+                    <select name="cateid">
+                      <option value="">请选择</option>
+                      <foreach name="columninfo" item="lumn">
+                      <if condition="$lumn['cateid'] eq $map['cateid']">
+                      <option value="{$lumn['cateid']}" selected>{$lumn['catename']}</option>
+                      <else/>
+                      <option value="{$lumn['cateid']}" >{$lumn['catename']}</option>
+                      </if>
+                      </foreach>
+                    </select>
+                <span>关键词：</span><input name="keywords" type="text" placeholder ='请输入文章标题、文章内容进行模糊查询' value="{$map['keywords']}" size="30" maxlength="20" onclick="javascript:if(this.value=='请输入文章标题、文章内容进行模糊查询')this.value='';">
+              <input type="submit" value="搜索">
+    
+            </div>
+        	<a href="javascript:void(0)" ><p class="tjyjyw" onclick="showAddArticle()">添加文章</p></a>
+        	<table class="ddlc">
+            	<tr>
+                  
+                  <th>所属栏目</th>
+                  <th>序号</th>
+                  <th>文章简称</th>
+                  <th>创建人</th>
+                  <th>创建时间</th>
+                  <th>操作</th>
+                </tr>
+                <foreach name="articleinfo" item="val">
+                  <tr id="deltr{$val['art_id']}">
+                   
+                    <td>{$val['catename']}</td>
+                    <td><span onclick="spanhide({$val['art_id']})" id="span{$val['art_id']}">{$val['orderid']}</span><input type="text" value="{$val['orderid']}" style="height:20px;width:40px;display:none" onblur="inputhide({$val['art_id']})" id="input{$val['art_id']}"></td>
+                    <td>{$val['short_title']}</td>
+                    <td>{$val['author']}</td>
+                    <td><php> echo date('Y-m-d H:i:s',$val['addtime']);</php></td>
+                    <td><a href="javascript:void(0)" onclick="editsarticle({$val['art_id']})">修改</a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="delcolumn({$val['art_id']})">删除</a>
+                  </tr>
+                </foreach>
+
+            </table>
+            <div>{$page}</div>
+          </form>
+        </div>
+    <!--添加文章 开始-->
+    <div class="add shop" style="display:none" id="addarticle">
+      <div class="backcolor">
+          <h3>添加文章<span class="guanbi">X</span></h3>
+          <form action="savearticle" method="post" onsubmit="return CheckArticle()">
+          <div class="jbxx">
+              <h4>基本信息</h4>
+              <p  class="sslm"><e style="color: red">*</e><span> 所属栏目：</span>
+              <select name="cateid" id="parent_id">
+                <foreach name="columninfo" item="lumn">
+                    <option value="{$lumn['cateid']}">{$lumn['catename']}</option>
+                </foreach>
+              </select>
+              </p>
+                <p><e style="color: red">*</e><span>文章简称：</span><input type="text" name="short_title" id=""short_titles></p>
+                <p><e style="color: red">*</e><span>文章标题：</span><input type="text" name="title" id="titles"></p>
+                <p><input  type="checkbox"   value="1" name="is_show"/>是否显示</p>
+                <p><e style="color: red">*</e><span>商品标题描述：</span></p>   
+          </div>
+          
+            <textarea name="content" id="content">CKEditor Demo</textarea>
+         
+            <div>
+                <p class="anniu">
+                  <input type="submit"  value="保存">&nbsp;&nbsp;<input type="button"  value="关闭" onclick="hideArticle()">
+                </p>
+          </div>
+        </form>
+    </div>
+    
+  </div>
+    <!--wapper-right end-->
+
+    <div class="add shop" style="display:none" id="editarticle">
+      <div class="backcolor">
+          <h3>修改文章<span class="guanbi">X</span></h3>
+          <form action="editsavearticle" method="post" onsubmit="return CheckArticles()">
+            <input type="hidden" name="art_id" id="art_id">
+          <div class="jbxx">
+              <h4>基本信息</h4>
+              <p class="sslm"><e style="color: red">*</e><span> 所属栏目：</span>
+              <select name="cateid" id="parent_id">
+                <foreach name="columninfo" item="lumn">
+                    <option value="{$lumn['cateid']}">{$lumn['catename']}</option>
+                </foreach>
+              </select>
+              </p>
+                <p><e style="color: red">*</e><span>文章简称：</span><input type="text" name="short_title" id="short_title"></p>
+                <p><e style="color: red">*</e><span>文章标题：</span><input type="text" name="title" id="title"></p>
+                <p><input  type="checkbox"   value="1" name="is_show" id="is_show"/>是否显示</p>
+                <p><e style="color: red"></e><span>商品标题描述：</span></p>   
+          </div>
+            <textarea name="contents" rows="5" cols="10" id="contents"></textarea>
+         
+            <div>
+                <p class="anniu">
+                  <input type="submit"  value="保存">&nbsp;&nbsp;<input type="button"  value="关闭" onclick="hideArticle()">
+                </p>
+          </div>
+    </div>
+    </form>
+  </div>
+
+
+</div><!--wapper end-->
+<script>
+CKEDITOR.replace(  'content',
+{
+    filebrowserBrowseUrl :  '{$Think.ADMIN_JS}ckfinder/ckfinder.html',
+    filebrowserImageBrowseUrl :  '{$Think.ADMIN_JS}ckfinder/ckfinder.html?Type=Images',
+    filebrowserFlashBrowseUrl :  '{$Think.ADMIN_JS}ckfinder/ckfinder.html?Type=Flash',
+    filebrowserUploadUrl :  '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+    filebrowserImageUploadUrl  :  '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
+    filebrowserFlashUploadUrl  :  '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
+});
+var aeditor = CKEDITOR.replace( 'contents', {
+        filebrowserBrowseUrl        : '{$Think.ADMIN_JS}ckfinder/ckfinder.html',
+        filebrowserImageBrowseUrl   : '{$Think.ADMIN_JS}ckfinder/ckfinder.html?Type=Images',
+        filebrowserFlashBrowseUrl   : '{$Think.ADMIN_JS}ckfinder/ckfinder.html?Type=Flash',
+        filebrowserUploadUrl    : '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+        filebrowserImageUploadUrl   : '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
+        filebrowserFlashUploadUrl   : '{$Think.ADMIN_JS}ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
+    }
+);
+
+</script>
+
+
+<!--头部 开始-->

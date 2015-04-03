@@ -1,0 +1,92 @@
+<table border=1>
+	<tr>
+		<td>订单号：{$receiptdata["getOrderFind"]["order_card"]}&nbsp;&nbsp;&nbsp;&nbsp;金额总计：￥{$receiptdata["getOrderFind"]["totalprice"]}</td>
+	</tr>
+	<tr>
+		<td>
+                     <foreach name="orderGoods" item="ogd">
+            <if condition="$ogd['style'] eq 38">
+                <if condition="$ogd['goods_id'] eq 8">
+                       
+                        <img src="http://www.shop.com/Application/Admin/Static/image/w_icon12.png" /></br>
+                        业务类型：{$ogd["message"]["short_title"]}|
+                        商标名称：{$ogd["message"]["name"]}|
+                        商标类别：{$ogd["message"]["style"]}|
+                        需求描述：{$ogd["message"]["text"]} 
+                       
+                    <else/>
+                        <img src="http://www.shop.com/Application/Admin/Static/image/w_icon12.png" /></br>
+                        业务类型：{$ogd["message"]["short_title"]}|
+                        商标名称：{$ogd["message"]["name"]}|
+                        商标类别：{$ogd["message"]["style"]}|
+                        服务项目：{$ogd["subd"]} 
+                </if>
+            </if>
+             <if condition="$ogd['style'] eq 5">
+                        <img src="http://www.shop.com/Application/Admin/Static/image/w_icon12.png" /></br>
+                        业务类型：{$ogd["message"]["short_title"]}|
+                        专利名称：{$ogd["message"]["name"]}|
+                        行业类型：{$ogd["message"]["style"]}|
+                        需求描述：{$ogd["message"]["text"]} 
+                  </li>
+             </if>
+            <if condition="$ogd['style'] eq 6">
+                <img src="http://www.shop.com/Application/Admin/Static/image/w_icon12.png" /></br>
+                业务类型：{$ogd["message"]["short_title"]}|
+                需求描述：{$ogd["message"]["text"]} 
+                  </li>
+            </if>
+            <br>
+         </foreach>		
+	</tr>
+	<tr>
+		<td>开票信息</td>
+	</tr>
+	 <tr>
+         <td>发票类型:
+            <if condition="$billdata['bill_type'] eq 1">专票</if>
+            <if condition="$billdata['bill_type'] eq 2">普票</if>
+         </td>
+     </tr>
+     <tr>
+         <td>企业名称:{$billdata["company_name"]}</td>
+     </tr>
+     <tr>
+         <td>纳税人识别号:{$billdata["taxes_number"]}</td>
+     </tr>
+     <tr>
+         <td>地址:{$billdata["address"]}</td>
+     </tr>
+     <tr>
+         <td>电话:{$billdata["phone"]}</td>
+     </tr>
+     
+     <tr>
+         <td>开户行:{$billdata["bank"]}</td>
+     </tr>
+     <tr>
+         <td>开户银行账号:{$billdata["bank_number"]}</td>
+     </tr>
+</table>
+	<table border=1>
+		<tr>
+			<td>营业执照：</td>
+                        
+	         <td><img src="{$billdata['company_linease']}"></td>
+	         <td>银行开户许可：</td>
+	         <td><img src="{$billdata['allow_phoro']}"></td>
+	     </tr>
+	     <tr>
+	         <td>税务登记证：</td>
+	         <td><img src="{$billdata['taxes_phore']}"></td>
+	         <td>一般纳税人证明：</td>
+	         <td><img src="{$billdata['taxes_prove']}"></td>
+	     </tr>
+	</table>
+
+
+
+
+
+
+ 

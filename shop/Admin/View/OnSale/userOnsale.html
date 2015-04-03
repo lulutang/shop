@@ -1,0 +1,79 @@
+<head>
+<link href="{$Think.ADMIN_CSS}style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+
+</head>
+<div class="wapper">
+
+    <!--right_inner begin-->
+    <div class="wapper-right">
+    	<div class="right_inner">
+            <div class="path">您的位置：<a href="#">工作台</a>》<a href="#">会员管理</a>》<a href="#">会员优惠券列表</a></div>
+        <div class="search_dh">
+       <form action="userOnsale" method="get">
+                  <p class="jjss">
+                <span>用户名：</span><input name="keywords" type="text" placeholder ='请输入用户昵称进行模糊搜索' value="{$keywords}" size="30" maxlength="20" >
+              <input type="submit" value="搜索">
+            </div>
+        	<table class="ddlc">
+            	<tr>
+                  <th>用户昵称</th>
+                  <th>活动名称</th>
+                  <th>优惠金额</th>
+                  <th>使用条件</th>
+                  <th>是否使用</th>
+                  <th>使用时间</th>
+                  <th>有效时间</th>
+                  <th>使用范围</th>
+                  <th>领取时间</th>
+                </tr>
+                <foreach name="info" item="val" key='key'>
+                  <tr <if condition="$key%2 neq 0">class="tr_bgcolor"</if>>
+                    <td><a href="javascript:void(0)" onclick="LookUserOnsale({$val['uid']})">{$val['user_name']}</a></td>
+                    <td>{$val['name']}</td>
+                    <td>{$val['sale_money']}</td>
+                    <td>{$val['is_where']}</td>
+                    <td><if condition="$val.is_use eq 1">已使用<else/>未使用</if></td>
+                    <td><if condition="$val.is_use eq 1">{$val.use_time|date='Y-m-d H:i:s',###}<else/>暂无使用</if></td>
+                    <td>{$val.startTime|date='Y-m-d',###} 至 {$val.endTime|date='Y-m-d',###}</td>
+                    <td><if condition="$val.fanwei eq 0">全场<else/>未知</if></td>
+                    
+                    <td>{$val.createTime|date='Y-m-d H:i:s',###}</td>
+                  </tr>
+                </foreach>
+            </table>
+            <div>{$pages}</div>
+          </form>
+        </div>
+</div><!--wapper end-->
+</div>
+<!--add detail begin-->
+<div class="add detail" style="display:none" id="UserDetail">
+    	<div class="backcolor">
+        	<h3>会员详情<span class="guanbi" onclick='guanbi();'>X</span></h3>
+            <div class="jb_info">
+            	<p><img src="" id="z_photo_add" height="100px" width="100px"/></p>
+                <div class="info">
+                	<p><span id="z_name"></span>&nbsp;&nbsp;<span class="dengji">V1</span></p>
+                    <p class="total_cost">总&nbsp;消&nbsp;费：<span class="total" id="z_price"></span></p>
+                   
+                </div>
+            </div>
+            <div class="member_info">
+            	<ul>
+                    <li><span class="ddtj_name">手机号码：</span><font id="z_phone"></font></li>
+                    <li><span class="ddtj_name">电子邮箱：</span><font id="z_email"></font></li>
+                    <li><span class="ddtj_name">注册时间：</span><font id="z_date"></font></li>
+                    <li><span class="ddtj_name">会员来源：</span><font id="z_status"></font></li>
+                    <li><span class="ddtj_name">优惠券个数：</span><font id="z_num"></font></li>
+                    <li><span class="ddtj_name">优惠券总数：</span><font id="z_money"></font></li>
+                    <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ddtj_name" id="z_people"></span></li>
+                </ul>
+            </div>
+                
+           
+        </div>
+    </div>
+      <div id="bg"></div>
+<!--add detail end-->
+<script type="text/javascript" src="{$Think.ADMIN_JS}cart.js"></script>

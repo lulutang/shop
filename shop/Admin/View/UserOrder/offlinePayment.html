@@ -1,0 +1,226 @@
+<link href="{$Think.ADMIN_CSS}style.css" rel="stylesheet" type="text/css">
+
+<div class="wapper">
+
+    <div class="wapper-right">
+    <div class="right_inner cart">
+     <div class="path">您的位置：<a href="/Admin/Index/main">工作台</a> 》<a href="">订单管理</a> 》 <a href="__URL__/OfflinePayment/">线下支付待处理订单管理</a></div>      
+     <form action="/admin/userOrder/searchOfflinePayment" method="get" name="search1">
+	  </form>
+        <form action="/admin/userOrder/searchOfflinePayment" method="get" name="search" >
+         <div class="search">
+                	<div class="sstj" >
+                    	<p><span>支付银行：</span>
+                    	<select name="ywlx">
+                    	<option>请选择</option>
+	                	   <if condition="('北京银行' eq $ywlx)"><option selected>北京银行</option> <else/> <option>北京银行</option></if> 
+	                	   <if condition="('中国工商银行' eq $ywlx)"><option selected>中国工商银行</option> <else/> <option>中国工商银行</option></if> 
+						</select>
+						
+            			<select name="key">
+                    	   <option>关键词</option>
+                    	    <option <if condition="('用户昵称' eq $key1)">selected</if>>用户昵称</option>
+                    	    <option <if condition="('订单编号' eq $key1)">selected</if>>订单编号</option>
+                    	    <option <if condition="('用户联系方式' eq $key1)">selected</if>>用户联系方式</option>
+                    	    
+	                	</select><input name="keywords" type="text" placeholder ='请输入订单编号、用户昵称、用户联系方式'  <if condition="( $keywords neq '' )"> value="{$keywords}" </if>  size="30" maxlength="30" /></p>
+                    	<p class="buytime"><span>订单生成时间：</span>
+                    	<input type="text" <if condition="( $buy_timeb neq '' )"> value="{$buy_timeb}" <else/>value=""</if> id="" name="buy_timeb" onclick="SelectDate(this,'yyyy-MM-dd hh:mm:ss')"/>
+                    	至
+                    	<input type="text" <if condition="( buy_timeend neq '' )"> value="{$buy_timeend}" <else/>value=""</if> id="" name="buy_timeend" onclick="SelectDate(this,'yyyy-MM-dd hh:mm:ss')"/></span>
+                      <span class="buysum"><span>订单金额：</span>     <input type="text" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-.]+/,'');}).call(this)" onblur="this.v();" <if condition="(!empty($money))">value="{$money}" <else/>value=""</if>  name="money"/>  至 
+                        <input type="text"  onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-.]+/,'');}).call(this)" onblur="this.v();" <if condition="(!empty($money_end))">value="{$money_end}" <else/>value=""</if> name="money_end"/> </span>
+                        
+                        
+                        </p>
+                 
+                    </div> 
+                    <div class="sstj_search_btn"><input name="input" type="submit" value="搜索" /></div>
+                    <div class="clear"></div>
+		  			</form>
+		      	
+		  		
+        </div>
+       	<div class="operation">
+        	<div id="systembox">
+
+    <div id="systembtn" class="systembtn">
+        <a href="javaScript:void(0)" id ='submit_offline' class="abtn"><span>今日线下支付待处理订单({$dayCount})</span></a>
+        <div id="menu_xl" class="menu_xl">
+          <dl>
+             <dt><a href="#" target="_blank">今日新加入购买商品(200)</a></dt>
+          </dl>
+          <dl>
+             <dt><a href="#" target="_blank">今日新加入购买商品(200)</a></dt>
+          </dl>   
+                
+        </div>
+    </div>
+
+</div>
+<!-- 			<div id="systembox02">
+
+    <div id="systembtn02" class="systembtn02">
+        <a href="#" class="abtn"><span>线下支付确认</span></a>
+        <div id="menu_xl02" class="menu_xl02">
+          <dl>
+             <dt><a href="#" target="_blank">今日新加入购买商品(200)</a></dt>
+          </dl>
+          <dl>
+             <dt><a href="#" target="_blank">今日新加入购买商品(200)</a></dt>
+          </dl>   
+                
+        </div>
+    </div>
+
+</div> -->
+			<div class="clear"></div>
+        </div>
+        <table class="cart hydd">
+        	<tr>
+            	<th  class="col_01">订单编号</th>
+                <th  class="col_02">用户昵称</th>
+                <th  class="col_02">用户联系方式</th>
+                <th  class="col_03">购买商品数</th>
+                <th  class="col_04">订单总额</th>
+                <th  class="col_05">支付方式</th>
+                <th  class="col_06">订单状态</th>
+                <th  class="col_07">订单生成时间</th>
+                <th  class="col_08">操作</th>
+            </tr>
+            <foreach name='orders' item='val' key = 'key'>
+              <tr <if condition="$key%2 neq 0">class="tr_bgcolor" </if>>
+                  <td>{$val.order_card}</td>
+                  <td>{$val.truename}</td>
+                  <td>{$val.phone}</td>
+                  <td>{$val.goods_number}</td>
+                  <td>{$val.totalprice}</td>
+                  <td><if condition="($val.pay_type eq 1)">线上<else/>线下</if> </td>
+                  <td><if condition="($val.status eq 1)">已支付<else/>未支付</if></td>
+                  <td>{$val.createtime|date='Y-m-d H:i:s',###}</td>
+                  <td><a onclick="javaScript:searchOfflinePayment({$val.id},{$val.user_id})">查看详情</a>
+                  <a onclick="javaScript:OfflinePayment({$val.id},{$val.totalprice})">线下支付确认</a>
+                  </td>
+              
+                </tr>
+              </foreach>
+          <if condition="!empty($orders)">
+            <tr>
+            	<td class="hj" colspan="9">商品总数：<span>{$count}</span>&nbsp;&nbsp;&nbsp;&nbsp;  订单总额：<span>￥{$sum}</span></td>
+            </tr>
+            </if>
+             
+            
+           
+        </table>	
+        <!--table end-->
+        </div>
+    <!--right_inner end-->
+      <div id="bg"></div>
+    <!--弹出二 开始-->
+    <div class="add detail" id = 'adddetail' style="display:none;">
+    	<div class="backcolor">
+
+        <h3>订单详情              <span onclick='guanbi();' class="guanbi">X</span></h3>
+            <div class="jb_info" id= 'jb_info'>
+            	
+
+        	
+        
+
+            </div>
+            <div>
+            	<ul id ='dingdan'>
+                	
+                </ul>
+            </div>
+          <!--   <div class="zfxx">
+            	<ul>
+                	<li><span class="ddtj_name">支付方式：</span>20141010001</li>
+                    <li><span class="ddtj_name">支付确认人：</span>￥5000.00</li>
+                    <li><span class="ddtj_name">线下支付确认时间：</span>2014年10月1日20:10:10</li>
+                </ul>
+            	
+            </div> -->
+          <!--   <div class="zfxq">
+            	<ul>
+                	<li class="zff">
+                    	<p class="zff_title">支付账号</p>
+                        <p><span>户名：</span>孙喜阳</p>
+                        <p><span>账户：</span>622202 0200 1131 00854</p>
+                        <p><span>卡户行：</span>工行北京礼士路支行</p>
+                    </li>
+                    <li class="zff_img"><img src="{$Think.ADMIN_IMAGES}arrow.png" /></li>
+                    <li class="zff">
+                    	<p class="zff_title">支付账号</p>
+                        <p><span>户名：</span>孙喜阳</p>
+                        <p><span>账户：</span>622202 0200 1131 00854</p>
+                        <p><span>卡户行：</span>工行北京礼士路支行</p>
+                    </li>
+                    
+                </ul>
+            </div> -->
+            <table id='con'>
+            </table>
+        </div>
+    </div>
+    <!--弹出二 结束-->
+    <!--delete 开始-->
+    
+    <div class="add xxzfqr" id = 'adddelete' style="display:none;">
+    	<div class="backcolor">
+        	<h3>线下支付确认<span class="guanbi">X</span></h3>
+            <div  class="zfqr">
+             <form action="/admin/userOrder/updateOfflinePayment" method="post" enctype='multipart/form-data' name="search" onSubmit="var money=$('#moeny').val();var pingju=$('#pingju').val();if(pingju==''){alert('请选择上传文件');return false;};if(isNaN(money))alert('金额不能为空');return false;" >
+            <table>
+            
+            	<tr>
+                <td class="dzqr_name">到款账户：</td>
+                <td ><select name="zhanghu">
+	                	    <option>北京银行</option>
+	                	    <option>中国工商银行</option> 
+						</select></td>
+                </tr>
+                <tr>
+                <td class="dzqr_name">到款金额：</td>
+                <td ><input type ='text'  id = 'money' name='money' onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-.]+/,'');}).call(this)" onblur="this.v();"></td>
+                </tr>
+                <tr>
+                <td class="dzqr_name">到款凭据：</td>
+                <td class="dzqj_pic"><img src="{$Think.ADMIN_IMAGES}dzpz.png" id='imgPre'/><br /><input type ='file' id ='pingju' name='pingju' onchange="preImg(this.id,'imgPre');" > </td>
+                </tr>
+               
+               
+                <tr><td colspan="2"  class="qd">
+                  <input type="submit"  value="确定" /> 
+               <input type="hidden" value="" id='order_id' name='order_id' /> 
+            <input type="reset" onclick = 'javascript:guanbi();' value="取消" /> 
+                </td></tr>
+            </table>
+           	
+            </form>
+                </div>
+               
+            </div>
+        </div>
+    </div>
+    
+   
+    
+    
+    <!--delete 结束-->
+    </div><!--wapper-right end-->
+</div><!--wapper end-->
+<!--头部 开始-->
+</body>
+</html>
+
+
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}cart.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}Calendar1.js"></script>
+
+
+
+
+

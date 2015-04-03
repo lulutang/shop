@@ -1,0 +1,24 @@
+<div class="sxgg">
+<h4>属性规格</h4>
+<volist name="server_attr" id="attr">
+<p>{$attr['attr_name']} 
+<input type="hidden" name="attr[]" value="{$attr['id']}">
+<volist name="server_attr_val" id="attr_val">
+		<if condition="$attr['id'] eq $attr_val['attr_id']">
+		<label>
+		<input type="radio" value="{$attr_val['id']}" name="attr{$attr['id']}" onclick="Attr_val({$attr_count})" id="{$attr_val['id']}">{$attr_val['value']}</label>
+			 </if>
+	</volist>
+	</p>
+</volist>
+</div>
+
+
+
+
+
+	
+	
+
+
+

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>优惠券通用设置</title>
+<link href="{$Think.ADMIN_CSS}global.css" rel="stylesheet" type="text/css">
+<link href="{$Think.ADMIN_CSS}m_style1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<div class="content_right common_set coupon_set">
+     <div id="indent" class="indent" onClick="changeWin()"></div>
+     <div class="link_path">您所在的位置：<a href="/Admin/Operation/coupon">运营管理</a>&nbsp; &gt; &nbsp;<a href="/Admin/Operation/coupon">优惠券</a>&nbsp; &gt; &nbsp;<a href="javascript:void(0)">通用设置</a></div>
+     <div class="title">{$key}</div>
+     <div class="activity_list_title">{$key}通用设置</div>
+     <form action="/admin/operation/confirmCoupon" method="post" onsubmit="return validate_form(this)" name="search" >
+     
+     <div class="set_activity01">
+     	<p>活动名称：&nbsp;<input type="text" name='name' id='name' class="text300" /> 发行商：&nbsp;<input type="text"  class="text300" id='text300' placeholder ='中细软集团'/></p>
+        <p>促销类型：
+        <input type="text" class="text300" readonly="readonly" name='type' value="{$key}"/>
+        	<!-- <select class="select300">
+                <option>单品促销</option>
+                <option>优惠券促销</option>
+                <option>盘缠促销</option>
+            </select> -->
+        有效时间：&nbsp;<input type="text" id="startTime"  name="startTime" class="text150" onclick="SelectDate(this,'yyyy-MM-dd')" readonly="readonly" /> 至 <input type="text" name="endTime" id="endTime" onclick="SelectDate(this,'yyyy-MM-dd')" class="text150" readonly="readonly" /></p>
+     </div>
+     <div class="activity_list_title">优惠券信息</div>
+     <div  class="set_activity02">
+     	<ul class="activity_list">
+        	<li>
+              <div class="list_info info1">
+				<div class="text"><span class="size46"> ￥</span><input type="text" id='text150' name="money" class="text150" /><span class="size30">元</span></div>
+                 <p class="size14" name='size14'>中细软集团</p> 
+                <p>使用条件： <select name="use" id='use'>
+                	<option value='0'>请选择</option>
+                    <option value='1'>全场</option>
+                    <option value='2'>商标服务</option>
+                    <option value='3'>专利服务</option>
+                    <option value='4'>版权服务</option>
+                    <option value='5'>其他</option>
+                </select></p>
+                <p>有效时间：<input style='width:80px' type="text" id="sale_startTime" name ='sale_startTime'  onclick="SelectDate(this,'yyyy-MM-dd')"/>至  <input  style='width:80px' type="text" id="sale_endTime" name ='sale_endTime'  onclick="SelectDate(this,'yyyy-MM-dd')"/></p>
+              </div>
+              <div class="list_edit">
+           		  满足金额
+                ￥ <input type='text' id = 'onsale_money' name='sale_where' >
+              </div>
+                
+          </li>
+          <!-- <li>
+              <div class="list_info info2">
+				<div class="text"><span class="size46"> ￥</span><input type="text" class="text150" /><span class="size30">元</span></div>
+                <p class="size14">中细软集团</p>
+                <p>使用条件：商标注册</p>
+                <p>有效时间：2014年12月22日 至 2015年10月12日</p>
+              </div>
+              <div class="list_edit">
+              	<input type="checkbox" />
+                <select class="select200">
+                	<option>请选择使用范围</option>
+                    <option>￥300.00</option>
+                    <option>￥200.00</option>
+                    <option>￥100.00</option>
+                </select>
+              </div>
+          </li>
+          <li>
+              <div class="list_info info4">
+				<div class="text"><span class="size46"> ￥</span><input type="text" class="text150" /><span class="size30">元</span></div>
+                <p class="size14">中细软集团</p>
+                <p>使用条件：商标注册</p>
+                <p>有效时间：2014年12月22日 至 2015年10月12日</p>
+              </div>
+              <div class="list_edit">
+              	<input type="checkbox" />
+                <select class="select200">
+                	<option>—请选择价钱—</option>
+                    <option>￥300.00</option>
+                    <option>￥200.00</option>
+                    <option>￥100.00</option>
+                </select>
+              </div>
+          </li> -->
+        </ul>
+       
+     </div>
+     <div class="btn1">
+     <input type='hidden' name='data' value='{$data}'>
+     <input type='hidden' name='faxing' id='faxing_end' value='中细软集团'>
+     <input type='submit' id='submit_info' class="btn_save" style="cursor:pointer" value='确认'>
+     </form>
+    <!--  <a href="confirmCoupon.html">确认</a>--></div> 
+     
+</div>
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script type="text/javascript">
+//菜单缩放
+  openclose=true;
+  
+  function changeWin(){ 
+      parent.bodyFrame.cols =openclose?"1,*":"210,*";//这句话有报错
+      $(".indent").toggleClass('ind');
+      openclose=!openclose;
+  }
+  function CurentTime()
+  { 
+      var now = new Date();
+      var year = now.getFullYear();       //年
+      var month = now.getMonth() + 1;     //月
+      var day = now.getDate();            //日
+     
+      var hh = now.getHours();            //时
+      var mm = now.getMinutes();          //分
+      var clock = year + "-";
+  
+      if(month < 10)
+          clock += "0";
+     
+      clock += month + "-";
+     
+      if(day < 10)
+          clock += "0";
+         
+      clock += day + " ";
+     
+      if(hh < 10)
+          clock += "0";
+         
+      clock += hh + ":";
+      if (mm < 10) clock += '0'; 
+      clock += mm; 
+      return(clock); 
+  } 
+  function validate_form(){
+	  time = CurentTime();
+	 
+	  var val = $('#name').val().replace(/\ +/g,"");
+	  if(val.length <=0) {
+	    	alert('请输入活动名称')
+	    	return false;
+	  }
+	  
+	  var val = $('#onsale_money').val().replace(/\ +/g,"");
+	  if(isNaN(val) || val.length <=0){
+			alert('请输入使用优惠卷条件的金额')
+			return false;
+	  }
+
+	  var val = $('#text150').val().replace(/\ +/g,"");
+	  if(isNaN(val) || val.length <=0){
+	    	alert('请输入活动赠送的金额')
+			return false;
+	  }
+	  var startTime = $('#startTime').val().replace(/\ +/g,"");
+	  if(startTime.length <=0) {
+		    alert('请输入促销活动开始时间')
+		    return false;
+	  }
+      var endTime = $('#endTime').val().replace(/\ +/g,"");
+	  if(endTime.length <=0) {
+		    alert('请输入促销活动结束时间')
+		    return false;
+	  }
+	  if(endTime<=startTime){
+			alert('促销活动时间错误')
+			return false;
+	  }
+		
+	  if(endTime <= time){
+		     alert('促销活动结束时间小于当前时间')
+			 return false;
+	  }
+		 
+	  var use = $('#use').val();
+	 
+	  if(use <= 0){
+		  alert('请选择优惠券使用范围')
+			 return false;
+	  }
+		 var sale_startTime = $('#sale_startTime').val().replace(/\ +/g,"");
+		 if(val.length <=0) {
+		    alert('请输入优惠卷开始使用时间')
+		    return false;
+		 }
+		 var sale_endTime = $('#sale_endTime').val().replace(/\ +/g,"");
+		 if(val.length <=0) {
+		    alert('请输入优惠卷使用结束时间')
+		    return false;
+		 }
+		 if(sale_endTime<=sale_startTime){
+			 alert('优惠卷使用时间错误')
+			    return false;
+		 }
+		 if(sale_endTime <= time){
+			 alert('优惠卷使用结束时间小于当前时间')
+			  return false;
+		 }
+		 var storage = window.localStorage;
+		 storage.setItem("checkbox_youhuijuan_list",'');
+		document.search.submit();
+  }
+  $(function(){
+	  $(document).ready(function(){
+		var val = $('#text300').val().replace(/\ +/g,"");
+		if(val && val.length>0)
+		$('.size14').html(val)
+	  });
+	  
+	  $('#onsale_money').blur(function(){
+			 var val = $(this).val().replace(/\ +/g,"");
+			 if(isNaN(val) || val.length <=0)
+		     alert('请输入有效数字')
+	  });
+	  $('#name').blur(function(){
+			 var val = $(this).val().replace(/\ +/g,"");
+			 if(val.length <=0)
+		     alert('请输入活动名称')
+	  });
+	  $('#text150').blur(function(){
+			 var val = $(this).val().replace(/\ +/g,"");
+			 if(isNaN(val) || val.length <=0)
+		     alert('请输入有效数字')
+	  });
+	  $('#text300').blur(function(){
+		 var val = $(this).val().replace(/\ +/g,"");
+		 if(val && val.length>0){
+			 $('#faxing_end').attr('value',val)
+		     $('.size14').html(val)
+		 }
+	     else{
+	    	 
+	    	 $('#faxing_end').attr('value','中细软集团')
+	    	 $('.size14').html('中细软集团')
+	     }
+	    	
+	  });
+	 
+	
+  });
+</script>
+</body>
+</html>
+<script type="text/javascript" src="{$Think.ADMIN_JS}Calendar1.js"></script>

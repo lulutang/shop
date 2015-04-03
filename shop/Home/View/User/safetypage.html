@@ -1,0 +1,59 @@
+<include file="Public/header" />
+<script language="JavaScript" src="{$Think.HOME_JS}top.js"></script> 
+<!--个人中心 安全中心 开始-->
+<div class="container">
+	<div class="crumbs">
+    	您的位置：
+        <a href="{$Think.DOMAIN}">中细软服务商城</a>&gt;
+        <a href="{$Think.DOMAIN}Home/User/userhome">个人中心</a>&gt;
+        <a href="javascript:void()">安全设置</a>
+        
+    </div>
+	<include file="Public/ucenter_left"/>
+    <div class="members_right safety  float-right">
+    	<p class="members_right_title">安全设置</p>
+        <div class="safety_box">
+        	<h3>您的基础信息</h3>
+            <if condition="empty($selfinfo['email'])">
+            <p><span class="text-right">登录邮箱：</span>您尚未设置登录邮箱</p>
+            <else />
+            <p><span class="text-right">登录邮箱：</span>{$selfinfo['email']}</p>
+            </if>
+            <p><span class="text-right">手机号码：</span> <php>echo substr_replace($selfinfo['mobile_phone'],'*****',3,5); </php><a href=""></a></p>
+            <p><span class="text-right">上次登录时间：</span><php>echo date('Y-m-d H:i:s',$selfinfo['last_login']);</php></p>
+            <p><span class="text-right">绑定手机为：</span><if condition="empty($selfinfo['bind_mobile'])">无</if>{$selfinfo['bind_mobile']}</p>       
+            <ul>
+            	<li>
+                	<span class="name"><img src="{$Think.HOME_IMAGES}checking.png" /> 登录密码</span>
+                    <span class="check_content">登录密码能够保证您的账户安全，让您购物更放心</span>
+                    <a href="/Home/User/changepassword">修改密码</a>
+                </li>
+                <if condition="empty($selfinfo['bind_mobile'])">
+                <li>
+                	<span class="name"><img src="{$Think.HOME_IMAGES}nochecking.png" /> 验证手机</span>
+                    <span class="check_content">您的手机还没验证，为了保障账户安全，请验证！</span>
+                    <a href="/Home/User/bindphone">立即绑定</a>
+                </li>
+                <else />
+                <li>
+                    <span class="name"><img src="{$Think.HOME_IMAGES}checking.png" /> 验证手机</span>
+                    <span class="check_content">您的手机已验证，开启您的购物之旅！</span>
+                    <a href="/Home/User/bindphone">修改号码</a>
+                </li>
+                </if>
+                <li>
+                	<span class="name"><img src="{$Think.HOME_IMAGES}nochecking.png" /> 验证邮箱</span>
+                    <span class="check_content">您的邮箱还没验证，为了保障账户安全，请验证！</span>
+                    <a href="/Home/User/bindemail">绑定邮箱</a>
+                </li>
+            </ul>        
+        </div>
+    </div>
+    <div style="clear:both;"></div>  
+</div>
+
+<!--个人中心 安全中心 结束-->
+
+
+<include file="Public/footer" />
+

@@ -1,0 +1,510 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>商标服务|专利服务|版权服务-中细软服务商城</title>
+<meta name = "keywords" content = "商标注册,商标设计,商标异议申请,专利申请,实用新型专利,版权申请"/>
+<meta name = "description" content = "全国第一家知识产权业务服务商城,中细软服务商城包含商标服务,专利服务,版权服务等知识产权相关业务。"/>
+<link href="{$Think.HOME_CSS}style.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="{$Think.HOME_CSS}ucenter.css">
+<script language="JavaScript" src="{$Think.HOME_JS}jquery-1.7.2.js"></script>
+</head>
+
+<body>
+<!--顶部导航 开始-->
+<div class="topnav-box">
+	<div class="container">
+    	<ul class="topnav" name="ff" id="ff">
+            <li>
+            
+            
+                <if condition="($Think.session.user.user_name !='')">
+                <span> {$Think.session.user.user_name},</span>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" id='logout' class="a-red">退出</a>
+                <else/>
+                 <a href="javascript:void(0);" id='login' class="a-red">登录</a>&nbsp;&nbsp;&nbsp;
+                 <a href="http://www.gbicom.cn/passport/register?ref=http%3A%2F%2Fwww.gbicom.cn%2F" id='regs' target='_black' class="a-red">注册</a>
+                </if>
+            </li>
+            <li  class="font-size14">
+            	<div class="top_members" onMouseOut="this.className='top_members'" onMouseOver="this.className='top_members active_top_members'"> 
+                <p> 
+                 <a href="javascript:void(0)"  onclick="CheckLogin('userhome')">个人中心</a>
+                </p>  
+                <ul class="top_members_ct"> 
+                	<li><a href="javascript:void(0)" onClick="CheckLogin('allorder')">我的订单</a></li>
+                    <li><a href="javascript:void(0)" onClick="CheckLogin('userhome')">个人资料</a></li>
+                    <li><a href="javascript:void(0)" onClick="CheckLogin('safetypage')">安全设置</a></li>
+                </ul> 
+              </div>
+
+            </li>
+            
+          
+            
+            <li style="float:right; padding-right:15px;">
+            	<a href="__APP__/Home/Article/detialarticle"  class="a-red">购物帮助</a>
+            </li>
+            <li style="float:right; margin-right:20px;">
+            	<span class="color9">全国统一咨询热线：</span>&nbsp;&nbsp;
+                <b class="font-size14" style="color:#bb0000">400-700-0065</b>
+            </li>
+            <div style="clear:both;"></div>
+        </ul>
+    </div>
+</div>
+<!--顶部导航 结束-->
+
+<!--顶部搜索 开始-->
+<div class="container top-search">
+	<div class=" float-left">
+    	<a  href="{$Think.DOMAIN}"><img src="{$Think.HOME_IMAGES}logo.png"></a>
+    </div>
+    <div class=" float-left">
+    	<a class="mallname" href="{$Think.DOMAIN}">服务商城</a>
+    </div>
+    <div class=" float-right">
+    	<a href="javascript:void(0)" onClick="CheckLogin('allorder')" class=" button"><img src="{$Think.HOME_IMAGES}button05.png"></a>
+    </div>
+    <div class=" float-right">
+     <form action="http://www.gbicom.cn/search.html"  name ="submit_shop" target="_blank">
+    	<ul class="search">
+        	
+            <li class="">
+            <a  class="font-size16 search-left">
+            商&nbsp;标</a>
+            <!--搜索下拉框 开始-->
+                <div class="down search-down" style="display:none;">
+                    <dl class="downbox" style="">
+                        <dd><a href="">商&nbsp;标</a></dd>
+                        <dd><a href="">商&nbsp;标</a></dd>
+                        <dd><a href="">商&nbsp;标</a></dd>
+                        
+                    </dl>
+                </div>
+            <!--搜索下拉框 结束-->
+            </li>
+
+            <li><input style="height:37px; line-height:36px;"  id= 'keywords_s' name='KeyWordSearch' type="text"   placeholder="注册商标请先查询，请输入商标名称，如王老吉"></li>
+
+            
+             <input type='hidden' value='0' name='cid'>
+            <input type='hidden' value='1' name='search'>
+               <input type='hidden' value='mc' name='field'>
+            <li><a href="javascript:void(0);" id ='submit_shop' class=" button" onclick="$('#search_box').find('.bg').show();$('#search_box').show();"><img src="{$Think.HOME_IMAGES}button-search.png"></a>
+           
+            <div style="clear:both;"></div>
+        </ul>
+        </form>
+        <p class="search-info">
+        	<!--热搜词：
+           <a target="_blank" href="http://zkb.gbicom.cn/#/KeyWordSearch/双十一" class="a-red">双十一</a>&nbsp;&nbsp;&nbsp;  
+            <a target="_blank" href="http://zkb.gbicom.cn/#/KeyWordSearch/王老吉" class="a-red">王老吉</a>&nbsp;&nbsp;&nbsp;     
+            <a target="_blank" href="http://zkb.gbicom.cn/#/KeyWordSearch/滴滴打车" class="a-red">滴滴打车</a> &nbsp;&nbsp;&nbsp;    
+            <a target="_blank" href="http://zkb.gbicom.cn/#/KeyWordSearch/海底捞" class="a-red">海底捞</a> &nbsp;&nbsp;&nbsp;   
+            <a target="_blank" href="http://zkb.gbicom.cn/#/KeyWordSearch/陌陌" class="a-red">陌陌</a>  -->
+        </p>
+    </div>
+</div> 
+
+
+<!--顶部搜索弹窗 开始sdd20150324-->
+<div class="loginbox searchbox" style='display:none' id='search_box'>
+  <iframe id='' class='popIframe' frameborder='0' ></iframe>
+    <div id="" class="mydiv login_box"> 
+        <div class="login_bg" id='search_div'>
+            <p class="p_title">商标查询</p>
+            <div class="t1">
+                <span class="s1">商标类别：</span>
+                <span class="s2">
+                <?php
+                $list_style = C('SELF_STYLE');
+                ?>
+                    <select class="select" name="style" id="style">
+                    <foreach name='list_style' item='val' >
+                    <option value="{$val}">{$val}</option>
+                    </foreach>
+                    
+                    </select>
+                </span>
+            </div>
+            <div class="t1">
+                <span class="s1">商标名称：</span>
+                <span class="s2"><input type="text" maxlength='20' name='name' id='name' value="" class="input" /></span>
+            </div>
+            <div class="t1">
+                <span class="s1"><b class="red">*</b>联系人姓名：</span>
+                <span class="s2"><input type="text" maxlength='20' id="user_name" value="" class="input" /></span>
+            </div>
+            <div class="t1">
+                <span class="s1"><b class="red">*</b>手机号码：</span>
+                <span class="s2"><input type="text" maxlength='11' id="phone" value="" class="input" /></span>
+            </div>
+            <div class="t1">
+                <span class="s1">QQ：</span>
+                <span class="s2"><input type="text" maxlength='11' id="qq" value="" class="input" /></span>
+            </div>
+            <div class="t1">
+                <span class="s1"></span>
+                <span class="s2"><input class="button_input" type="button" id="button_input" value="提交" ></span>
+            </div>
+        </div>
+         <div class="login_bg"  id='search_success_div' style="display:none;">
+            <p class="p_title"><img src="/Application/Home/Static/images/success.png" />提交成功</p>
+            <p class="p_detail">中细软客服中心已经收到您的信息，正在为您派遣知识产权顾问中。 <br>知识产权顾问会携带贴心的服务以闪电般的速度联系您。</p>
+           <input class="button_input" type="button" id="button_input2" value="立即咨询" style="margin: 0 auto;display: block;">
+           
+        </div>
+        <a class="close" style="cursor:pointer" id=''  onclick="$('#search_box').find('.bg').hide();$('#search_box').hide();"></a>            
+    </div>
+    <div id="search_bg" class="bg" style="display:none;"></div>
+
+
+</div>
+
+<!--顶部搜索 结束-->
+<div class="loginbox" style='display:none' id='loginDiv'>
+    
+    <iframe id='popIframe' class='popIframe' frameborder='0' ></iframe>
+    <div id="popDiv" class="mydiv login_box" > 
+        <div class="login_bg" id='error_msg4'>
+            <p class="text-center"  id='error_msg1'></p>
+            <p><input class="type_text1" type="text" name='user_name' placeholder="用户名/手机号"/></p>
+            <p><input class="type_text2"  type="password" name='password'  id='password' placeholder="密码"  /></p>
+             <p><input type="checkbox" id='checkboxID'/> 记住我一周</p>
+            <p><input class="button_login" type="button"  id='login_user' value="登录" /> <a target ="_black" href="http://www.gbicom.cn/passport/register?ref=http%3A%2F%2Fwww.gbicom.cn%2F">注册</a></p>
+        </div>
+         <div class="login_bg"  id='error_msg3' style="display:none;">
+            <p class="text-center"  >登录成功</p>
+           
+           
+        </div>
+        <a class="close" style="cursor:pointer" id='close_log'>X </a>            
+    </div>
+    <div id="bg" class="bg" style="display:none;"></div>
+
+
+</div>
+<!--主导航 开始-->
+<div class="main-navbg">
+	<div class="container">
+    	<ul class="main-nav" id='xuanze'>
+        	<li>
+                <a id="showAll" class="classification">全部分类</a>
+                <!--主菜单下拉框 开始-->
+                
+              	<div class="mainnav-down" id="SNmenuNav" style='display: none;'>
+                		<dl class="mainnav-downbox" >
+                        
+
+                    	<dt class="mainnav-hover">
+                            <a class="mainnav-down-title mainnav-down-title01" href="/Home/Goods/goods_list/id/38">商标服务</a>
+                            <p>
+                            	<a href="/Home/Goods/goods_list/id/38#goods_69">国内商标</a>&nbsp;&nbsp;
+                                <a href="/Home/Goods/goods_list/id/38#goods_67">国际商标</a>&nbsp;&nbsp;
+                                <a href="/Home/Goods/goods_list/id/38#goods_47">商标设计</a><br>
+                     
+                            	<a href="/Home/Goods/goods_list/id/38#goods_68">补发证明</a>&nbsp;&nbsp;
+                                <a href="/Home/Goods/gooddetails/id/43">商标续展</a>&nbsp;&nbsp;
+                                <a href="/Home/Goods/gooddetails/id/46">商标更正</a>
+                            	
+                                <br>
+                            	<a href="/Home/Goods/goods_list/id/38#goods_66">商标案件</a>&nbsp;&nbsp;
+                                <a href="/Home/Goods/gooddetails/id/48">商标注销</a>&nbsp;&nbsp;
+                                <a href="/Home/Goods/gooddetails/id/49">许可备案</a>
+                            	
+                               
+                            	
+                            </p>
+                        </dt>
+                        <!--展开菜单 开始-->
+                        <dd style="display: none">
+                    	<div class="mainnav-open" >
+                            <div class="mainnav-openbox">
+                            	<div class="openbox-left">
+                                    <ul>
+                                    	<li><a href="/Home/Goods/goods_list/id/38#goods_69" class="openbox-text01">国内注册</a></li>
+                                        <li> 
+                                        	<p>
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/8">国内注册</a>&nbsp;
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/1">香港注册</a>&nbsp;
+                                                  |&nbsp;<a href="/Home/Goods/gooddetails/id/10">澳门注册</a>&nbsp;
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/9">台湾注册</a>&nbsp;
+                                                </p>
+                                               
+                                             
+                                        </li>
+                                        <div style="clear:both"></div>
+                                    </ul>
+                                	
+                                    <ul>
+                                    	<li><a href="/Home/Goods/goods_list/id/38#goods_67" class="openbox-text01">国际注册</a></li>
+                                        <li>
+                                            <p> 
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/11">美国</a>&nbsp;
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/15">日本</a>&nbsp;
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/16">韩国</a>&nbsp;
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/12">法国</a>&nbsp;
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/14">英国</a>&nbsp;
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/13">德国</a>&nbsp;
+                                            </p> 
+                                            
+                                               
+                                        </li>
+                                        <div style="clear:both"></div>
+                                    </ul>
+                                    <ul>
+                                    	<li><a href="/Home/Goods/goods_list/id/38#goods_47" class="openbox-text01">商标设计</a></li>
+                                        <li> 
+                                        	<p>
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/50">中文设计</a>&nbsp;
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/51">英文设计</a>&nbsp;
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/52">中英文设计</a>&nbsp;
+                                                </p>
+                                                <p>
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/53">图形设计</a>&nbsp;
+                                                   |&nbsp;<a href="/Home/Goods/gooddetails/id/54">中英文与图形设计</a>&nbsp;
+                                                      |&nbsp;<a href="/Home/Goods/gooddetails/id/55">卡通形象设计</a>&nbsp;
+                                         
+                                            </p>
+                                             
+                                        </li>
+                                        <div style="clear:both"></div>
+                                    </ul>
+                                    <ul>
+                                    	<li><a href="/Home/Goods/goods_list/id/38#goods_68" class="openbox-text01">补发证明</a></li>
+                                        <li> 
+                                        	<p>
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/38">补发变更证明</a>&nbsp;
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/39">补发转让证明</a>&nbsp;
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/40">补发续展证明</a>&nbsp;
+                                          
+                                            </p>
+                                                
+                                        </li>
+                                        <div style="clear:both"></div>
+                                    </ul>
+                                    <ul style="border:none 0;">
+                                    	<li><a href="/Home/Goods/goods_list/id/38#goods_66" class="openbox-text01">商标案件</a></li>
+                                        <li> 
+                                        	<p>
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/23">异议申请</a>&nbsp;
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/22">异议答辩</a>&nbsp;
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/21">撤三申请</a>&nbsp;
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/20">撤三答辩</a>&nbsp;
+                                            </p>
+                                            <p>
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/19">驳回复审</a>&nbsp;
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/18">无效宣告</a>&nbsp;
+                                               
+                                            </p>
+                                                
+                                        </li>
+                                        <div style="clear:both"></div>
+                                    </ul>
+                                </div>
+<!--                                <div class="openbox-right">
+                                	<h3><a href="">热门推荐</a></h3>
+                                    <ul>
+                                    	<li><a href="">国内商标</a>&nbsp;&nbsp;<a href="">国内商标</a></li>
+                                        <li><a href="">国内商标</a>&nbsp;&nbsp;<a href="">国内商标</a></li>
+                                        <li><a href="">国内商标</a>&nbsp;&nbsp;<a href="">国内商标</a></li>
+                                        <li><a href="">国内商标</a>&nbsp;&nbsp;<a href="">国内商标</a></li>
+                                        <li><a href="">国内商标</a>&nbsp;&nbsp;<a href="">国内商标</a></li>
+                                        <li><a href="">国内商标</a>&nbsp;&nbsp;<a href="">国内商标</a></li>
+                                        <li><a href="">国内商标</a>&nbsp;&nbsp;<a href="">国内商标</a></li>
+                                        <div style="clear:both"></div>
+                                    </ul>
+                                    <h3><a href="">优惠活动</a></h3>
+                                    <div class="preferential-imgbox">
+                                    	<img src="{$Think.HOME_IMAGES}preferential-img01.png">
+                                    </div>
+                                </div>-->
+                                <div style="clear:both"></div>
+                            </div>
+                        </div>
+                         </dd>   
+                    <!--展开菜单 结束-->
+                        </dl>
+                        <dl class="mainnav-downbox" >
+                        <dt class="mainnav-hover">
+           
+                        
+                        
+                        
+                        
+                            <a class="mainnav-down-title mainnav-down-title02" href="/Home/Goods/goods_list/id/5">专利服务</a>
+                            <p>
+                           <a href="/Home/Goods/goods_list/id/5#goods_70" >申请代理</a>&nbsp;&nbsp;
+                           <a href="/Home/Goods/goods_list/id/5#goods_73" >著录事项变更</a>&nbsp;&nbsp;<br>
+                   
+                                                          <a href="/Home/Goods/goods_list/id/5#goods_71">专利复审</a>&nbsp;&nbsp;
+                             <a href="/Home/Goods/goods_list/id/5#goods_76" >答复审查意见</a>&nbsp;&nbsp;<br>
+                        
+                                                          <a href="/Home/Goods/goods_list/id/5#goods_72">无效宣告</a>&nbsp;&nbsp;
+
+                               <a href="/Home/Goods/goods_list/id/5#goods_75" >专利检索</a>&nbsp;&nbsp;
+                          </p>
+
+                        </dt>
+                                                    <!--展开菜单 开始-->
+                        <dd style="display: none">
+                    	<div class="mainnav-open" >
+                            <div class="mainnav-openbox">
+                            	<div class="openbox-left">
+                                	<ul>
+                                    	<li><a href="/Home/Goods/goods_list/id/5#goods_70" class="openbox-text01">申请代理</a></li>
+                                        <li> 
+                                        	<p>
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/26">发明专利</a>&nbsp;
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/25">实用新型</a>&nbsp;
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/24">外观专利</a>&nbsp;
+                                              
+                                            </p>
+                                                
+                                        </li>
+                                        <div style="clear:both"></div>
+                                    </ul>
+                                    <ul>
+                                    	<li><a href="/Home/Goods/goods_list/id/5#goods_71" class="openbox-text01">专利复审</a></li>
+                                        <li>
+                                            <p> 
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/27">发明复审</a>&nbsp;
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/28">实用新型复审</a>&nbsp;
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/29">外观设计复审</a>&nbsp;
+                                               
+                                            </p> 
+                                                  
+                                        </li>
+                                        <div style="clear:both"></div>
+                                    </ul>
+                                    
+                                    <ul>
+                                    	<li><a href="/Home/Goods/goods_list/id/5#goods_72" class="openbox-text01">无效宣告</a></li>
+                                        <li> 
+                                        	<p>
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/33">发明无效宣告</a>&nbsp;
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/34">实用新型无效宣告</a>&nbsp;
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/35">外观设计无效宣告</a>&nbsp;
+                                               
+                                            </p>
+                                          
+                                          
+                                        </li>
+                                        <div style="clear:both"></div>
+                                    </ul>
+                                             <ul>
+                                        <li><a href="/Home/Goods/goods_list/id/5#goods_75" class="openbox-text01">专利检索</a></li>
+                                        <li> 
+                                        	<p>
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/36">实用新型检索</a>&nbsp;
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/37">外观设计检索</a>&nbsp;
+                                             
+                                               
+                                            </p>
+                                          
+                                          
+                                        </li>
+                                        <div style="clear:both"></div>
+                                    </ul>
+                                    <ul style="border:none 0;">
+                                    	<li><a href="/Home/Goods/goods_list/id/5#goods_73" class="openbox-text01">著录事项变更</a></li>
+                                        <li> 
+                                        	<p>
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/30">发明人变更</a>&nbsp;
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/31">申请人变更</a>&nbsp;
+                                                |&nbsp;<a href="/Home/Goods/gooddetails/id/32">专利权人变更</a>&nbsp;
+                                               
+                                            </p>
+                                             
+                                        </li>
+                                        <div style="clear:both"></div>
+                                    </ul>
+                                </div>
+<!--                                <div class="openbox-right">
+                                	<h3><a href="">热门推荐</a></h3>
+                                    <ul>
+                                    	<li><a href="">国内商标</a>&nbsp;&nbsp;<a href="">国内商标</a></li>
+                                        <li><a href="">国内商标</a>&nbsp;&nbsp;<a href="">国内商标</a></li>
+                                        <li><a href="">国内商标</a>&nbsp;&nbsp;<a href="">国内商标</a></li>
+                                        <li><a href="">国内商标</a>&nbsp;&nbsp;<a href="">国内商标</a></li>
+                                        <li><a href="">国内商标</a>&nbsp;&nbsp;<a href="">国内商标</a></li>
+                                        <li><a href="">国内商标</a>&nbsp;&nbsp;<a href="">国内商标</a></li>
+                                        <li><a href="">国内商标</a>&nbsp;&nbsp;<a href="">国内商标</a></li>
+                                        <div style="clear:both"></div>
+                                    </ul>
+                                    <h3><a href="">优惠活动</a></h3>
+                                    <div class="preferential-imgbox">
+                                    	<img src="{$Think.HOME_IMAGES}preferential-img01.png">
+                                    </div>
+                                </div>-->
+                                <div style="clear:both"></div>
+                            </div>
+                        </div>
+                         </dd>   
+                    <!--展开菜单 结束-->
+                    </dl>
+                    <dl class="mainnav-downbox" >
+                      	<dt class="mainnav-hover01">
+                            <a class="mainnav-down-title mainnav-down-title03" href="/Home/Goods/goods_list/id/6">版权服务</a>
+                            <p>
+                                <a href="/Home/Goods/gooddetails/id/6">著作权变更</a>&nbsp;&nbsp;
+                                <a href="/Home/Goods/gooddetails/id/3">计算机软件</a>&nbsp;&nbsp;<br>
+                                <a href="/Home/Goods/gooddetails/id/4">工程设计图</a>&nbsp;&nbsp;
+                                <a href="/Home/Goods/gooddetails/id/5">产品设计图</a>&nbsp;&nbsp;<br>
+                            
+                                <a href="/Home/Goods/gooddetails/id/2">美术作品</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="/Home/Goods/gooddetails/id/7">补办证书</a>&nbsp;&nbsp;
+                            
+                            </p>
+                        </dt>
+                                                <!--展开菜单 开始-->
+                 
+                         
+                    <!--展开菜单 结束-->
+                    </dl>
+                     <dl class="mainnav-downbox" >
+                        <dt class="mainnav-hover01">
+                            <a class="mainnav-down-title" href="" style="padding:0; border:none 0;">
+                            热门服务</a>
+                            <div class="hot">
+                            	<div class="hotbox">
+                                	<img src="{$Think.HOME_IMAGES}hot01.png">
+                                </div>
+                            </div>
+                            
+                            <p>
+                                <a href="/Home/Goods/gooddetails/id/8">商标注册</a>&nbsp;&nbsp;
+                                <a href="/Home/Goods/gooddetails/id/24">专利申请</a>&nbsp;&nbsp;
+                                <a href="/Home/Goods/gooddetails/id/6">著作权登记</a>
+                            </p>
+                        </dt>
+                        
+                      <!--展开菜单 开始-->
+              
+                    <!--展开菜单 结束-->
+                    </dl>
+                </div>
+                <!--主菜单下拉框 结束-->
+            </li>
+
+            <li class="indeximg" 
+                 ><a href="{$Think.DOMAIN}" >首页</a></li>
+            <li value='2'>
+                <a href="{$Think.DOMAIN}home/package/lists">享优惠 </a>
+            </li>
+            <li value='3'>
+                <a href="{$Think.DOMAIN}Home/Goods/goods_list/id/38" >注商标</a> 
+            </li>
+            <li value='4'>
+                <a href="{$Think.DOMAIN}Home/Goods/goods_list/id/5" >申专利</a>
+            </li>
+            <li value='5' >
+                <a href="{$Think.DOMAIN}Home/Goods/goods_list/id/6" >登版权 </a>
+            </li>
+            <li value='6'><a href="http://bbs.gbicom.cn/forum-64-1.html"  target="_blank">查攻略</a></li>
+            <div style="clear:both;"></div>                                                       
+        </ul>
+    </div>
+    
+</div>
+<!--主导航 结束-->

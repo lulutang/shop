@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>工作台</title>
+<link href="{$Think.ADMIN_CSS}global.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+</head>
+
+<body>
+  <ul class="content_left">
+    <li class="menuli open">
+      <a href="javascript:void(0)" class="a1 wdgzt">我的工作台</a>
+    </li>
+    <li class="menuli">
+      <a href="javascript:void(0)" class="a1 ywgl">业务管理<b class="b"></b></a>
+      <ul class="twoul">
+        <li class="twoli"><a href="/index.php/Admin/Server/serverList" target="main" class="a2">业务类型管理</a></li>
+        <li class="twoli"><a href="/index.php/Admin/Ordermanage/lists" target="main" class="a2">订单流程管理</a></li>
+      </ul>
+    </li>
+    <li class="menuli">
+      <a href="javascript:void(0)" class="a1 spfwgl">商品服务管理<b class="b"></b></a>
+      <ul class="twoul">
+        <li class="twoli"><a href="/index.php/Admin/Goods/Goods_list" target="main" class="a2">商品管理</a></li>
+        <li class="twoli"><a href="/index.php/Admin/Package/Package_list" target="main" class="a2">套装管理</a></li>
+      </ul>
+    </li>
+    <li class="menuli">
+      <a href="javascript:void(0)" class="a1 ymsz">页面设置<b class="b"></b></a>
+      <ul class="twoul">
+        <li class="twoli"><a href="/index.php/Admin/Priority/goods" target="main" class="a2">商品服务优先级设置</a></li>
+        <li class="twoli"><a href="/index.php/Admin/Priority/package" target="main" class="a2">套餐商品优先级设置</a></li>
+      </ul>
+    </li>
+    <li class="menuli">
+      <a href="javascript:void(0)" class="a1 ddgl">订单管理<b class="b"></b></a>
+      <ul class="twoul">
+        <li class="twoli cur"><a href="/admin/cart/carts/" target="main" class="a2">购物车管理</a></li>
+        <li class="twoli"><a href="/index.php/Admin/Uorder/judge" target="main" class="a2">所有订单</a></li>
+        <li class="twoli"><a href="/index.php/Admin/Uorder/ordergoods" target="main" class="a2">所有服务</a></li>
+      </ul>
+    </li>
+    <li class="menuli">
+      <a href="javascript:void(0)" class="a1 xtgl">系统管理<b class="b"></b></a>
+      <ul class="twoul">
+        <li class="twoli"><a href="/index.php/Admin/User/roleinfo" target="main" class="a2">角色管理</a></li>
+        <li class="twoli"><a href="/index.php/Admin/User/userinfo" target="main" class="a2">员工管理</a></li>
+        <li class="twoli"><a href="/index.php/Admin/User/optionlog" target="main" class="a2">操作日志</a></li>
+      </ul>
+    </li>
+    <li class="menuli">
+      <a href="javascript:void(0)" class="a1 bzgl">帮助管理<b class="b"></b></a>
+      <ul class="twoul">
+        <li class="twoli"><a href="/index.php/Admin/Article/columnshow" target="main" class="a2">栏目管理</a></li>
+        <li class="twoli"><a href="/index.php/Admin/Article/articleshow" target="main" class="a2">栏目文章</a></li>
+      </ul>
+    </li>
+    <li class="menuli">
+      <a href="javascript:void(0)" class="a1 kggl">客官管理<b class="b"></b></a>
+      <ul class="twoul">
+        <li class="twoli"><a href="/index.php/Admin/Guest/lists" target="main" class="a2">客官管理</a></li>
+      </ul>
+    </li> 
+    <li class="menuli">
+      <a href="javascript:void(0)" class="a1 zggj">掌柜工具<b class="b"></b></a>
+      <ul class="twoul">
+        <li class="twoli"><a href="/index.php/Admin/Waiter/lists" target="main" class="a2">我的跑堂</a></li>
+      </ul>
+    </li> 
+    <li class="menuli">
+      <a href="javascript:void(0)" class="a1 fwgl">服务管理<b class="b"></b></a>
+      <ul class="twoul">
+        <li class="twoli"><a href="../service/serviceManage.html" target="main" class="a2">服务管理</a></li>
+      </ul>
+    </li>
+    <li class="menuli">
+      <a href="javascript:void(0)" class="a1 hygl">会员管理<b class="b"></b></a>
+      <ul class="twoul">
+        <li class="twoli"><a href="../members/members_index.html" target="main" class="a2">个人设置</a></li>
+         
+        <li class="twoli"><a href="/Admin/OnSale/userOnsale" target="main">优惠券列表</a></li>
+
+      
+      </ul>
+    </li>
+    <li class="menuli">
+      <a href="javascript:void(0)" class="a1 bxgl">编修管理<b class="b"></b></a>
+      <ul class="twoul">
+        <li class="twoli"><a href="/Admin/Compile/combxsh" target="main" class="a2">国内商标注册</a></li>
+      </ul>
+    </li>
+     <li class="menuli">
+      <a href="javascript:void(0)" class="a1 hygl">发票管理<b class="b"></b></a>
+      <ul class="twoul">
+        <li class="twoli"><a href="/index.php/Admin/Uorder/orderreceipt/invoile/1" target="main" class="a2">已开发票</a></li>
+        <li class="twoli"><a href="/index.php/Admin/Uorder/orderreceipt/invoile/0" target="main" class="a2">未开发票</a></li>
+      </ul>
+    </li>
+
+    <li class="menuli">
+      <a href="javascript:void(0)" class="a1 yygl">运营管理<b class="b"></b></a>
+
+      <ul class="twoul">
+        <li class="twoli"><a  href="/Admin/Operation/singlePromotion" target="main" class="a2">单品促销</a></li>
+        <li class="twoli"><a href="/Admin/Operation/giftPromotion" target="main" class="a2">赠品促销</a></li>
+		<li class="twoli"><a  href="/Admin/Operation/coupon" target="main" class="a2">优惠券</a></li>
+        <li class="twoli"><a href="/Admin/Operation/money" target="main" class="a2">盘缠</a></li>
+		<li class="twoli"><a  href="/Admin/Operation/activity" target="main" class="a2">活动管理</a></li>
+
+      </ul>
+    </li>
+
+
+  </ul>
+
+<script type="text/javascript"> 
+$(function(){
+  $(".content_left .menuli .a1").bind("click",function(){
+    if($(this).parent().find(".twoul").length>0){  
+      var flagli = $(this).parent(".open").length;
+      if(flagli>0){
+        $(this).parent().removeClass("open"); 
+      }else{        
+        $(this).parent().parent().find(".open").removeClass("open"); 
+        $(this).parent().addClass("open"); 
+      }      
+    }
+  });
+  $(".content_left .menuli .twoul .twoli").bind("click",function(){
+    $(this).parents(".content_left").find(".cur").removeClass("cur"); 
+    $(this).addClass("cur"); 
+  });
+
+});
+</script>
+</body>

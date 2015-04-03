@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>工作台</title>
+<link href="{$Think.ADMIN_CSS}s_style.css" rel="stylesheet" type="text/css">
+<link href="{$Think.ADMIN_CSS}global.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <div class="content_right">
+    <div class="indent"  onclick="changeWin()"></div>
+    <div class="link_path">您所在的位置：<a href="/admin/Uorder/ordergoods">服务管理</a>&nbsp;>&nbsp;{$orderGoods["bargain"]}</div>
+    <ul class="s_state_link clearfix">
+      <li class="s_stated">
+        <p class="p1"><span>下单时间</span></p>
+        <p class="p2">
+            {$orderGoods["addtime"]|date="Y-m-d",###}<br>
+            {$orderGoods["addtime"]|date="H:i:s",###}<br>
+            {$orderGoods["user_name"]}
+        </p>
+      </li>
+      <foreach name="goodsflow" item="gf" key="k">
+           <li class="{$gf['flowcolor']}">
+          <p class="p1"><span>{$gf[0]}</span></p>
+          <if condition="!empty($gf['numtime'])">
+          <p class="p2">{$gf["numtime"]|date="Y-m-d",###}<br>{$gf["numtime"]|date="H:i:s",###}<br>{$gf['uname']}</p>
+          </if>
+        </li>
+      </foreach>
+    </ul>
+    <div class="s_detail">
+      <div class="s_title">
+        <p class="s_pcaseid">订单编号：{$orderGoods["order_code"]}<a href="/admin/Uorder/orderdetailed/orderid/{$orderGoods['order_id']}">查看</a></p>
+        <p class="s_pcasestate" style="width: 21%;">合同编号：{$orderGoods["bargain"]}<a href="/admin/Uorder/patentdetail/ordergid/{$orderGoods['id']}">查看</a></p>
+        <p class="s_pgoods" style="width: 25%;">商品信息：{$orderGoods["message"]["short_title"]}[￥{$orderGoods["goods_price"]}]</p>
+        <p class="s_pprice" style="width: 23%;">服务价：￥{$orderGoods["service_price"]}
+            <if condition="$orderGoods['status'] neq 6">
+                <span id="sji"><a href="javascript:;" class="f90" id="up">编辑</a></span>
+                
+            </if>
+            <if condition="empty($goodsflow[8]['numtime'])">
+                <a href="/admin/Uorder/uppatent/ordergoods_id/{$orderGoods['id']}/goodsstatus/{$orderGoods['status']}" class="red">
+                    {$ordergoodsflow[$orderGoods["status"]][0]}
+                </a>
+            </if>
+           </p>
+            
+      </div>
+      <div class="s_content">
+
+            <if condition="$orderGoods['style'] eq 38">
+                <div class="s_dtr"><p class="s_pn">商标名称：</p>
+                    <p class="s_pd" id='spname'>{$orderGoods["message"]["name"]}</p>
+                </div>
+                <div class="s_dtr"><p class="s_pn">商标类别：</p>
+                    <p class="s_pd" id="spcate">{$orderGoods["message"]["style"]}</p>
+                </div>
+                <div class="s_dtr" style="height:150px;"><p class="s_pn">需求描述：</p>
+                    
+                    <p class="s_pd" style="width:60%;" id="spcontro">{$orderGoods["message"]["text"]}</p>
+                </div>
+                <div class="s_dtr" style="height:100px;"><p class="s_pn" id="upan"></p></div>
+            </if>
+            <if condition="$orderGoods['style'] eq 5">
+                <div class="s_dtr"><p class="s_pn">专利名称：</p>
+                    
+                    <p class="s_pd" style="width:60%;" id='spname'>{$orderGoods["message"]["name"]}</p>
+                    
+                </div>
+                <div class="s_dtr"><p class="s_pn">行业类型：</p>
+                    
+                    <p class="s_pd" style="width:60%;" id="spcate">{$orderGoods["message"]["style"]}</p>
+                        
+                </div>
+                <div class="s_dtr" style="height:150px;"><p class="s_pn">需求描述：</p>
+                    
+                    <p class="s_pd" style="width:60%;" id="spcontro">{$orderGoods["message"]["text"]}</p>
+                    
+                </div>  
+                <div class="s_dtr" style="height:100px;"><p class="s_pn" id="upan"></p></div>
+            </if>
+            <if condition="$orderGoods['style'] eq 6">
+                <div class="s_dtr" style="height:150px;"><p class="s_pn">需求描述：</p>
+                    <p class="s_pd" style="width:60%;" id="spcontro">{$orderGoods["message"]["text"]}</p>
+                </div> 
+                 <div class="s_dtr" style="height:100px;"><p class="s_pn" id="upan"></p></div> 
+            </if>
+      </div>
+    </div>
+<span id="goodorderid" style="display:none">{$orderGoods["id"]}</span>
+<span id="pid" style="display:none">{$orderGoods["style"]}</span>
+<span id="stylecount" style="display:none">{$stylecount}</span>
+<foreach name="style" item="ste" key="k" >
+    <span id="styleid{$k}" style="display:none">{$ste}</span>
+</foreach>
+
+  </div> 
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}order.js"></script>
+</body>   

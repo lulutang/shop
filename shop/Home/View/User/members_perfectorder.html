@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>完善订单</title>
+<link href="style.css" rel="stylesheet" type="text/css">
+<script src="js/jquery-1.7.2.min.js"></script>
+<script src="js/check.js"></script>
+<!--弹出框JS 开始-->
+<script language="javascript" type="text/javascript">
+function showDiv(){
+document.getElementById('popDiv').style.display='block';
+document.getElementById('popIframe').style.display='block';
+document.getElementById('bg').style.display='block';
+}
+function closeDiv(){
+document.getElementById('popDiv').style.display='none';
+document.getElementById('bg').style.display='none';
+document.getElementById('popIframe').style.display='none';
+
+}
+</script>
+<!--弹出框JS 结束-->
+</head>
+
+<body>
+
+<!--顶部导航 开始-->
+<div class="topnav-box">
+	<div class="container">
+    	<ul class="topnav">
+            <li style="margin-right:30px;">
+                <span>liliyhu_1987,</span>&nbsp;&nbsp;&nbsp;&nbsp;<a href="" class="a-red">退出</a>
+            </li>
+            <li class="font-size14" style="margin-right:110px;">
+            	<a href="" class="topnav-personal a-red">个人中心</a>
+                <!--个人中心下拉框 开始-->
+                <div class="down" style="display:none;">
+                    <dd class="downbox">
+                    	<dl><a href="">订单管理</a></dl>
+                        <dl><a href="">基本资料</a></dl>
+                        <dl><a href="">安全中心</a></dl>
+                        
+                    </dd>
+                </div>
+                <!--个人中心下拉框 结束-->
+            </li>
+            
+            <li>
+            	<span class="color9">全国统一咨询热线：</span>&nbsp;&nbsp;
+                <b class="font-size14" style="color:#bb0000">400-700-0065</b>
+            </li>
+            <li style="float:right; padding-right:15px;">
+            	<a href=""  class="a-red">收藏</a>
+            </li>
+            <li style="float:right; padding-right:20px;">
+            	<a href=""  class="a-red">设为首页 </a>
+            </li>
+            <div style="clear:both;"></div>
+        </ul>
+    </div>
+</div>
+<!--顶部导航 结束-->
+
+<!--顶部搜索 开始-->
+<div class="container top-search">
+	<div class=" float-left">
+    	<img src="images/logo.png">
+    </div>
+    <div class=" float-left">
+    	<a class="mallname" href="">服务商城</a>
+    </div>
+    <div class=" float-right">
+    	<a href="" class=" button"><img src="images/button05.png"></a>
+    </div>
+    <div class=" float-right">
+    	<ul class="search">
+        	
+            <li class="">
+            <a href="" class="font-size16 search-left">
+            商&nbsp;标</a>
+            <!--搜索下拉框 开始-->
+                <div class="down search-down" style="display:none;">
+                    <dl class="downbox" style="">
+                        <dd><a href="">商&nbsp;标</a></dd>
+                        <dd><a href="">商&nbsp;标</a></dd>
+                        <dd><a href="">商&nbsp;标</a></dd>
+                        
+                    </dl>
+                </div>
+            <!--搜索下拉框 结束-->
+            
+            </li>
+            
+            <li><input type="text" value="注册商标请先查询，请输入商标名称，如王老吉"></li>
+            <li><a href="" class=" button"><img src="images/button-search.png"></a></li>
+            <div style="clear:both;"></div>
+        </ul>
+        <p class="search-info">
+        	热搜词：
+        	<a href="" class="a-red">海尔</a>&nbsp;&nbsp;&nbsp;  
+            <a href="" class="a-red">ipad</a>&nbsp;&nbsp;&nbsp;     
+            <a href="" class="a-red">苹果</a> &nbsp;&nbsp;&nbsp;    
+            <a href="" class="a-red">三星</a>  
+        </p>
+    </div>
+</div> 
+<!--顶部搜索 结束-->
+
+<!--主导航 开始-->
+<div class="main-navbg">
+	<div class="container">
+    	<ul class="main-nav">
+        	<li>
+                <a href="" class="classification">全部分类</a>
+                <!--主菜单下拉框 开始-->
+                
+              	<div class="mainnav-down" style="display:none;">
+                	<dl class="mainnav-downbox">
+                    	<!--展开菜单 开始-->
+                    	<div class="mainnav-open" style="display:none;">
+                            <div class="mainnav-openbox">
+                            	<div class="openbox-left">
+                                	<ul>
+                                    	<li><a href="" class="openbox-text01">国内注册</a></li>
+                                        <li> 
+                                        	<p>
+                                                |&nbsp;<a href="">国内</a>&nbsp;
+                                                |&nbsp;<a href="">香港</a>&nbsp;
+                                                |&nbsp;<a href="">澳门</a>&nbsp;
+                                                |&nbsp;<a href="">台湾</a>&nbsp;
+                                            </p>
+                                                
+                                        </li>
+                                        <div style="clear:both"></div>
+                                    </ul>
+                                    <ul>
+                                    	<li><a href="" class="openbox-text01">国内注册</a></li>
+                                        <li>
+                                            <p> 
+                                                |&nbsp;<a href="">马德里</a>&nbsp;
+                                                |&nbsp;<a href="">欧盟</a>&nbsp;
+                                                |&nbsp;<a href="">非洲联盟</a>&nbsp;
+                                                |&nbsp;<a href="">美国</a>&nbsp;
+                                                |&nbsp;<a href="">英国</a>&nbsp;
+                                                |&nbsp;<a href="">俄罗斯</a>&nbsp;
+                                            </p> 
+                                            <p> 
+                                                |&nbsp;<a href="">马德里</a>&nbsp;
+                                                |&nbsp;<a href="">欧盟</a>&nbsp;
+                                                |&nbsp;<a href="">非洲联盟</a>&nbsp;
+                                                |&nbsp;<a href="">美国</a>&nbsp;
+                                                |&nbsp;<a href="">英国</a>&nbsp;
+                                                |&nbsp;<a href="">俄罗斯</a>&nbsp;
+                                            </p>    
+                                            <p> 
+                                                |&nbsp;<a href="">马德里</a>&nbsp;
+                                                |&nbsp;<a href="">欧盟</a>&nbsp;
+                                                |&nbsp;<a href="">非洲联盟</a>&nbsp;
+                                                |&nbsp;<a href="">美国</a>&nbsp;
+                                                |&nbsp;<a href="">英国</a>&nbsp;
+                                                |&nbsp;<a href="">俄罗斯</a>&nbsp;
+                                            </p>              
+                                        </li>
+                                        <div style="clear:both"></div>
+                                    </ul>
+                                    <ul>
+                                    	<li><a href="" class="openbox-text01">商标设计</a></li>
+                                        <li> 
+                                        	<p>
+                                                |&nbsp;<a href="">卡通人物</a>&nbsp;
+                                                |&nbsp;<a href="">文字变形</a>&nbsp;
+                                                |&nbsp;<a href="">澳门</a>&nbsp;
+                                                |&nbsp;<a href="">台湾</a>&nbsp;
+                                            </p>
+                                             
+                                        </li>
+                                        <div style="clear:both"></div>
+                                    </ul>
+                                    <ul style="border:none 0;">
+                                    	<li><a href="" class="openbox-text01">商标案件</a></li>
+                                        <li> 
+                                        	<p>
+                                                |&nbsp;<a href="">不规范商品补正</a>&nbsp;
+                                                |&nbsp;<a href="">注册商标续展</a>&nbsp;
+                                                |&nbsp;<a href="">注册商标宽展</a>&nbsp;
+                                                |&nbsp;<a href="">转上注册商标</a>&nbsp;
+                                            </p>
+                                            <p>
+                                                |&nbsp;<a href="">不规范商品补正</a>&nbsp;
+                                                |&nbsp;<a href="">注册商标续展</a>&nbsp;
+                                                |&nbsp;<a href="">注册商标宽展</a>&nbsp;
+                                                |&nbsp;<a href="">转上注册商标</a>&nbsp;
+                                            </p>
+                                            <p>
+                                                |&nbsp;<a href="">不规范商品补正</a>&nbsp;
+                                                |&nbsp;<a href="">注册商标续展</a>&nbsp;
+                                                |&nbsp;<a href="">注册商标宽展</a>&nbsp;
+                                                |&nbsp;<a href="">转上注册商标</a>&nbsp;
+                                            </p>     
+                                        </li>
+                                        <div style="clear:both"></div>
+                                    </ul>
+                                </div>
+                                <div class="openbox-right">
+                                	<h3><a href="">热门推荐</a></h3>
+                                    <ul>
+                                    	<li><a href="">国内商标</a>&nbsp;&nbsp;<a href="">国内商标</a></li>
+                                        <li><a href="">国内商标</a>&nbsp;&nbsp;<a href="">国内商标</a></li>
+                                        <li><a href="">国内商标</a>&nbsp;&nbsp;<a href="">国内商标</a></li>
+                                        <li><a href="">国内商标</a>&nbsp;&nbsp;<a href="">国内商标</a></li>
+                                        <li><a href="">国内商标</a>&nbsp;&nbsp;<a href="">国内商标</a></li>
+                                        <li><a href="">国内商标</a>&nbsp;&nbsp;<a href="">国内商标</a></li>
+                                        <li><a href="">国内商标</a>&nbsp;&nbsp;<a href="">国内商标</a></li>
+                                        <div style="clear:both"></div>
+                                    </ul>
+                                    <h3><a href="">优惠活动</a></h3>
+                                    <div class="preferential-imgbox">
+                                    	<img src="images/preferential-img01.png">
+                                    </div>
+                                </div>
+                                <div style="clear:both"></div>
+                            </div>
+                        </div>
+                    <!--展开菜单 结束-->
+                    	<dd class="mainnav-hover">
+                            <a class="mainnav-down-title mainnav-down-title01" href="">商标服务</a>
+                            <p>
+                            	<a href="">国内商标</a>&nbsp;&nbsp;
+                                <a href="">国际商标</a>&nbsp;&nbsp;
+                                <a href="">商标案件</a>
+                            	
+                            </p>
+                            
+                        </dd>
+                        
+                        <dd class="mainnav-hover">
+                            <a class="mainnav-down-title mainnav-down-title02" href="">专利服务</a>
+                            <p>
+                                <a href="">专利代理</a>&nbsp;&nbsp;
+                                <a href="">无效宣告请求</a>
+                            </p>
+                        </dd>
+                      	<dd class="mainnav-hover">
+                            <a class="mainnav-down-title mainnav-down-title03" href="">版权服务</a>
+                            <p>
+                                <a href="">著作权登记</a>&nbsp;&nbsp;
+                                <a href="">著作权许可</a>&nbsp;&nbsp;<br>
+                                <a href="">著作权转让</a>&nbsp;&nbsp;
+                                <a href="">著作权维权</a>&nbsp;&nbsp;<br>
+                                <a href="">著作权合同备案</a>&nbsp;&nbsp;
+                                <a href="">事项登记</a>&nbsp;&nbsp;<br>
+                                <a href="">著作权质权登记</a>&nbsp;&nbsp;<br>
+                                <a href="">与著作权相关权利</a>
+                            
+                            </p>
+                        </dd>
+                        <dd class="mainnav-hover01">
+                            <a class="mainnav-down-title" href="" style="padding:0; border:none 0;">
+                            热门服务
+                            <div class="hot">
+                            	<div class="hotbox">
+                                	<img src="images/hot01.png">
+                                </div>
+                            </div>
+                            </a>
+                            <p>
+                                <a href="">商标设计</a>&nbsp;&nbsp;
+                                <a href="">商标设计</a>&nbsp;&nbsp;
+                                <a href="">商标设计</a>
+                            </p>
+                        </dd>
+                    </dl>
+                </div>
+                <!--主菜单下拉框 结束-->
+            </li>
+            <li><a href="" class="indeximg">首页</a></li>
+            <li><a href="">享优惠 </a></li>
+            <li>
+                <a href="">注商标</a>
+                <!--注册下拉框 开始-->
+                    <!--<div class="down mainxiala" style="display:none">
+                        <dl class="downbox" style="left:2px;">
+                            <dd><a href="">国内注册</a></dd>
+                            <dd><a href="">国内注册</a></dd>
+                            <dd><a href="">国内注册</a></dd>
+                            <dd><a href="">&nbsp;&nbsp;更多>></a></dd>
+                            
+                        </dl>
+                    </div>-->
+                <!--注册下拉框 结束-->
+            </li>
+            <li>
+                <a href="">申专利</a>
+                <!--注册下拉框 开始-->
+                    <!--<div class="down mainxiala" style="display:none">
+                        <dl class="downbox" style="left:2px;">
+                            <dd><a href="">国内注册</a></dd>
+                            <dd><a href="">国内注册</a></dd>
+                            <dd><a href="">国内注册</a></dd>
+                            <dd><a href="">&nbsp;&nbsp;更多>></a></dd>
+                            
+                        </dl>
+                    </div>-->
+                <!--注册下拉框 结束-->
+            </li>
+            <li>
+                <a href="">登版权 </a>
+                <!--注册下拉框 开始-->
+                    <!--<div class="down mainxiala" style=" display:none">
+                        <dl class="downbox" style="left:2px;">
+                            <dd><a href="">国内注册</a></dd>
+                            <dd><a href="">国内注册</a></dd>
+                            <dd><a href="">国内注册</a></dd>
+                            <dd><a href="">&nbsp;&nbsp;更多>></a></dd>
+                            
+                        </dl>
+                    </div>-->
+                <!--注册下拉框 结束-->
+            </li>
+            <li><a href="">查攻略</a></li>
+            <div style="clear:both;"></div>                                                       
+        </ul>
+    </div>
+</div>
+<!--主导航 结束-->
+
+<!--个人中心 完善订单  开始-->
+<div class="container">
+	<div class="crumbs">
+    	您的位置：
+        <a href="">中细软服务平台</a>&gt;
+        <a href="">个人中心</a>&gt;
+        <a href="">我的订单</a>&gt;
+        <a href="">订单管理</a>
+    </div>
+    <div class="left_nav float-left">
+    	<h2 class="h2_bg1"><a href="">个人中心</a></h2>
+        <ul>
+            <li><a href="members_trader.html">交易人信息</a></li>
+            <li class="last"><a href="members_growing.html">会员成长</a></li>
+        </ul>
+        <h2 class="h2_bg2"><a href="">订单管理</a></h2>
+        <ul>
+            <li class="last"><a href="members_allorder.html">已买的商品</a></li>
+        </ul>
+        <h2 class="h2_bg3"><a href="">商品活动</a></h2>
+        <ul>
+            <li class="last"><a href="members_coupon.html">我的优惠信息</a></li>
+        </ul>
+         <h2 class="h2_bg4"><a href="">账号设置</a></h2>
+        <ul>
+            <li><a href="members_account.html">我的账号</a></li>
+            <li><a href="members_detail.html">账户明细</a></li>
+            <li class="last"><a href="bindpaynum.html">账号安全</a></li>
+        </ul>
+    </div>
+    <div class="members_right  invoice  perfect_order  float-right">
+    	<p class="members_right_title">完善订单</p>
+        <table>
+        	<tr>
+            	<td width="25%" class="text-right"><span class="colorf00">*</span>申请人信息：</td>
+                <td width="75%" class="text-left">
+                	<select class="select300_30">
+                    	<option>申请人</option>
+                        <option>申请人</option>
+                        <option>申请人</option>
+                        <option>申请人</option>
+                    </select>
+                    <a class="add" href="">新增申请人</a>
+                </td>
+            </tr>
+            <tr>
+            	<td class="text-right"><span class="colorf00">*</span>商标名称：</td>
+                <td class="text-left"><input class="text300_30" type="text" /></td>
+            </tr>
+            <tr>
+            	<td class="text-right ver_top"><span class="colorf00">*</span>商标分类：</td>
+                <td class="text-left">
+            	<div class="brand_type" onMouseOut="this.className='brand_type'" onMouseOver="this.className='brand_type active_brand_type'"> 
+                    <p> <a href="#" target="_blank">请选择商标所属行业</a> </p>  
+                    <ul class="brand_type_ct"> 
+                      <li><a  href="">第01类-化学原料</a></li>
+                      <li><a  href="">第02类-颜料油漆</a></li>
+                      <li><a  href="">第03类-日化用品</a></li>
+                      <li><a  href="">第04类-燃料油脂</a></li>
+                      <li><a  href="">第05类-医药</a></li>
+                      <li><a  href="">第06类-金属材料</a></li>
+                      <li><a  href="">第07类-机械</a></li>
+                      <li><a  href="">第08类-手工器械</a></li>
+                      <li><a  href="">第09类-科学仪器</a></li>
+                      <li><a  href="">第10类-医疗器械</a></li>
+                      <li><a  href="">第11类-灯具空调</a></li>
+                      <li><a  href="">第12类-运输工具</a></li>
+                      <li><a  href="">第13类-军火烟火</a></li>
+                      <li><a  href="">第14类-珠宝钟表</a></li>
+                      <li><a  href="">第15类-乐器</a></li>
+                      <li><a  href="">第16类-办公用品</a></li>
+                      <li><a  href="">第17类-橡胶制品</a></li>
+                      <li><a  href="">第18类-皮革皮具</a></li>
+                      <li><a  href="">第19类-建筑材料</a></li>
+                      <li><a  href="">第20类-家具</a></li>
+                      <li><a  href="">第21类-厨房洁具</a></li>
+                      <li><a  href="">第22类-绳网袋篷</a></li>
+                      <li><a  href="">第23类-纱线丝</a></li>
+                      <li><a  href="">第24类-布料床单</a></li>
+                      <li><a  href="">第25类-服装鞋帽</a></li>
+                      <li><a  href="">第26类-钮扣拉链</a></li>
+                      <li><a  href="">第27类-地毯席垫</a></li>
+                      <li><a  href="">第28类-健身器材</a></li>
+                      <li><a  href="">第29类-食品</a></li>
+                      <li><a  href="">第30类-方便食品</a></li>
+                      <li><a  href="">第31类-饲料种籽</a></li>
+                      <li><a  href="">第32类-啤酒饮料</a></li>
+                      <li><a  href="">第33类-酒</a></li>
+                      <li><a  href="">第34类-烟草烟具</a></li>
+                      <li><a  href="">第35类-广告销售</a></li>
+                      <li><a  href="">第36类-金融物管</a></li>
+                      <li><a  href="">第37类-建筑修理</a></li>
+                      <li><a  href="">第38类-通讯服务</a></li>
+                      <li><a  href="">第39类-运输贮藏</a></li>
+                      <li><a  href="">第40类-材料加工</a></li>
+                      <li><a  href="">第41类-教育娱乐</a></li>
+                      <li><a  href="">第42类-网站服务</a></li>
+                      <li><a  href="">第43类-餐饮住宿</a></li>
+                      <li><a  href="">第44类-医疗园艺</a></li>
+                      <li><a  href="">第45类-社会服务</a></li>
+                    </ul> 
+         		</div> 
+                
+                <select class="select300_30 marg_left">
+                	<option>0901-电子计算机及其外</option>
+                    <option>0901-电子计算机及其外</option>
+                    <option>0901-电子计算机及其外</option>
+                    <option>0901-电子计算机及其外</option>
+                    <option>0901-电子计算机及其外</option>
+                
+                </select>
+                <div class="list">
+                  <h2>第25类 <span>食品</span> <img src="images/tit_bg1.png" /></h2>              
+                  <ul class="list_chbox_bord">
+                    <li><div><label><input type="checkbox" id="se_all" /> 全选</label></div></li>
+                    <li class="list_chbox">
+                      <label><input type="checkbox" name="check" /> 1、肉</label>
+                      <label><input type="checkbox" name="check"  /> 1、肉</label>
+                      <label><input type="checkbox" name="check"  /> 1、肉</label>
+                      <label><input type="checkbox" name="check" /> 1、肉</label>
+                     <label><input type="checkbox" name="check"  /> 1、肉</label>
+                     <label><input type="checkbox" name="check"  /> 1、肉</label>
+                    </li>
+                  </ul>
+                </div>
+                
+                
+                 <div class="list01">
+                  <h2>第25类 <span>食品</span> <img src="images/tit_bg01.png" /></h2>              
+                  <ul class="list01_chbox_bord">
+                    <li><div><label><input type="checkbox" id="se_all01" /> 全选</label></div></li>
+                    <li class="list01_chbox">
+                      <label><input type="checkbox" name="check01"  /> 1、肉</label>
+                      <label><input type="checkbox" name="check01"  /> 1、肉</label>
+                      <label><input type="checkbox" name="check01" /> 1、肉</label>
+                      <label><input type="checkbox" name="check01"  /> 1、肉</label>
+                     <label><input type="checkbox" name="check01"  /> 1、肉</label>
+                     <label><input type="checkbox" name="check01" /> 1、肉</label>
+                    </li>
+                  </ul>
+                </div>
+
+            </td>
+            </tr>
+            <tr>
+            	<td class="text-right ver_top"><span class="colorf00">*</span>商标申请声明：</td>
+                <td class="text-left">
+                	<p>集体商标；       证明商标；       以三维标志申请商标注册；        以颜色组合申请商标注册；</p>
+                    <p><input type="checkbox" /> 以声音标志申请商标注册</p>
+                    <p><input type="checkbox" /> 两个以上申请人共同申请注册同一商标</p>
+                </td>
+            </tr>
+            <tr>
+            	<td class="text-right ver_top"><span class="colorf00">*</span>要求优先权声明：</td>
+                <td class="text-left">
+                	<p>基于第一次申请优先权</p>
+                    <p><input type="checkbox" /> 基于第一次申请优先权 <input type="checkbox" /> 基于第一次申请优先权  </p>
+                </td>
+            </tr>
+            <tr>
+            	<td class="text-right"><span class="colorf00">*</span>申请/展出国家/地区：</td>
+                <td class="text-left">中国香港，内地 </td>
+            </tr>
+             <tr>
+            	<td class="text-right"><span class="colorf00">*</span>申请号：</td>
+                <td class="text-left"><input class="text300_30" type="text" /></td>
+            </tr>
+            <tr>
+            	<td class="text-right"><span class="colorf00">*</span>是否开票：</td>
+                <td class="text-left">
+                	<select class="select130_30">
+                    	<option>-不开发票-</option>
+                        <option>-开发票-</option>
+                    </select>
+                    <a class="prompt">提示：开票发票说明</a>
+                </td>
+            </tr>
+             <tr>
+            	<td></td>
+                <td class="text-left type" ><input type="radio" name="invoice" />专票 <input type="radio" name="invoice" />普票</td>
+            </tr>
+             <tr>
+            	<td class="text-right"><span class="colorf00">*</span>抬头：</td>
+                <td class="text-left"><input class="text300_30" type="text" /></td>
+            </tr>
+            <tr>
+            	<td class="text-right">联系人：</td>
+                <td class="text-left"><input class="text300_30" type="text" /></td>
+            </tr>
+            <tr>
+            	<td class="text-right">联系电话：</td>
+                <td class="text-left"><input class="text300_30" type="text" /></td>
+            </tr>
+            <tr>
+            	<td class="text-right"><span class="colorf00">*</span>收货人地址：</td>
+                <td class="text-left">
+                	<select class="select300_30">
+                    	<option>北京市房山去长阳路长阳家园商业楼3楼仲细软集团</option>
+                        <option>北京市房山去长阳路长阳家园商业楼3楼仲细软集团</option>
+                    </select>
+                </td>
+            </tr>
+             <tr>
+            	<td></td>
+                <td><input class="btn_confirm" type="button" value="提交" /> <a  class="btn_special"  href="javascript:showDiv()" >特殊情况</a>
+                <iframe id='popIframe' class='popIframe' frameborder='0' ></iframe>
+                <div id="popDiv" class="mydiv popup special" style="display:none;">
+               
+                	<h2>增项提示</h2>
+                    <div class="special_box">
+                    	<p class="prompt01">您好，您修改时添加的类别小项已经超出订单ZXR9898943979的总价钱数</p>
+                        <p class="prompt02">您此次修改的订单号是ZXR989894397933322189详情如下</p>
+                        <h3>第24类-食品-10小类</h3>
+                        <ul>
+                        	<li>1、肉;</li>
+                            <li>2、腌制，感知的肉;</li>
+                            <li>3、家禽;</li>
+                            <li>4、非活水产;</li>
+                            <li>5、蛋品;</li>
+                            <li>6、罐头制品;</li>
+                            <li>7、浓肉汤;</li>
+                            <li>8、卤肉;</li>
+                            <li>9、酱肉;</li>
+                            <li>10 食用油;</li>
+                        </ul>
+                        <h3>第24类-食品-10小类</h3>
+                        <ul>
+                        	<li>1、肉;</li>
+                            <li>2、腌制，感知的肉;</li>
+                            <li>3、家禽;</li>
+                            <li>4、非活水产;</li>
+                            <li>5、蛋品;</li>
+                            <li>6、罐头制品;</li>
+                            <li>7、浓肉汤;</li>
+                            <li>8、卤肉;</li>
+                            <li>9、酱肉;</li>
+                            <li>10 食用油;</li>
+                        </ul>
+                        <p class="prompt03">目前超出的部分</p>
+                        <h3>第24类-食品-10小类</h3>
+                        <ul>
+                        	<li>1、肉;</li>
+                            <li>2、腌制，感知的肉;</li>
+                            <li>3、家禽;</li>
+                            <li>4、非活水产;</li>
+                            <li>5、蛋品;</li>
+                            <li>6、罐头制品;</li>
+                            <li>7、浓肉汤;</li>
+                            <li>8、卤肉;</li>
+                            <li>9、酱肉;</li>
+                            <li>10 食用油;</li>
+                        </ul>
+                        <h3>第24类-食品-10小类</h3>
+                        <ul>
+                        	<li>1、肉;</li>
+                            <li>2、腌制，感知的肉;</li>
+                            <li>3、家禽;</li>
+                            <li>4、非活水产;</li>
+                            <li>5、蛋品;</li>
+                            <li>6、罐头制品;</li>
+                            <li>7、浓肉汤;</li>
+                            <li>8、卤肉;</li>
+                            <li>9、酱肉;</li>
+                            <li>10 食用油;</li>
+                        </ul>
+                        <div class="prompt04">
+                        	<div class="prompt05">
+                        		<p class="prompt01">*亲超出的部分需要再次付款，付款明细和总计如下</p>
+                                <p class="prompt06">增加</p>
+                                <table>
+                                	<tr>
+                                    	<td width="70%">第  9  类-科学仪- 10 小项</td>
+                                        <td width="30%">共计：￥1000.00</td>
+                                    </tr>
+                                    <tr>
+                                    	<td>第 10 类-科学仪-大项 </td>
+                                        <td>共计：￥3200.00</td>
+                                    </tr>
+                                     <tr>
+                                    	<td>第 10 类-科学仪- 15 小项</td>
+                                        <td>共计：￥500.00</td>
+                                    </tr>
+                                    <tr>
+                                    	<td></td>
+                                        <td>合计：<font class="colorf00">￥4700.00</font></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <p class="prompt07"><a class="btn_confirm" href="">确认付款</a></p>
+                    </div>
+                    <a class="close" href="javascript:closeDiv()">关闭X </a>
+                
+                </div>
+                <div id="bg" class="bg" style="display:none;"></div>
+                </td>
+            </tr>
+        </table>        
+    </div>
+    <div style="clear:both;"></div>
+</div>
+
+
+
+
+
+<!--页脚 开始-->
+<div class="footer">
+  <div class="container">
+   	<ul class="footerbox">
+        	<li style="border-left:none 0;">
+                <h3 class="footerimg01">预约方式</h3>
+                <p><a href="">如何预约服务</a></p>
+                <p><a href="">预约服务的好处</a></p>
+                <p><a href="">预约后可以取消吗</a></p>
+            </li>
+            <li>
+                <h3 class="footerimg02">服务方式</h3>
+                <p><a href="">预约后怎么使用</a></p>
+                <p><a href="">服务流程有哪些</a></p>
+                <p><a href="">预约后可以取消吗</a></p>
+            </li>
+            <li>
+                <h3 class="footerimg03">服务承诺</h3>
+                <p><a href="">中细软资质</a></p>
+                <p><a href="">预约服务的好处</a></p>
+                <p><a href="">预约后可以取消吗</a></p>
+            </li>
+            <li class="footerweixin">
+                <p>关注微信公众平台<br>
+                    获得最新活动信息<br>
+                    扫描二维码或添加<br>
+                    “ 中华商标超市”<br>
+                </p>
+            </li>
+            <div style=" clear:both"></div>
+      </ul>
+    </div>
+</div>
+<div class="copy">
+	<div class="container">
+    	<ul class="copybox">
+        	<li>
+            	<img src="images/logo.png">
+            </li>
+            <li>
+            	<p>
+                <a href="">公司简介</a>&nbsp;&nbsp;|&nbsp;  
+                <a href="">联系方式</a>&nbsp;&nbsp;|&nbsp;     
+                <a href="">招聘信息</a>&nbsp;&nbsp;|&nbsp;      
+                <a href="">服务导航</a>&nbsp;&nbsp;|&nbsp;      
+                <a href="">客服中心</a>&nbsp;&nbsp;|&nbsp;      
+                <a href="">企业资质</a>&nbsp;&nbsp;|&nbsp;      
+                <a href="">服务客户</a>&nbsp;&nbsp;|&nbsp;      
+                <a href="">合作伙伴</a>&nbsp;&nbsp;|&nbsp;     
+                <a href="">意见反馈</a> 
+                <br>
+                中细软网络科技有限公司   版权所有 ©2002-2013  京ICP备11017069号-5  京公网安备 11010802012915号
+                </p>
+            </li>
+            <li>
+            	<img src="images/footer01.png">
+            </li>
+            <li>
+            	<img src="images/footer02.png">
+            </li>
+            <li>
+            	<img src="images/footer03.png">
+            </li>
+            <li>
+            	<img src="images/footer04.png">
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!--页脚 结束-->
+</body>
+</html>

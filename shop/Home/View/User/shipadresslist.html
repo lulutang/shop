@@ -1,0 +1,173 @@
+<include file="Public/header" />
+<script type="text/javascript" src="{$Think.HOME_JS}script_common.js"></script>
+<script type="text/javascript" src="{$Think.HOME_JS}script_city.js"></script>
+<script language="JavaScript" src="{$Think.HOME_JS}address.js"></script>
+<script language="javascript" type="text/javascript" src="{$Think.HOME_JS}ucenter/shipadresslist.js"></script>
+<!--个人中心 收货人地址 开始-->
+<div class="container">
+	<div class="crumbs">
+    	您的位置：
+    	<a href="{$Think.DOMAIN}">中细软服务商城</a>&gt;
+        <a href="{$Think.DOMAIN}Home/User/userhome">个人中心</a>&gt;
+        <a href="javascript:void()">收货人地址</a>
+
+    </div>
+	<include file="Public/ucenter_left"/>
+    <div class="members_right address  float-right">
+    	<p class="members_right_title">收货人地址</p>
+        <div class="address_box">
+        	<p>函件包括商标注册证原件；商标使用授权书；天猫旗舰店授权书（如有）；公证书复印件；商标代购合同原件；商标代理委托书；转让注册申请书等</p>
+            <p class="colorf00">如无特殊情况，所有邮寄项目均为中细软知识产权免费提供。因函件重要，统一默认走顺丰快递，函件 <span>邮寄地址请认真填写！</span></p>
+            <ul>
+            	
+                
+                <div id="popDiv2" class="mydiv popup" style="display:none;">
+                    <form action="editsaddress" method="post" onsubmit="return ZuSubmits()">
+                        <input type="hidden" name="aid" id="aid">
+                	<table>
+                       
+                    	<tr>
+                        	<th colspan="2">编辑收货地址</th>
+                        </tr>
+                         <tr>
+                        	<td colspan="2" class="padding_top30 text-left"><span>*注：新增收货地址、电话号码、手机号填选一项其余均为必填项</span></td>
+                        </tr>
+                        <tr>
+                        	<td class="text-right"><span>*</span>所在地区：</td>
+                            <td class="text-left">
+                                <input type="hidden" id="pro">
+                                <input type="hidden" id="cit">
+                            	<div id="birthcitybox">
+                            
+                            </div>
+                            </td>
+                        </tr>
+                        <tr>
+                        	<td class="text-right"><span>*</span>详细地址：</td>
+                            <td class="text-left"><input class="lineheight29" type="text" size="50" name="minute_address" id="minute_address"/></td>
+                        </tr>
+                         <tr>
+                        	<td class="text-right"><span>*</span>邮政编码：</td>
+                            <td class="text-left"><input class="lineheight29" type="text" size="50" name="zip_code" id="zip_code"/></td>
+                        </tr>
+                         <tr>
+                        	<td class="text-right"><span>*</span>收货人姓名：</td>
+                            <td class="text-left"><input class="lineheight29" type="text" size="50" name="name" id="name"/></td>
+                        </tr>
+                        <tr>
+                        	<td class="text-right"><span>*</span>手机号码：</td>
+                            <td class="text-left"><input class="lineheight29" type="text" size="50" name="phone" id="phone"/></td>
+                        </tr>
+                        <tr>
+                        	<td class="text-right"><span>*</span>电话号码：</td>
+                            <td class="text-left"><input class="lineheight29" type="text" size="50" name="tel" id="tel"/></td>
+                        </tr>
+                         <tr>
+                        	<td></td>
+                            <td class="text-left"><input type="checkbox" name="is_check" value="1" id="is_check">设置为默认收货地址</td>
+                        </tr>
+                        <tr>
+                        	<td></td>
+                            <td class="padding_bottom30 text-left"><input class="button_save" type="submit" value="保存"></td>
+                        </tr>
+                    
+                    </table>
+                </form>
+                    <a href="javascript:closeDiv()">关闭</a>
+                
+                </div>
+
+
+
+
+                <div id="bg" class="bg" style="display:none;"></div>
+                
+
+                  
+
+
+
+                <foreach name="addressinfo" item="val">
+                    <if condition="$val['is_check'] eq 1">
+                    <li class="current">
+                        <span class="send">寄送至</span> <input type="radio" checked="checked" name="address"  />{$val['sh_province']}&nbsp;{$val['sh_city']}&nbsp;{$val['sh_minute_address']}&nbsp;({$val['sh_name']}&nbsp;收)&nbsp;{$val['sh_phone']}&nbsp;&nbsp;&nbsp;&nbsp;<span class="defaule">默认地址</span> &nbsp;&nbsp;&nbsp; 
+                        <span class="edit"><a href="javascript:showDiv({$val['id']})">编辑</a></span> 
+                    </li>
+                    <else />
+                    <li class="paddingleft"><span class="send">寄送至</span> <input type="radio"  value="address2"  name="address" />{$val['sh_province']}&nbsp;{$val['sh_province']}&nbsp;{$val['sh_city']}&nbsp;{$val['sh_minute_address']}&nbsp;({$val['sh_name']}&nbsp;收)&nbsp;{$val['sh_phone']} <span class="edit"><a href="javascript:showDiv({$val['id']})">编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="siteaddress/id/{$val['id']}">设置为默认地址</a></span></li>
+                    </if>
+                </foreach>
+                <p><a href="javascript:showDiv1()" class="new_address">添加收货地址</a></p>
+                <div id="popDiv1" class="mydiv popup" style="display:none;">
+                    <form action="addsaddress" method="post" onsubmit="return ZuSubmit()">
+                	<table>
+                    	
+                        <tr>
+                            <th colspan="2">添加收货地址</th>
+                        </tr>
+                         <tr>
+                            <td colspan="2" class="padding_top30 text-left"><span>*注：新增收货地址：手机号、电话号码可选其一</span></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right"><span>*</span>所在地区：</td>
+                            <td class="text-left" id="birthcityboxs">
+                                
+                            <script type="text/javascript">
+
+                            showprovince('provinces', 'citys', '', 'birthcityboxs','padding_l20');
+                            showcity('citys', '', 'provinces', 'birthcityboxs','padding_l20');
+
+
+                            </script>
+                            
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-right"><span>*</span>详细地址：</td>
+                            <td class="text-left"><input class="lineheight29" type="text" size="50" name="minute_address" id="s_minute_address"/></td>
+                        </tr>
+                         <tr>
+                            <td class="text-right"><span>*</span>邮政编码：</td>
+                            <td class="text-left"><input class="lineheight29" type="text" size="50" name="zip_code" id="s_zip_code"/></td>
+                        </tr>
+                         <tr>
+                            <td class="text-right"><span>*</span>收货人姓名：</td>
+                            <td class="text-left"><input class="lineheight29" type="text" size="50" name="name" id="s_name"/></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right"><span>*</span>手机号码：</td>
+                            <td class="text-left"><input class="lineheight29" type="text" size="50" name="phone" id="s_phone"/></td>
+                        </tr>
+                         <tr>
+                            <td class="text-right"><span>*</span>电话号码：</td>
+                            <td class="text-left">
+                                <input class="lineheight29" type="text" size="50" name="tel" id="s_tel"/>
+                            </td>
+                        </tr>
+                         <tr>
+                            <td></td>
+                            <td class="text-left"><input type="checkbox" name="is_check" value="1">设置为默认收货地址</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td class="padding_bottom30 text-left"><input class="button_save" type="submit" value="保存"></td>
+                        </tr>
+                   
+                    </table>
+                     </form>
+                    <a href="javascript:closeDiv1()">关闭</a>
+                
+                </div>
+                
+                
+            </ul>
+        </div>   
+    </div>
+    <div style="clear:both;"></div>
+
+</div>
+<!--个人中心 收货人地址 结束-->
+<include file="Public/footer" />
+
+
+
