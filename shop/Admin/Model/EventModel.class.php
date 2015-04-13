@@ -68,7 +68,7 @@ class EventModel extends model{
 	public function min5Event(){
 		$m = M('Order');
 		$time = time()-86400;
-		$result = $m -> field('order_id, onsale_id, onsale_money, totalprice') -> where('createtime <='.$time.' AND status = 0 AND onsale_money > 0 AND onsale_id > 0')->select();
+		$result = $m -> field('order_id, onsale_id, onsale_money, totalprice') -> where('createtime <='.$time.' AND status = 1 AND onsale_money > 0 AND onsale_id > 0 AND is_use = 0')->select();
 
 		foreach ($result as $val){
 			$onsale_id = $val['onsale_id'];

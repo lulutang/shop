@@ -36,6 +36,7 @@
                         <td class="text-left"><a href="/Home/package/details/id/{$v['package_id']}" target="_blank"><img src="{$current|current_cdn_img}{$v['thumb']}" height="80px" width="140px"/> <p>{$v['short_title']}</p></a></td>
                         <input type="hidden" value="{$v['now_price']}" id="price{$v['id']}">
                         <input type="hidden" value="p{$v['package_id']}" id="good{$v['id']}">
+                        <input type="hidden" value="{$v['id']}" id="cart{$v['id']}">
                         <td>￥{$v['now_price']}</td>
                         <td onclick="DelSelf({$v['id']})" style="cursor:pointer">删除</td>
                     </tr>

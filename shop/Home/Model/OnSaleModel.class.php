@@ -26,6 +26,16 @@ class OnSaleModel extends Model {
     	return $result;
     }
     
+    //获取满足需求的优惠卷活动的一条数据
+    public function getOnsaleOne($where){
+    	if(is_array($where)) {
+    		$m = M('Onsale');
+    		$lists = $m->field('id, sale, name, money, use, sale_where, startTime, sale_startTime, sale_endTime,sale_use') -> where($where) -> find();
+    		return $lists;
+    	}
+    	return false;
+    
+    }
     //增加用户优惠卷数据
     public function addUserOnsale($data){
     	$m = M('User_sale');
@@ -58,7 +68,7 @@ class OnSaleModel extends Model {
     	$m = M('User_sale');
     	$where['state'] = 0;
     	$where['is_use'] = 0;
-    	$data = $m->field('id, sale_id, sale_money, startTime, endTime,fanwei')->where($where)->find();
+    	$data = $m->field('id, sale_id, sale_money, startTime, endTime, fanwei')->where($where)->find();
     	if(time() >= $data['startTime'] && $data['endTime'] >= time())
     		return $data;
     	else 

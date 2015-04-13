@@ -1,0 +1,70 @@
+<link href="{$Think.ADMIN_CSS}style.css" rel="stylesheet" type="text/css">
+
+<div class="wapper">
+
+    <div class="wapper-right">
+    <div class="right_inner cart">
+    	<div class="path">您的位置：<a href="/Admin/Index/main">工作台</a> 》<a href="">会员管理</a> 》 <a href="__URL__/lists/">会员查询信息统计</a></div>     
+    	
+      
+	<div class="search_dh">
+       <form action="lists" method="get">
+               <p class="jjss">
+                 <span>订单支付时间：</span>
+                 <input type="text" style="width:130px" <if condition="( $buy_timeb neq '' )"> value="{$buy_timeb}" <else/>value=""</if> id="" name="buy_timeb" onclick="SelectDate(this,'yyyy-MM-dd hh:mm')"/>
+                    	至
+                 <input type="text" style="width:130px" <if condition="( buy_timeend neq '' )"> value="{$buy_timeend}" <else/>value=""</if> id="" name="buy_timeend" onclick="SelectDate(this,'yyyy-MM-dd hh:mm')"/></span>
+
+              <input type="submit" value="搜索">
+          
+          </p>
+    </div>	
+		  		
+        </div>
+
+        <table class="cart hydd" style="width:96%">
+        	<tr>
+            	<th  class="col_11">编号</th>
+                <th  class="col_11">查询次数</th>
+                <th  class="col_10">查询时间</th>
+                <th  class="col_11">查询来源</th>
+            </tr>
+            <foreach name='lists' item='val' key = 'key'>
+              <tr <if condition="$key%2 neq 0">class="tr_bgcolor" </if>>
+
+                  <td>{$key+1}</td>
+                  <td>{$val.num}</td>
+                  <td>{$val.add_time|date='Y-m-d H:i:s',###}</td>
+                  <td>
+               	<if condition="($val['channel'] eq 0)">
+							服务商城
+				<else/>未知
+          		  </if>
+                  </td>
+              
+                </tr>
+              </foreach>
+          <if condition="!empty($orders)">
+            <tr>
+            	<td class="hj" colspan="10">商品总数：<span>{$goods_number}</span>&nbsp;&nbsp;&nbsp;&nbsp;  订单总额：<span>￥{$sum}</span></td>
+            </tr>
+            </if>
+             
+            
+           
+        </table>	
+           {$pages}
+         </form> 
+        <!--table end-->
+        </div>
+     
+    <!--right_inner end-->
+     <div id="bg"></div>
+
+    </div><!--wapper-right end-->
+</div><!--wapper end-->
+<!--头部 开始-->
+</body>
+</html>
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}Calendar1.js"></script>

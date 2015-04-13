@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>商标注册代理协议</title>
+  <link href="{$Think.ADMIN_CSS}s_style_add.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <div class="agency"> 
+    <img src="{$Think.ADMIN_IMAGES}title1.png" class="img"/>
+    <h2>商标注册代理协议</h2>
+    <table class="table1" border="0">
+      <tr><th width="22%"></th><td width="40%"></td><th width="18%">合同编码：</th><td width="20%"><input type="text" class="s180" value="{$trademarkdata['bargain']}" disabled/></td></tr>
+      <tr><th>甲方（委托人）：</th><td><input type="text" class="s450" value="{$trademarkdata['trader_name']}" disabled/></td><th></th><td></td></tr>
+      <tr><th>乙方（受托人）：</th><td><input type="text" class="s450" value="北京细软智谷知识产权代理有限责任公司" disabled/></td><th></th><td></td></tr>
+    </table>
+    <p class="p1">甲、乙双方经友好协商，就乙方代理甲方商标注册申请的有关事宜达成如下协议：</p>
+    <p class="p1">1.委托内容：</p>
+    <table class="table2" cellspacing="0" border="1">
+      <tr><th rowspan="3" width="10%">委托事项</th><th colspan="3">商标注册</th><th colspan="5">商标基础业务</th></tr>
+      <tr>
+        <td rowspan="2" width="10%"><label><input type="checkbox" name="pu" checked value="1"/>普通<br>商标</label></td>
+        <td rowspan="2" width="10%"><label><input type="checkbox" name="ji" value="1"/>集体<br>商标</label></td>
+        <td rowspan="2" width="10%"><label><input type="checkbox" name="zhen" value="1"/>证明<br>商标</label></td>
+        <td colspan="2" width="10%"><label><input type="checkbox" name="dai" value="1"/>代办执照</label></td>
+        <td><label><input type="checkbox" name="xu" value="1"/>续展</label></td>
+        <td><label><input type="checkbox" name="zhuan" value="1"/>转让申请</label></td>
+        <td><label><input type="checkbox" name="bu" value="1"/>补注册证</label></td>
+      </tr>
+      <tr>
+        <td width="10%"><label><input type="checkbox" name="gen" value="1"/>更正</label></td>
+        <td width="10%"><label><input type="checkbox" name="bian" value="1"/>变更</label></td>
+        <td width="10%"><label><input type="checkbox" name="zhu" value="1"/>注销</label></td>
+        <td width="10%"><label><input type="checkbox" name="xu" value="1"/>许可备案</label></td>
+        <td width="10%"><label><input type="checkbox" name="che" value="1"/>撤回申请</label></td>
+      </tr>
+      <tr><th>商标<br>名称</th><td colspan="3"><input type="text" class="s300" value="{$trademarkdata['name']}"/></td><th>商标<br>类别</th><td colspan="4"><input type="text" class="s450" value="{$trademarkdata['style_name']}"/></td></tr>
+      <tr><th>所需材料</th><td colspan="8">1.商标图样；2.主体资格证明；3.申请书和委托书（盖鲜章）</td></tr>
+      <tr>
+        <th>费用情况</th><td>支付方式</td>
+        <td colspan="2"><label><input type="checkbox" name="xian" value="1"/>现金</label><label><input type="checkbox" name="zhuan" value="1"/>转账</label></td>
+        <th>支付日期</th><td colspan="4">于本协议生效日起三日内</td>
+      </tr>
+      <tr>
+        <th>金额合计</th>
+        <td colspan="5">注册费：￥<input type="text" class="s100" value="{$trademarkdata['service_price']}" disabled/>元整（大写人民币<input type="text" class="s100" value="{$trademarkdata['replacemoney']}" disabled/>圆整）</td>
+        <td colspan="3">是否需要发票：
+            <label><input type="checkbox" name="shi" value="1" <if condition='1 eq $trademarkdata["priority"]'>checked</if>/>是</label>
+            <label><input type="checkbox" name="fou" value="1" <if condition='0 eq $trademarkdata["priority"]'>checked</if>/>否</label></td>
+      </tr>
+      <tr><th>备注</th><td colspan="8">此为申请注册<input type="text" class="s60" value="1"/><span>个</span>商标和<input type="text" class="s60" value="1"/><span>个</span>代办执照的费用，在领取受理书及注册证时无任何费用产生。</td></tr>
+    </table>
+    <p class="p1">2.乙方在甲方全额付款并提供完整、真实的申请资料后，及时将申请资料提交至国家商标局。</p>
+    <p class="p1">3.在本协议履行的过程中，如果由于乙方原因导致相关申请漏报、错报造成甲方损失的，乙方将全额退还所收甲方的费用。因甲方提供资料错误造成的不予受理等后果，乙方不承担责任。</p>
+    <p class="p1">4.乙方在未收到甲方应付的有关费用前，有权拒绝履行相应义务。</p>
+    <p class="p1">5.因本合同发生的争议，双方协商解决，协商不成，双方均可向有管辖权的人民法院提交诉讼。</p>
+    <p class="p1">6.本协议中所述商标具体情况详见《商标注册申请确认函》，该确认函<span>作为</span>本协议之附件，同本协议一起使用。</p>
+    <p class="p1">7.本协议自双方签字盖章之日起至该相关申请资料被官方受理时止。本协议终止后，乙方仍有义务及时向甲方转达商标局相关官方文件。</p>
+    <p class="p1">8.本协议以书面形式签订，签字盖章后的传真件与合同原件具有同等法律效力。</p>
+    <p class="p1">9.商标注册相关手续可由乙方任一关联公司向商标局报送。</p>
+    <p class="p1">10.自本协议生效之日起，甲方<span>扫描右下角二维码即可</span>自动成为乙方细软知库宝会员（定制版除外），乙方为其提供免费商标检测及知识产权专业咨询服务。</p>
+    <p class="p1">备注：<input type="text" class="s700"/></p>
+    <p class="p1">11.全部款项汇至下面账户：</p>
+    <p class="p2">户&nbsp;名：北京细软智谷知识产权代理有限责任公司&nbsp;&nbsp;&nbsp;&nbsp;帐&nbsp;号：0200 3169 0920 0010 868</p>
+    <p class="p2">开户行：中国工商银行股份有限公司北京房山支行良乡分理处</p>
+    
+    <div class="ewmdiv a_other">
+      <img src="{$Think.ADMIN_IMAGES}ewm.png" class="img"/>
+      <img src="{$Think.ADMIN_IMAGES}seal.png" class="seal">
+      <div class="btns">
+          <a class="input text-center" onclick="$('.a_other .seal').toggle();">签章</a>
+        <a class="input text-center" onclick='javascript:window.print();'>打印</a>
+        <a class="input text-center" href="/admin/Uorder/trademarkbook/ordergid/{$trademarkdata['ogdid']}/down/downpdf">保存</a>
+
+      </div>
+      <table class="table3">
+        <tr>
+          <td width="10%">甲方：</td>
+          <td width="30%"><input type="text" class="s300" value="{$trademarkdata['trader_name']}"/></td>
+          <td width="10%">乙方：</td>
+          <td width="30%"><input type="text" class="s300" value="北京细软智谷知识产权代理有限责任公司"/></td>
+          <td width="18%">&nbsp;</td>
+        </tr>
+        <tr>
+          <td>地址：</td>
+          <td><input type="text" class="s300" value="{$trademarkdata['trader_address']}"/></td>
+          <td>地址：</td>
+          <td><input type="text" class="s300" value=""/></td>
+          <td>&nbsp;</td>
+      </tr>
+        <tr><td width="10%">联系人：</td><td width="35%"><input type="text" class="s300" value="{$trademarkdata['trader_name']}"/></td><td width="10%">联系人：</td><td width="35%"><input type="text" class="s300" value="{$trademarkdata['truename']}"/></td></tr>
+        <tr><td>电话：</td><td><input type="text" class="s300" value="{$trademarkdata['trader_phone']}"/></td><td>电话：</td><td><input type="text" class="s300" value="{$trademarkdata['mobile']}"/></td></tr>
+        <tr><td>签订日期：</td><td><input type="text" class="s60" value="{$trademarkdata['nowtime']|date='Y',###}"/>年<input type="text" class="s60" value="{$trademarkdata['nowtime']|date='m',###}"/>月<input type="text" class="s60" value="{$trademarkdata['nowtime']|date='d',###}"/>日</td><td>签订日期：</td><td><input type="text" class="s60" value="{$trademarkdata['nowtime']|date='Y',###}"/>年<input type="text" class="s60" value="{$trademarkdata['nowtime']|date='m',###}"/>月<input type="text" class="s60" value="{$trademarkdata['nowtime']|date='d',###}"/>日</td></tr>
+      </table>
+    </div>
+  </div>
+</body>
+<script src="{$Think.ADMIN_JS}jquery-1.7.2.min.js" type="text/javascript"></script>

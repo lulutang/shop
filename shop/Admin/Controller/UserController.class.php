@@ -548,7 +548,7 @@ class UserController extends Controller{
     public function getGleanUserInfo() {
     	$get = I('get.');
     	$page = isset ( $get ['p'] ) ? intval ( $get ['p'] ) : 1;
-    	$pageSize = isset ( $get ['pageSize'] ) ? intval ( $get ['pageSize'] ) : 10;
+    	$pageSize = isset ( $get ['size'] ) ? intval ( $get ['size'] ) : 10;
     	$keywords = isset ( $get ['keywords'] ) ? $get ['keywords'] : '';
     	
     	$buy_timeb = str_replace('+', ' ', $get ['buy_timeb']) ;
@@ -576,7 +576,7 @@ class UserController extends Controller{
     				strtotime ( $buy_timeend )
     		);
     	$list = $model ->getGleanUserInfo($page, $pageSize, $where);
-    	$pageModel = new Page ( $list ['count'] );
+    	$pageModel = new Page ( $list ['count'], $pageSize );
     	$pages = $pageModel->show ();
     	
     	$this->assign ( 'pages', $pages );

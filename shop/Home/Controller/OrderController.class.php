@@ -272,14 +272,11 @@ class OrderController extends Controller {
 		
 
 		$onsaleId = I ( 'get.onsale' );//优惠卷的id
-
-		if($goods ['short_title'] == self::ZHUCE){
-			$this->assign ( 'style', '1' );
-		}else{
-			$this->assign ( 'style', $goods['server_name'] );
+		 if($goods ['short_title'] == self::ZHUCE){
+			$this->assign ( 'all', 1 );
 		}
 
-		
+		$this->assign ( 'style', $goods['server_name'] );
 		$this->assign ( 'lists', $result );
 		$this->assign ( 'onsaleId', $onsaleId );
 		$this->assign ( 'server_pid', $addCart ['type'] );
@@ -304,11 +301,10 @@ class OrderController extends Controller {
 		$onsaleId = I ( 'get.onsaleId' );
 		$num = I ( 'get.num' );
 		$num = $num >1 ? intval($num) : 1;
-
 		$all = I ( 'get.all' )>0 ? intval(I ( 'get.all' )) : 0;
-		if($all == 1) { //需要写完整信息的订单 
+		/* if($all == 1) { //需要写完整信息的订单  暂时不采用
 			return $this ->zhuceOne(I('get.'));
-		}
+		} */
 		
 		//促销活动的订单
 		if($cid){
@@ -331,18 +327,15 @@ class OrderController extends Controller {
 		$user_name = $session['user_name'];
 		$phone = $session['bind_mobile'];
 		
-		if(empty($user_id)){
+		if(empty($user_id)) {
 			$this->assign ( 'message', '请登录后再操作' );
 			$this->display('Public/error');
 			exit();
 		}
 		
-		if($onsaleId){
-			$onsaleModel = new OnSaleModel();
-			$onsaleInfo = $onsaleModel ->getOneOnsale(array('id' =>$onsaleId));
-			if($onsaleInfo){
-				$onsale_money =$onsaleInfo['sale_money'];
-			}
+		$onsale_money = 0;
+		if($onsaleId) {
+			$onsale_money = $this -> getBindOneOnsale($onsaleId);
 		}
 		
 		if ($type == 'package') { // 商城优惠信息下单
@@ -416,17 +409,19 @@ class OrderController extends Controller {
 					
 			) ;// 组合商品id
 					
-			$orderId = $orderModel->add ( $orderInfo );
-			
-			if($onsaleInfo){
-				$onsaleModel ->bindOneOnsale(array('id'=>$onsaleId),array('orderId'=>$orderId));
-			}
+			$orderModel = new OrderModel();
+			$orderId = $orderModel -> addOrder($orderInfo);
 			
 			if(!$orderId) {
 				$this->assign ( 'message', '生成订单异常，请重新操作' );
 				$this->display('Public/error');
 				exit();
 			}
+			
+			if($onsaleId && $onsale_money){
+				$onsaleModel ->bindOneOnsale(array('id'=>$onsaleId),array('orderId'=>$orderId));
+			}
+			
 			foreach ( $pack_goodsIds as $gid ) {
 				$goodsInfo = getGoodsInfo ( $gid ); // 获得某一个商品
 				$goodsInfo = reset ( $goodsInfo );
@@ -457,148 +452,20 @@ class OrderController extends Controller {
 			$this->add_order_goods ( $order_goods, false );
 			deleteCart($cart_ids);
 			Header ( "Location: " . U ( '/home/order/pay?orderId=' . $orderId ) );
-		} elseif ($type == 'cart') { // 从购物车直接生成订单
+		} elseif ($type == 'cart') { // 从购物车直接生成订单 优化2015-4-03
 			$model = new OrderModel();
-			$cartResult = $model->makeOrderByCart(I ( 'get.' ));
-			die();
-			Header ( "Location: " . U ( '/home/order/pay?orderId=' . $orderId ) );
+			$res = $model->makeOrderByCart(I ( 'get.' ));
 			
-			$package_ids = I ( 'get.package_ids' );
-			$goods_ids = I ( 'get.goods_ids' );
-			$godPrice = 0;
-			
-			$goodsModel = M('goods');
-			if ($goods_ids) {
-				$pack_goodsIds = explode ( ',', $goods_ids );
-				foreach ($pack_goodsIds as $g){
-					$gv = $goodsModel ->field('now_price')-> where ('goods_id = ('. $g .')') ->find();
-					$godPrice += $gv['now_price'];
-				}
-			}
-			$is_package = 0;
-			$packageIds =array();
-			if ($package_ids) {
-				$is_package =1;
-				$packageIds = explode ( ',', $package_ids );
-				$pack_price = 0;
-				
-				foreach ( $packageIds as $package_id ) {
-					$options = array (
-							'package_id' => $package_id 
-					); // 组合查询条件
-					$result = getPackageOne ( $options ); // 获得某一个组合商品
-					
-					$goods = reset ( $result );
-					if(empty($goods)) {
-						$this->assign ( 'message', '所选的商品不存在' );
-						$this->display('Public/error');
-						exit();
-					}
-					if($goods['status'] != 1) {
-						$this->assign ( 'message', '所选的优惠套餐里有已过期的商品' );
-						$this->display('Public/error');
-						exit();
-					}
-					$goodsInfo = array (
-							'package_id' => $goods ['package_id'],
-							'package_code' => $goods ['package_code'],
-							'short_title' => $goods ['short_title'],
-							'title' => $goods ['title'],
-							'description' => $goods ['description'],
-							'now_price' => $goods ['now_price'],
-							'old_price' => $goods ['old_price'],
-							'thumb' => $goods ['thumb'] ,
-							'order_code' => $goods ['order_card']
-							
-					);
-					
-					$pack_price += $goods ['now_price'];	
-					$goodsInfos = $goods ['goods'];
-					if ($goodsInfos) {
-						$goodapp = '';
-						foreach ( $goodsInfos as $val ) {
-							$pack_goodsIds [] = $val ['goods_id'];
-							$goodapp .= $val ['goods_id'].',';
-						}
-					}
-				}
-			}
-			$message = array (
-					'text' => '',
-					'short_title' => '购物车组合商品' 
-			);
-
-			if(floatval($pack_price + $godPrice) <= 0) {
-				$this->assign ( 'message', '订单金额异常，请重新操作' );
+			if(in_array('fail', $res)){
+				$this->assign ( 'message', $res['fail']['message'] );
 				$this->display('Public/error');
 				exit();
 			}
-			$goods_id_num = explode(',', $goods_ids);
-			$goods_id_nums = count($goods_id_num) + count($packageIds);
-			$orderInfo = array (
-					'order_card' => 'ZXRCART' . makeOrderCardId (), // 订单编号
-					'goods_number' => $goods_id_nums,
-					'totalprice' => $pack_price + $godPrice, // 订单总额
-					'status' => 0, // 订单状态 关联ordermanage表id
-					'createtime' => time (),
-					'user_id' => $user_id, // 下订单人关联前台用户
-					'user_name' => $user_name, // 下订单人关联前台用户
-					'goods_id' => $goods_ids, // 商品id
-					'pay_type' => '', // 支付方式
-					'is_invoile' => '', // 是否要发票
-					'nvoile_title' => '', // 发票抬头
-					'message' => json_encode ( $message ), // 用户留言
-					'is_prop' => 0, // 是否使用道具 如优惠卷
-					'trade_no' => '', // 外部订单号
-					'type' => 1, // 购买方式 1普通 0 限时
-					'is_package' => $is_package, // 是否是优惠商品组合
-					'package_id' => $package_ids ,
-					'phone' => $phone
-			); 
-
-			if ($orderInfo) {
-				$orderModel = M ( 'order' );
-				foreach ( $pack_goodsIds as $gid ) {//先做判断
-					$goodsInfo = getGoodsInfo ( $gid ); // 获得某一个商品
-					$goodsInfo = reset ( $goodsInfo );
-					if($goodsInfo['status'] != 1){
-						$this->assign ( 'message', '该订单里有已下架的商品' );
-						$this->display('Public/error');
-						exit();
-					}
-				}
-				
-				$orderId = $orderModel->add ( $orderInfo );
-				foreach ( $pack_goodsIds as $gid ) {
-					$goodsInfo = getGoodsInfo ( $gid );
-					$goodsInfo = reset ( $goodsInfo );
-					
-					$order_goods [] = array (
-							'user_id' => $user_id, // 下订单人关联前台用户
-							'user_name' => $user_name, // 下订单人关联前台用户
-							'message' => json_encode ( array (
-									'short_title' => $goodsInfo ['short_title']
-							) ),
-							'order_id' => $orderId,
-							'goods_id' => $goodsInfo ['goods_id'],
-							'style' => $goodsInfo ['server_pid'],
-							'yiji' => $goodsInfo ['now_servername'],
-							'erji' => $goodsInfo ['attr_name'],
-							'goods_price' => $goodsInfo ['now_price'],
-							'goods_thumb' => $goodsInfo ['thumb'],
-							'addtime' => time () ,
-							'goods_code' => $goodsInfo ['goods_code'],
-							'order_code' => $orderInfo ['order_card'],
-							'phone' => $phone,
-							'cost' => $goodsInfo ['cost'] ,
-							'service_price' =>$goodsInfo ['now_price'],
-					);
-				}
-
-				$this->add_order_goods ( $order_goods, false );
-			    deleteCartByCart($package_ids, $goods_ids);
-			    Header ( "Location: " . U ( '/home/order/pay?orderId=' . $orderId ) );
+			if($res['success']) {
+				Header ( "Location: " . U ( '/home/order/pay?orderId=' . $res['success']['orderId'] ) );
 			}
+			
+			
 		} else { // 普通下单流程
 			$text = strip_tags(trim(I ( 'get.textarea' ))) ;
 			$goods_id = I ( 'get.goods_id' );
@@ -663,10 +530,14 @@ class OrderController extends Controller {
 					'phone' => $phone
 			);
 			
-			$orderId = $orderModel->add ( $orderInfo );
 			
-			if($onsaleInfo){//绑定优惠卷
-				$onsaleModel ->bindOneOnsale(array('id'=>$onsaleId),array('orderId'=>$orderId));
+			
+			
+			$orderModel = new OrderModel();
+			$orderId = $orderModel -> addOrder($orderInfo);
+			
+			if($onsaleId && $onsale_money) {
+				$this -> bindOneOnsale($onsaleId, $orderId);
 			}
 			
 			$order_shops = array (
@@ -687,15 +558,102 @@ class OrderController extends Controller {
 					'service_price' =>$goodsInfo ['now_price'],
 					'phone' => $phone
 			);
+			if($all == 1){
+				$m = M('order_goods');
+				$maxId = $m->field('max(need_id) as max')->find();
+				$i = (int)$maxId['max'] >0 ? (int)$maxId['max'] : 1;
+			}
 			
 			if($num>1) {
 				$order_shops = array_fill(0, $num, $order_shops);
+				if($all == 1){
+					foreach ($order_shops as &$v) {
+						++$i;
+						$v['need_id'] = $i;
+						$goodsNeedInfos[] = array(
+								'name' => $message ['name'],
+								'need_state' => '',
+								'need_prior' => '',
+								'area' => '',
+								'need_time' => '',
+								'need_number' => '',
+								'style' => $message ['style'],
+								'style_part' => '',
+								'state' => 0,
+								'create_time' => time(),
+								'goods_id' => $v['goods_id'],
+								'uid' => $user_id,
+								'order_id' => $orderId,
+								'user_name'=> $user_name,
+								'phone' => $phone ,
+								'subd' => '',
+								'subd_num' => '',
+								'price' => $v['goods_price'],
+								'need_id' => $i,
+						);
+						
+					}
+					$model = new Goods_needModel();
+					$add = $model -> addInfo($goodsNeedInfos);
+				}
+				
 				$this->add_order_goods ($order_shops);
 			} else {
+				if($all == 1){
+					$order_shops['need_id'] = $i + 1 ;
+					$goodsNeedInfos = array(
+							'name' => $message ['name'],
+							'need_state' => '',
+							'need_prior' => '',
+							'area' => '',
+							'need_time' => '',
+							'need_number' => '',
+							'style' => $message ['style'],
+							'style_part' => '',
+							'state' => 0,
+							'create_time' => time(),
+							'goods_id' => $order_shops['goods_id'],
+							'uid' => $user_id,
+							'order_id' => $orderId,
+							'user_name'=> $user_name,
+							'phone' => $phone ,
+							'subd' => '',
+							'subd_num' => '',
+							'price' => $order_shops['goods_price'],
+							'need_id' => $i + 1,
+					);
+					$model = new Goods_needModel();
+				
+					$add = $model -> addInfo($goodsNeedInfos, 1);
+					
+				}
 				$this->add_order_goods ($order_shops, 1);
 			}
 	
 			Header ( "Location: " . U ( '/home/order/pay?orderId=' . $orderId ) );
+		}
+	}
+	
+	/**
+	 * 获得绑定优惠卷
+	 */
+	private function getBindOneOnsale($onsaleId) {
+		
+		$onsaleModel = new OnSaleModel();
+		$onsaleInfo = $onsaleModel ->getOneOnsale(array('id' =>$onsaleId));
+		if($onsaleInfo){
+			$onsale_money =$onsaleInfo['sale_money'];
+		}
+		return $onsaleInfo['sale_money'];
+	}
+	
+	/**
+	 * 绑定优惠卷
+	 */
+	private function bindOneOnsale($onsaleId, $orderId) {
+		if($onsaleId && $orderId){//绑定优惠卷
+			$onsaleModel = new OnSaleModel();
+			$onsaleModel ->bindOneOnsale(array('id'=>$onsaleId),array('orderId'=>$orderId));
 		}
 	}
 	
@@ -977,6 +935,10 @@ class OrderController extends Controller {
 			$goodsM = M('goods');
 			$goodsM -> where('goods_id in ('.$result['goods_id'].')') -> setInc('number', 1);	
 		}
+		
+		//修改订单的商品
+		$this->updateOrderGoods($result['order_id']);
+		
 		$userModel = new UserModel();
 		//增加用户消费的金额
 		$userModel -> incUserInfo($result['user_id'], 'user_money', $total_fee);
@@ -989,6 +951,9 @@ class OrderController extends Controller {
 			$onsaleModel = new OnSaleModel();
 			$onsaleModel->bindOneOnsale(array('id'=>$result['onsale_id']), array('is_use'=>1,'use_time'=>time()));
 		}
+		
+		//单个商品有绑定优惠卷的
+		$this->addGoodsOnsale($result['user_id'], $result['user_name'], $result['goods_id']);
 		return array (
 				'success' => array (
 						'desc1' => '支付订单成功',
@@ -1088,21 +1053,20 @@ class OrderController extends Controller {
 						'order_card' => $orderId
 					) )->save ( $data ); // 使用锁功能 ?
 		
-		$goodsModel = M('order_goods');//修改订单商品里的状态
-		$goodsModel -> where ( array (
-							'order_id' => $result['order_id']
-					) )->save ( array('is_pay' => 1, 'pay_time' =>time(), 'status' => 7, 'virt_status' =>5) );
+		
 		$userModel = new UserModel();//增加用户消费的金额
-		$userModel -> incUserInfo($result['user_id'], 'user_money' , $total_fee);
-
+		$userModel -> incUserInfo($result['user_id'], 'user_money', $total_fee);
+		
+		//修改订单的商品
+		$this->updateOrderGoods($result['order_id']);
+		
 		if($result['type'] == 2 ) {//是促销商品
 			$message = json_decode($result['message']);
 			$aid = isset($message -> act) ? $message -> act : 0;
 			if($aid > 0) {
 				$m = M('activity');
-				$m -> where(array('act_id' => $aid)) -> setInc('act_purchase_amount',1);
+				$m -> where(array('act_id' => $aid)) -> setInc('act_purchase_amount', 1);
 				$actModel = new ActivityModel();
-		
 				$actInfo = $actModel->getActInfo($aid);
 				if($actInfo['act_endtime'] >= time()){
 					$userInfo [] = array(
@@ -1123,12 +1087,15 @@ class OrderController extends Controller {
 		}
 		//插入是赠品的数据
 		$this->addActGoods($result['order_id'], $result['goods_id'], $result['user_id'], $result['user_name'], $result['order_card']);
-		//增加优惠卷
+		//订单满增活动 --增加优惠卷
 		$this->addOnsale($result['user_id'], $result['user_name'], $total_fee);
-		if($result['onsale_id']){
+		if($result['onsale_id']) {
 			$onsaleModel = new OnSaleModel();
 			$onsaleModel->bindOneOnsale(array('id'=>$result['onsale_id']), array('is_use'=>1,'use_time'=>time()));
 		}
+		
+		//单个商品有绑定优惠卷的
+		$this->addGoodsOnsale($result['user_id'], $result['user_name'], $result['goods_id']);
 		$json = array (
 					'success' => array (
 					'desc1' => '支付订单成功',
@@ -1138,6 +1105,65 @@ class OrderController extends Controller {
 		echo json_encode($json);exit();
 	}
 	
+	/**
+	 * 修改订单商品的信息
+	 * @param int $orderId
+	 */
+	private function updateOrderGoods($orderId) {
+		$goodsModel = M('order_goods');//修改订单商品里的状态
+		$goodsModel -> where ( array (
+				'order_id' => $orderId
+		) )->save ( array('is_pay' => 1, 'pay_time' =>time(), 'status' => 7, 'virt_status' =>5) ); 
+		
+		$result = $goodsModel -> field('id, goods_id') -> where (array('order_id' => $orderId)) -> select();
+		$arr = array();
+		//关于生成合同号的需求
+		//同一个订单里的同一个商品的合同号是一致的 反之则不同
+		foreach ($result as $val) {
+			if($val['goods_id'] && !in_array($val['goods_id'], $arr)) {
+				$arr[] = $val['goods_id'];
+				$hetong[$val['goods_id']] = makeHetong($orderId);
+			}
+		}
+		$shop = C('DB_PREFIX');
+		$sql = '';
+		foreach ($hetong as $k => $v) {
+			$sql.='UPDATE '.$shop.'order_goods SET bargain = "'.$v.'" WHERE order_id = '.$orderId.' AND goods_id ='. $k.'; ';
+		}
+		
+		$goodsModel -> query($sql);
+	}
+
+	//单个商品有绑定优惠卷的
+	private function addGoodsOnsale($uid, $userName, $goodsId){
+		if($uid && $userName && $goodsId){
+			$model = M('Goods_onsale');
+			$result = $model -> field('id, name, money, sale_where, sale_startTime, sale_endTime, use, faxing, goods_id, onsale_id, startTime, endTime') ->  where('type = 1 AND state = 0 AND goods_id IN ('.$goodsId.')') -> select();
+			$time = time();
+			$userOnasle = array();
+			foreach ($result as $val) {
+				//在活动区域内
+				if($time >= $val['startTime'] && $time <= $val['endTime']) {
+					$userOnasle[] = array('name' => $val['name'],
+							'uid' => (int)$uid,
+							'user_name' => $userName,
+							'sale_id' => (int)$val['id'],
+							'sale_money' => (float)$val['money'],
+							'fanwei' => (int)$val['use'],
+							'is_where' => (float)$val['sale_where'],
+							'startTime' => (int)$val['sale_startTime'],
+							'endTime' => (int)$val['sale_endTime'], 
+							'createTime' => time());
+				}
+				
+			}
+			$model = M('User_sale');
+			$model ->addAll($userOnasle);
+			
+		}
+		
+		
+	}
 	/**
 	 * 线下支付时发送短信
 	 * @param int bank 选择线下银行
@@ -1452,7 +1478,7 @@ class OrderController extends Controller {
 		} else {
 			$bianhao = 'ZXRCS';
 		}
-		$orderModel = M ( 'order' );
+		
 		if($goodsInfo ['now_price']<=0) {
 			$this->assign ( 'message', '订单金额异常，请重新操作' );
 			$this->display('Public/error');
@@ -1480,7 +1506,9 @@ class OrderController extends Controller {
 				
 		);
 			
-		$orderId = $orderModel->add ( $orderInfo );
+		
+		$orderModel = new OrderModel();
+		$orderId = $orderModel -> addOrder($orderInfo);
 		$this->add_order_goods ( array (
 				'message' => json_encode ( $message ),
 				'user_id' => $user_id, // 下订单人关联前台用户
@@ -1510,7 +1538,8 @@ class OrderController extends Controller {
 	public function ajaxGetZhuceInfo(){
 		$get = I('get.');
 		if($get['type'] == 1) {
-			 $arr = C ( 'SYS_ZHUCE' );
+			 $arr = getAllCategory();
+		
 			 if($arr[$get['keyWord']] != '') {
 			 	$result = $arr[$get['keyWord']];
 			 	echo json_encode(array('success' => 1,'zuce' =>array_keys($result),'zuceOne'=>reset($result)));
@@ -1518,7 +1547,7 @@ class OrderController extends Controller {
 			 	echo json_encode(array('success' => 0));
 			 }
 		}elseif ($get['type'] == 2){
-			$arr = C ( 'SYS_ZHUCE' );
+			$arr = getAllCategory();
 			if($arr) {
 				$arr = array_values($arr);
 				$res = array();
@@ -1543,7 +1572,7 @@ class OrderController extends Controller {
 	 * @param unknown $info
 	 */
 	private function zhuceOne($info) {
-
+		$onsaleId = I ( 'get.onsaleId' );
 		$goods_id = I ( 'get.goods_id' );
 		
 		$goodsInfo = getGoodsInfo ( $goods_id ); // 获得某一个商品
@@ -1569,7 +1598,6 @@ class OrderController extends Controller {
 			$message ['name'] = I ( 'get.name' );
 			$message ['style'] = I ( 'get.style' );
 		} 
-		$orderModel = M ( 'order' );
 		if ($goodsInfo ['now_price'] <= 0) {
 			$this->assign ( 'message', '订单金额异常，请重新操作' );
 			$this->display ( 'Public/error' );
@@ -1597,10 +1625,16 @@ class OrderController extends Controller {
 		$goods_ids = array_pad($goods_ids, $goods_number, $goods_id);
 		$goods_id_now  = implode(',', $goods_ids);
 		
+		if($onsaleId) {
+			$onsale_money = $this -> getBindOneOnsale($onsaleId);
+		}
+		
 		$orderInfo = array (
 				'order_card' => $bianhao . makeOrderCardId (), // 订单编号
 				'goods_number' => $goods_number,
-				'totalprice' => $now_price, // 订单总额
+				'totalprice' => $now_price-$onsale_money, // 订单总额
+				'onsale_money'=>$onsale_money,//优惠订单总额
+				'onsale_id'=>$onsaleId,//优惠订单id
 				'status' => 0, // 订单状态 关联ordermanage表id
 				'createtime' => time (),
 				'user_id' => $user_id, // 下订单人关联前台用户
@@ -1615,8 +1649,9 @@ class OrderController extends Controller {
 				'type' => 1,
 				'phone' => $phone 
 		);
+		$orderModel = new OrderModel();
+		$orderId = $orderModel -> addOrder($orderInfo);
 		
-		$orderId = $orderModel->add ( $orderInfo );
 		//查处来有需求id的数量
 		$m = M('order_goods');
 		$maxId = $m->field('max(need_id) as max')->find();
@@ -1674,6 +1709,10 @@ class OrderController extends Controller {
 		$model = new Goods_needModel();
 		$add = $model -> addInfo($goodsNeedInfos);
 		deleteCart ( $cart_ids);
+		
+		if($onsaleId && $onsale_money) {
+			$this -> bindOneOnsale($onsaleId, $orderId);
+		}
 		Header ( "Location: " . U ( '/home/order/pay?orderId=' . $orderId ) );
 	}
 	

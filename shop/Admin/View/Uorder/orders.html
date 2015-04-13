@@ -10,8 +10,11 @@
 <body>
   <div class="content_right">
     <div class="indent" onclick="changeWin()"></div>
-    <div class="link_path">您所在的位置：<a href="javascript:void(0)">订单管理</a>&nbsp;>&nbsp;<a href="javascript:void(0)">所有订单</a> <a class="download" href="/admin/Uorder/down/starttime/{$get['starttime']}/endtime/{$get['endtime']}/ordertime/pay_time">下载excel</a></div>
-   
+    <div class="link_path">您所在的位置：<a href="/admin/Uorder/judge">订单管理</a>&nbsp;>&nbsp;
+        
+        <a href="/admin/Uorder/judge">所有订单</a>
+        
+        <a class="download" href="/admin/Uorder/down/ordertime/pay_time/sortf/{$sortorder}/starttime/{$get['starttime']}/endtime/{$get['endtime']}/order_card/{$get['order_card']}">下载excel</a></div>
     <div class="table_list casePay have_invoice_day ">
       <ul class="tab_list">
         <li class="hover"><a href="/admin/Uorder/judge">已支付</a></li>
@@ -26,7 +29,6 @@
             <input type="hidden" name="ordertime" value="pay_time">
             <input type="hidden" name="status" value="1">
             <input name="input" type="submit" value="搜索" class="search_btn">
-        </form>
       </div>
       <table class="spffxx">
         <tbody>
@@ -47,15 +49,23 @@
             <th width="12%">类型及实付款（元）</th>
             <th width="20%">发票状态</th>
           </tr>
-         
-          <foreach name="orderall" item="oa">
-                  <tr class="{$oa['trcolor']}">
+          <foreach name="orderall" item="oa" key="k">
+              <if condition="$k%2 eq 0">
+                  <tr class="tr_bgc1">
+              <else/>
+                  <tr class="tr_bgc2">
+              </if>
                     <td rowspan="{$oa['count']}">
                         <if condition="!empty($oa['pay_time'])">
                         {$oa["pay_time"]|date="Y-m-d",###}<br>{$oa["pay_time"]|date="H:i:s",###}
                         </if>
                     </td>
-                    <td rowspan="{$oa['count']}"><a href="/admin/Uorder/orderdetailed/pay/1/orderid/{$oa['order_id']}" target="main">{$oa["order_card"]}</a><br>客官昵称：{$oa["user_name"]}<br>手机号码：{$oa["phone"]}<br>跑堂：{$oa["salesman"]}</td>
+                    <td rowspan="{$oa['count']}">
+                            {$oa["order_card"]}<br>客官昵称：{$oa["user_name"]}<br>手机号码：{$oa["phone"]}
+                    <if condition="!empty($oa['pname'])">
+                        <br>跑堂：{$oa["pname"]}
+                    </if>     
+                    </td>
                     <td>
                         <if condition="$oa['orderfind']['goods_id'] neq 8">
                             <a href="/Admin/Uorder/patentdetail/ordergid/{$oa['orderfind']['id']}">
@@ -67,7 +77,7 @@
                     <td>
                         <if condition="$oa['orderfind']['style'] eq 38">
                            {$oa["orderfind"]["message"]["name"]} <br>
-                           {$oa["orderfind"]["message"]["style"]}
+                           <if condition="!empty($oa['orderfind']['message']['style'])">[{$oa["orderfind"]["message"]["style"]}]</if>                          
                         </if>
                         <if condition="$oa['orderfind']['style'] eq 5">
                             {$oa["orderfind"]["message"]["name"]}
@@ -78,20 +88,27 @@
                     </td>
                     <td class='price'>
                         <if condition="0 lt $oa['orderfind']['subd_num']">
-                                       <b class="add">增+{$oa['orderfind']['subd_num']}</b>
+                            <b class="add">增+{$oa['orderfind']['subd_num']}</b>
                         </if>
                         ￥{$oa['orderfind']['service_price']}</td>
-                    <td class='{$oa['orderfind']["color"]}'>{$oa['orderfind']["brandStatus"]}</td>
+                            <if condition="$oa['orderfind']['brandStatus'] eq '审核失败'">
+                                 <td style='color: #FF95CA;'>
+                                <else/>
+                                <td class='{$oa['orderfind']["color"]}'>
+                            </if>
+                    
+                        {$oa['orderfind']["brandStatus"]}
+                    </td>
                     <td rowspan="{$oa['count']}">
                         <if condition="$oa['is_package'] eq 1"><b class="tc">套餐</b></if>
                         <b>￥{$oa["pay_money"]}</b><br>
                         <if condition="$oa['coil_money'] neq 0">
                         （盘缠：{$oa["coil_money"]}）<br>
                         </if>
-                        <if condition="$oa['onsale_money'] neq null">
+                        <if condition="$oa['onsale_money'] neq null && $oa['onsale_money'] neq 0.00">
                         （优惠劵：{$oa["onsale_money"]}）<br>
                         </if>
-                        <a href="/admin/Uorder/orderdetailed/pay/1/orderid/{$oa['order_id']}"><button>订单详情</button></a>
+                        <a href="/admin/Uorder/orderdetailed/pay/1/orderid/{$oa['order_id']}" target="main" class="button">订单详情</a>
                     </td>
                     <td rowspan="{$oa['count']}">
                     <if condition="$oa['is_invoile'] eq 1">
@@ -106,7 +123,11 @@
                     </td>
 		</tr>
 		<foreach name="oa['orderg']" item="oog" >
-			 <tr class="{$oa['trcolor']}">
+            <if condition="$k%2 eq 0">
+                <tr class="tr_bgc1">
+                    <else/>
+                <tr class="tr_bgc2">
+            </if>
                             <td>
                                 <if condition="$oog['goods_id'] neq 8">
                                     <a href="/Admin/Uorder/patentdetail/ordergid/{$oog['id']}">
@@ -117,8 +138,8 @@
                                     <td><a href="/Home/Goods/gooddetails/id/{$oog['goods_id']}" target="_blank">{$oog['message']['short_title']}<br>[￥{$oog["goods_price"]}]</a></td>
                             <td>
                                 <if condition="$oog['style'] eq 38">
-                                    {$oog["message"]["style"]}
-                                    <br>{$oog["message"]["name"]}
+                                    {$oog["message"]["name"]}<br>
+                                    <if condition="!empty($oog['goods_style'])">[{$oog["goods_style"]}]</if>
                                 </if>
                                 <if condition="$oog['style'] eq 5">
                                     {$oog["message"]["name"]}
@@ -146,13 +167,12 @@
       </table>
     </div>    
     <div class="pageNew">
-        <form method="get" action="/admin/Uorder/judge">
-             {$pages}
+            {$pages}
         </form>
     </div>
   </div>
     
 <script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
 <script type="text/javascript" src="{$Think.ADMIN_JS}Calendar1.js"></script>
-<script type="text/javascript" src="{$Think.ADMIN_JS}order.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}order.js?a=<php echo mb_rand(10000,2000000)>"></script>
 </body>

@@ -41,17 +41,33 @@ class CompileController extends Controller{
      * @var string $sort 排序
      */
     public function combxsh(){
-        $order = isset($_REQUEST['sort']) ? $_REQUEST['sort'] : "QQ";
-        $str = I('post.');
-        $result = $this ->comsearch($str['onetype'], $str['oneval'], $str['two'], $str['threetype'], $str['threeval'], $str['threevals'], '', $str['size'], 'c.status = 1 and c.is_pass != 2', $order,$res_status, $store, $cause, '1');
+        $str = I('get.');
         $style = C('SELF_STYLE');
         
-        $this -> assign('sort',$order);
-        $this -> assign('map',$result['map']);
-        $this -> assign('p',trim(I("p")));
-        $this -> assign('size',trim(I("size")));
-        $this -> assign('page' , $result['pagesize']);
-        $this -> assign('compileinfo',$result['data']);
+        $order = isset( $str['sort'] ) ? $str['sort'] : "QQ";
+        $result = $this -> comsearch(
+                    $str['onetype'],   //View第一个下拉框值
+                    $str['oneval'],    //View第二个文本框值
+                    $str['two'],       //View第三个下拉框值
+                    $str['threetype'], //View第四个下拉框值
+                    $str['threeval'],  //View第五个文本框值
+                    $str['threevals'], //View第六个文本框值
+                    $str['size'],  //Page每页显示的条数    
+                    $str['p'],      //Page跳的页数
+                    'c.status = 1 and c.is_pass != 2', //初始搜索条件，编修通过
+                    $order,            //View右侧排序
+                    $res_status,       //View注册证下发三种状态
+                    $store,            //View审核失败 店铺搜索
+                    $cause,            //view审核失败 失败原因搜索
+                    '1'                //当前操作的状态 1 编修审核
+                );
+
+        $this -> assign('sort', $order);
+        $this -> assign('map', $result['map']);
+        $this -> assign('p', trim(I("p")));
+        $this -> assign('size', trim(I("size")));
+        $this -> assign('page', $result['pagesize']);
+        $this -> assign('compileinfo', $result['data']);
         $this -> assign('style', $style);
         $this -> display('editManage_BXSH');
     }
@@ -67,52 +83,41 @@ class CompileController extends Controller{
     * @4 代表初审公告
     */
     public function comminute(){
-        
-        $oid = isset($_REQUEST['oid']) ? $_REQUEST['oid'] : "";
-        $cid = isset($_GET['cid']) ? $_GET['cid'] : "";
-        $type = isset($_GET['type']) ? $_GET['type'] : "";
-        $order = isset($_GET['order_code']) ? $_GET['order_code'] : "";
-        $rtype = isset($_GET['rtype']) ? $_GET['rtype'] : "";
-        if(!is_numeric($oid) || !is_numeric($cid) || !is_numeric($type) || !is_numeric($rtype)){
-            echo '网络繁忙，非法参数...';die;
-        }
-        $com = new CompileModel;
-        $arr = $com -> GetComMinute($oid, $cid);
-        $log = $com -> GetAuditLog($order);
-        $cause = C('SELF_CAUSE');
+        $get = I('get.');
         $ems = C('SELF_EMS');
-        $this -> assign('ems',$ems); 
-        $this -> assign('log',$log); 
-        $this -> assign('cause',$cause);
+        $cause = C('SELF_CAUSE');
+        $com = new CompileModel;
+        
+        $oid = isset( $get['oid'] ) ? intval( $get['oid'] ) : "";
+        $cid = isset( $get['cid'] ) ? intval( $get['cid'] ) : "";
+        $type = isset( $get['type'] ) ? intval( $get['type'] ) : "";
+        $order = isset( $get['order_code'] ) ? $get['order_code'] : "";
+        $rtype = isset( $get['rtype'] ) ? intval( $get['rtype'] ) : "";
+        
+        if(!is_numeric($oid) || !is_numeric($cid) || !is_numeric($type) || !is_numeric($rtype)){
+            $this -> error('对不起，非法参数，请联系技术人员处理。。');die;
+        }
+       
+        $arr = $com -> GetComMinute($cid);
+        $log = $com -> GetAuditLog($order);
+        
+        $this -> assign('ems', $ems); 
+        $this -> assign('log', $log); 
+        $this -> assign('cause', $cause);
         $this -> assign('minfo',$arr);
         switch ($type) {
-            case 1:
-                $this -> display('editManage_BXSH_detail');
-                break;
-            case 2:
-                $this -> display('editManage_BXBJ_detail');
-                break;
-            case 3:
-                $this -> display('editManage_XFSL_detail');
-                break;
-            case 4:
-                $this -> display('editManage_CSGG_detail');
-                break;
-            case 5:
-                if($rtype == 1 || $rtype == 2){
-                    $this -> display('editManage_ZCXF_detail');
-                }else if($rtype == 3){
-                    $this -> display('editManage_ZCXF_detail2');
-                } 
-                break;
-            case 6:
-                $this -> display('editManage_FWJS_detail');
-                break;
-            case 7:
-                $this -> display('editManage_SHSB_detail');
-                break;
-            default:
-                break;
+            case 1: $this -> display('editManage_BXSH_detail'); break;
+            case 2: $this -> display('editManage_BXBJ_detail'); break;
+            case 3: $this -> display('editManage_XFSL_detail'); break;
+            case 4: $this -> display('editManage_CSGG_detail'); break;
+            case 5: if($rtype == 1 || $rtype == 2){
+                        $this -> display('editManage_ZCXF_detail');
+                    }else if($rtype == 3){
+                        $this -> display('editManage_ZCXF_detail2');
+                    }  break;
+            case 6: $this -> display('editManage_FWJS_detail'); break;
+            case 7: $this -> display('editManage_SHSB_detail'); break;
+            default: break;
         }
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
     }
@@ -124,40 +129,46 @@ class CompileController extends Controller{
     * @4 代表返回，不做操作
     */
     public function combxshjudge(){
-        $status = isset($_GET['type']) ? $_GET['type'] : 1;
-        $oid = isset($_POST['oid']) ? $_POST['oid'] : "";
-        if(!is_numeric($status)){
-            echo '网络繁忙，非法参数...';die;
-        }
-        $com = new CompileModel;
+        $get = I('get.');
         $resul = I('post.');
+        $com = new CompileModel;
+        $status = isset( $get['type'] ) ? intval( $get['type'] ) : 1;
+        $oid = isset( $resul['oid'] ) ? intval( $resul['oid'] ) : "";
+        
+        if(!is_numeric($status)){
+            $this -> error('对不起，非法参数，请联系技术人员处理。。');die;
+        }
+
         //记录失败日志
         if($resul['is_pass'] == 2){
             $data['order_code'] = $resul['order_code'];
             $data['causes'] = $resul['causes'];
-            $data['auditor'] = admin;
+            $data['auditor'] = session('truename');
             $data['time'] = time();
-            $com -> ComFailLog($data);
+            $com -> ComFailLog( $data );
+            $com -> ChageOrderStatus( $oid );
         }
-        if($status == 1){
+        
+        if($status == 2){
             $arr = $com -> SaveBxshData($resul);
             if($resul['is_pass'] == 1){
                 $com -> ChangeStatus('1', '3', $oid);
             }
-            if(empty($arr)){
-                echo "<script>alert('网络故障，审核失败。。');location.href='/Admin/Compile/combxbj';</script>";die;
-            }
-            $this -> redirect('Admin/Compile/combxbj');
-        }else if($status == 2){
-            $arr = $com -> SaveBxshData($resul);
             if(empty($arr)){
                 echo "<script>alert('网络故障，审核失败。。');location.href='/Admin/Compile/combxsh';</script>";die;
             }
             $this -> redirect('Admin/Compile/combxsh');
         }else if($status == 3){
             $arr = $com -> SaveBxshData($resul);
+            if($resul['is_pass'] == 1){
+                $com -> ChangeStatus('1', '3', $oid);
+            }
             $str = $com -> GetFirstData(1);
-            if(empty($arr)){
+            
+            if(empty($str)){
+                echo "<script>alert('已无可提交的数据，返回列表！');location.href='/Admin/Compile/combxsh';</script>";die;
+            }
+            if($arr != 1){
                 echo "<script>alert('网络故障，审核失败。。');location.href='/Admin/Compile/comminute/cid/".$str[0]['co_id']."/oid/".$str[0]['ordergoods_id']."/type/1/rtype/10';</script>";die;
             }
             $this -> redirect("/Admin/Compile/comminute/cid/".$str[0]['co_id']."/oid/".$str[0]['ordergoods_id']."/type/1/rtype/10");
@@ -173,18 +184,33 @@ class CompileController extends Controller{
      * @var string $sort 排序
      */
     public function combxbj(){
-        
-        $order = isset($_REQUEST['sort']) ? $_REQUEST['sort'] : "QQ";
-        $str = I('post.');
-        $result = $this ->comsearch($str['onetype'], $str['oneval'], $str['two'], $str['threetype'], $str['threeval'], $str['threevals'], '', $str['size'], 'c.status = 2', $order, $res_status, $store, $cause, '2');
+        $str = I('get.');
         $style = C('SELF_STYLE');
-        //dump($result);
-        $this -> assign('sort',$order);
-        $this -> assign('map',$result['map']);
-        $this -> assign('p',trim(I("p")));
-        $this -> assign('size',trim(I("size")));
-        $this -> assign('page' , $result['pagesize']);
-        $this -> assign('compileinfo',$result['data']);
+        
+        $order = isset( $str['sort'] ) ? $str['sort'] : "QQ";
+        $result = $this -> comsearch(
+                    $str['onetype'],   //View第一个下拉框值
+                    $str['oneval'],    //View第二个文本框值
+                    $str['two'],       //View第三个下拉框值
+                    $str['threetype'], //View第四个下拉框值
+                    $str['threeval'],  //View第五个文本框值
+                    $str['threevals'], //View第六个文本框值
+                    '',                //Page每页显示的条数    
+                    $str['size'],      //Page跳的页数
+                    'c.status = 2',    //初始搜索条件，编修通过
+                    $order,            //View右侧排序
+                    $res_status,       //View注册证下发三种状态
+                    $store,            //View审核失败 店铺搜索
+                    $cause,            //view审核失败 失败原因搜索
+                    '2'                //当前操作的状态 1 编修审核
+                );
+
+        $this -> assign('sort', $order);
+        $this -> assign('map', $result['map']);
+        $this -> assign('p', trim(I("p")));
+        $this -> assign('size', trim(I("size")));
+        $this -> assign('page', $result['pagesize']);
+        $this -> assign('compileinfo', $result['data']);
         $this -> assign('style', $style);
         $this -> display('editManage_BXBJ');
     }
@@ -196,31 +222,34 @@ class CompileController extends Controller{
      * @4 代表返回，不做操作
      */
     public function combxbjjudge(){
-        $status = isset($_GET['type']) ? $_GET['type'] : 1;
-        $oid = isset($_POST['oid']) ? $_POST['oid'] : "";
-        if(!is_numeric($status)){
-            echo '网络繁忙，非法参数...';die;
-        }
-        $com = new CompileModel;
+        $get = I('get.');
         $resul = I('post.');
-        if($status == 1){
+        $com = new CompileModel;
+        
+        $status = isset( $get['type'] ) ? intval( $get['type'] ) : 1;
+        $oid = isset( $resul['oid'] ) ? $resul['oid'] : "";
+        if(!is_numeric($status)){
+            $this -> error('对不起，非法参数，请联系技术人员处理。。');die;
+        }
+        
+        if($status == 2){
+            
             $com -> ChangeStatus('3', '4', $oid);    
-            $arr = $com -> SaveBxbjData($resul);
-            if(empty($arr)){
-                echo "<script>alert('网络故障，审核失败。。');location.href='/Admin/Compile/comxfsl';</script>";die;
-            }
-            $this -> redirect('Admin/Compile/comxfsl');
-        }else if($status == 2){
             $arr = $com -> SaveBxbjData($resul);
             if(empty($arr)){
                 echo "<script>alert('网络故障，审核失败。。');location.href='/Admin/Compile/combxbj';</script>";die;
             }
             $this -> redirect('Admin/Compile/combxbj');
         }else if($status == 3){
+            
+            $com -> ChangeStatus('3', '4', $oid);    
             $arr = $com -> SaveBxbjData($resul);
             $str = $com -> GetFirstData(2);
-            if(empty($arr)){
-               echo "<script>alert('网络故障，审核失败。。');location.href='/Admin/Compile/comminute/cid/".$str[0]['co_id']."/oid/".$str[0]['ordergoods_id']."/type/2/rtype/10';</script>";die;
+            if(empty($str)){
+                echo "<script>alert('已无可提交的数据，返回列表！');location.href='/Admin/Compile/combxbj';</script>";die;
+            }
+            if($arr != 1){
+                echo "<script>alert('网络故障，审核失败。。');location.href='/Admin/Compile/comminute/cid/".$str[0]['co_id']."/oid/".$str[0]['ordergoods_id']."/type/2/rtype/10';</script>";die;
             }
             $this -> redirect("/Admin/Compile/comminute/cid/".$str[0]['co_id']."/oid/".$str[0]['ordergoods_id']."/type/2/rtype/10");
         }else{
@@ -235,18 +264,33 @@ class CompileController extends Controller{
      * @var string $sort 排序
      */
     public function comxfsl(){
-        
-        $order = isset($_REQUEST['sort']) ? $_REQUEST['sort'] : "QQ";
-        $str = I('post.');
-        $result = $this ->comsearch($str['onetype'], $str['oneval'], $str['two'], $str['threetype'], $str['threeval'], $str['threevals'], '', $str['size'], 'c.status = 3', $order,$res_status, $store, $cause, '3');
+        $str = I('get.');
         $style = C('SELF_STYLE');
-        //dump($result);
-        $this -> assign('sort',$order);
-        $this -> assign('map',$result['map']);
-        $this -> assign('p',trim(I("p")));
-        $this -> assign('size',trim(I("size")));
-        $this -> assign('page' , $result['pagesize']);
-        $this -> assign('compileinfo',$result['data']);
+        
+        $order = isset( $str['sort'] ) ? $str['sort'] : "QQ";
+        $result = $this -> comsearch(
+                    $str['onetype'],   //View第一个下拉框值
+                    $str['oneval'],    //View第二个文本框值
+                    $str['two'],       //View第三个下拉框值
+                    $str['threetype'], //View第四个下拉框值
+                    $str['threeval'],  //View第五个文本框值
+                    $str['threevals'], //View第六个文本框值
+                    '',                //Page每页显示的条数    
+                    $str['size'],      //Page跳的页数
+                    'c.status = 3',    //初始搜索条件，编修通过
+                    $order,            //View右侧排序
+                    $res_status,       //View注册证下发三种状态
+                    $store,            //View审核失败 店铺搜索
+                    $cause,            //view审核失败 失败原因搜索
+                    '3'                //当前操作的状态 1 编修审核
+                );
+
+        $this -> assign('sort', $order);
+        $this -> assign('map', $result['map']);
+        $this -> assign('p', trim(I("p")));
+        $this -> assign('size', trim(I("size")));
+        $this -> assign('page', $result['pagesize']);
+        $this -> assign('compileinfo', $result['data']);
         $this -> assign('style', $style);
         $this -> display('editManage_XFSL');
     }
@@ -278,34 +322,34 @@ class CompileController extends Controller{
      * @4 代表返回，不做操作
      */
     public function  comxfsljudge(){
-        $status = isset($_GET['type']) ? $_GET['type'] : 1;
-        $oid = isset($_POST['oid']) ? $_POST['oid'] : "";
-        if(!is_numeric($status)){
-            echo '网络繁忙，非法参数...';die;
-        }
-        $com = new CompileModel;
+        $get = I('get.');
         $resul = I('post.');
-        if($status == 1){
-            $com -> ChangeStatus('4', '9', $oid);
+        $com = new CompileModel;
+       
+        $status = isset( $get['type'] ) ? intval( $get['type'] ) : 1;
+        $oid = isset( $resul['oid'] ) ? $resul['oid'] : "";
+        if(!is_numeric($status)){
+            $this -> error('对不起，非法参数，请联系技术人员处理。。');die;
+        }
+        
+        if( $status == 2 ){
             $resul['ac_url'] = $this -> uploadpic();
-            $arr = $com -> SaveXfslData($resul);
-            if(empty($arr)){
-                echo "<script>alert('网络故障，审核失败。。');location.href='/Admin/Compile/comcsgg';</script>";die;
-            }
-            $this -> redirect('Admin/Compile/comcsgg');
-        }else if($status == 2){
-            $arr['ac_url'] = $this -> uploadpic();
+            $com -> ChangeStatus('4', '9', $oid);
             $arr = $com -> SaveXfslData($resul);
             if(empty($arr)){
                 echo "<script>alert('网络故障，审核失败。。');location.href='/Admin/Compile/comxfsl';</script>";die;
             }
             $this -> redirect('Admin/Compile/comxfsl');
-        }else if($status == 3){
-            $arr['ac_url'] = $this -> uploadpic();
+        }else if( $status == 3 ){
+            $com -> ChangeStatus('4', '9', $oid);
+            $resul['ac_url'] = $this -> uploadpic();
             $arr = $com -> SaveXfslData($resul);
             $str = $com -> GetFirstData(3);
-            if(empty($arr)){
-               echo "<script>alert('网络故障，审核失败。。');location.href='/Admin/Compile/comminute/cid/".$str[0]['co_id']."/oid/".$str[0]['ordergoods_id']."/type/3/rtype/10';</script>";die;
+            if( empty ( $str )){
+                echo "<script>alert('已无可提交的数据，返回列表！');location.href='/Admin/Compile/comxfsl';</script>";die;
+            }
+            if( $arr != 1 ){
+                echo "<script>alert('网络故障，审核失败。。');location.href='/Admin/Compile/comminute/cid/".$str[0]['co_id']."/oid/".$str[0]['ordergoods_id']."/type/3/rtype/10';</script>";die;
             }
             $this -> redirect("/Admin/Compile/comminute/cid/".$str[0]['co_id']."/oid/".$str[0]['ordergoods_id']."/type/3/rtype/10");
         }else{
@@ -318,18 +362,33 @@ class CompileController extends Controller{
      * @var array $style 四十五大类类别
      */
     public function comcsgg(){
-        
-        $order = isset($_REQUEST['sort']) ? $_REQUEST['sort'] : "QQ";
-        $str = I('post.');
-        $result = $this ->comsearch($str['onetype'], $str['oneval'], $str['two'], $str['threetype'], $str['threeval'], $str['threevals'], '', $str['size'], 'c.status = 4', $order,$res_status, $store, $cause, '4');
+        $str = I('get.');
         $style = C('SELF_STYLE');
-        //dump($result);
-        $this -> assign('sort',$order);
-        $this -> assign('map',$result['map']);
-        $this -> assign('p',trim(I("p")));
-        $this -> assign('size',trim(I("size")));
-        $this -> assign('page' , $result['pagesize']);
-        $this -> assign('compileinfo',$result['data']);
+        
+        $order = isset( $str['sort'] ) ? $str['sort'] : "QQ";
+        $result = $this -> comsearch(
+                    $str['onetype'],   //View第一个下拉框值
+                    $str['oneval'],    //View第二个文本框值
+                    $str['two'],       //View第三个下拉框值
+                    $str['threetype'], //View第四个下拉框值
+                    $str['threeval'],  //View第五个文本框值
+                    $str['threevals'], //View第六个文本框值
+                    '',                //Page每页显示的条数    
+                    $str['size'],      //Page跳的页数
+                    'c.status = 4',    //初始搜索条件，编修通过
+                    $order,            //View右侧排序
+                    $res_status,       //View注册证下发三种状态
+                    $store,            //View审核失败 店铺搜索
+                    $cause,            //view审核失败 失败原因搜索
+                    '4'                //当前操作的状态 1 编修审核
+                );
+
+        $this -> assign('sort', $order);
+        $this -> assign('map', $result['map']);
+        $this -> assign('p', trim(I("p")));
+        $this -> assign('size', trim(I("size")));
+        $this -> assign('page', $result['pagesize']);
+        $this -> assign('compileinfo', $result['data']);
         $this -> assign('style', $style);
         $this -> display('editManage_CSGG');
     }
@@ -342,36 +401,36 @@ class CompileController extends Controller{
      * @4 代表返回，不做操作
      */
     public function comcsggjudge(){
-        $status = isset($_GET['type']) ? $_GET['type'] : 1;
-        $oid = isset($_POST['oid']) ? $_POST['oid'] : "";
-        if(!is_numeric($status)){
-            echo '网络繁忙，非法参数...';die;
-        }
-        $com = new CompileModel;
+        $get = I('get.');
         $resul = I('post.');
-        if($status == 1){
+        $com = new CompileModel;
+        
+        $status = isset( $get['type'] ) ? intval( $get['type'] ) : 1;
+        $oid = isset( $resul['oid'] ) ? $resul['oid'] : "";
+        if(!is_numeric($status)){
+            $this -> error('对不起，非法参数，请联系技术人员处理。。');die;
+        }
+        
+        if($status == 2){
             $com -> ChangeStatus('9', '8', $oid);
             $resul['ac_url'] = $this -> uploadpic();
-            $arr = $com -> SaveCsggData($resul);
-            if(empty($arr)){
-                echo "<script>alert('网络故障，审核失败。。');location.href='/Admin/Compile/comzcxf';</script>";die;
-            }
-            $this -> redirect('Admin/Compile/comzcxf');
-        }else if($status == 2){
-            $arr['ac_url'] = $this -> uploadpic();
             $arr = $com -> SaveCsggData($resul);
             if(empty($arr)){
                 echo "<script>alert('网络故障，审核失败。。');location.href='/Admin/Compile/comcsgg';</script>";die;
             }
             $this -> redirect('Admin/Compile/comcsgg');
         }else if($status == 3){
-            $arr['ac_url'] = $this -> uploadpic();
+            $com -> ChangeStatus('9', '8', $oid);
+            $resul['ac_url'] = $this -> uploadpic();
             $arr = $com -> SaveCsggData($resul);
             $str = $com -> GetFirstData(4);
-            if(empty($arr)){
-               echo "<script>alert('网络故障，审核失败。。');location.href='/Admin/Compile/comminute/cid/".$str[0]['co_id']."/oid/".$str[0]['ordergoods_id']."/type/3/rtype/10';</script>";die;
+            if(empty($str)){
+                echo "<script>alert('已无可提交的数据，返回列表！');location.href='/Admin/Compile/comcsgg';</script>";die;
             }
-            $this -> redirect("/Admin/Compile/comminute/cid/".$str[0]['co_id']."/oid/".$str[0]['ordergoods_id']."/type/3/rtype/10");
+            if($arr != 1){
+                echo "<script>alert('网络故障，审核失败。。');location.href='/Admin/Compile/comminute/cid/".$str[0]['co_id']."/oid/".$str[0]['ordergoods_id']."/type/4/rtype/10';</script>";die;
+            }
+            $this -> redirect("/Admin/Compile/comminute/cid/".$str[0]['co_id']."/oid/".$str[0]['ordergoods_id']."/type/4/rtype/10");
         }else{
             $this -> redirect('/Admin/Compile/comcsgg');
         }
@@ -382,19 +441,35 @@ class CompileController extends Controller{
      * @var array $style 四十五大类类别
      */
     public function comzcxf(){
-        
-        $order = isset($_REQUEST['sort']) ? $_REQUEST['sort'] : "QQ";
-        $res_status = isset($_POST['res_status']) ? $_POST['res_status'] : "";
-        $str = I('post.');
-        $result = $this ->comsearch($str['onetype'], $str['oneval'], $str['two'], $str['threetype'], $str['threeval'], $str['threevals'], '', $str['size'], 'c.status = 5', $order ,$res_status, $store, $cause, '5');
+        $str = I('get.');
         $style = C('SELF_STYLE');
-        //dump($result);
-        $this -> assign('sort',$order);
-        $this -> assign('map',$result['map']);
-        $this -> assign('p',trim(I("p")));
-        $this -> assign('size',trim(I("size")));
-        $this -> assign('page' , $result['pagesize']);
-        $this -> assign('compileinfo',$result['data']);
+        
+        $order = isset( $str['sort'] ) ? $str['sort'] : "QQ";
+        $res_status = isset( $str['res_status'] ) ? intval( $str['res_status'] ) : "";
+        
+        $result = $this -> comsearch(
+                    $str['onetype'],   //View第一个下拉框值
+                    $str['oneval'],    //View第二个文本框值
+                    $str['two'],       //View第三个下拉框值
+                    $str['threetype'], //View第四个下拉框值
+                    $str['threeval'],  //View第五个文本框值
+                    $str['threevals'], //View第六个文本框值
+                    '',                //Page每页显示的条数    
+                    $str['size'],      //Page跳的页数
+                    'c.status = 5',    //初始搜索条件，编修通过
+                    $order,            //View右侧排序
+                    $res_status,       //View注册证下发三种状态
+                    $store,            //View审核失败 店铺搜索
+                    $cause,            //view审核失败 失败原因搜索
+                    '5'                //当前操作的状态 1 编修审核
+                );
+
+        $this -> assign('sort', $order);
+        $this -> assign('map', $result['map']);
+        $this -> assign('p', trim(I("p")));
+        $this -> assign('size', trim(I("size")));
+        $this -> assign('page', $result['pagesize']);
+        $this -> assign('compileinfo', $result['data']);
         $this -> assign('style', $style);
         $this -> display('editManage_ZCXF');
     }
@@ -404,17 +479,33 @@ class CompileController extends Controller{
      * @var array $style 四十五大类类别
      */
     public function comfwjs(){
-        $order = isset($_POST['sort']) ? $_POST['sort'] : "QQ";
-        $str = I('post.');
-        $result = $this ->comsearch($str['onetype'], $str['oneval'], $str['two'], $str['threetype'], $str['threeval'], $str['threevals'], '', $str['size'], 'c.status = 6', $order,$res_status, $store, $cause, '2');
+        $str = I('get.');
         $style = C('SELF_STYLE');
-        //dump($result);
-        $this -> assign('sort',$order);
-        $this -> assign('map',$result['map']);
-        $this -> assign('p',trim(I("p")));
-        $this -> assign('size',trim(I("size")));
-        $this -> assign('page' , $result['pagesize']);
-        $this -> assign('compileinfo',$result['data']);
+        
+        $order = isset( $str['sort'] ) ? $str['sort'] : "QQ";
+        $result = $this -> comsearch(
+                    $str['onetype'],   //View第一个下拉框值
+                    $str['oneval'],    //View第二个文本框值
+                    $str['two'],       //View第三个下拉框值
+                    $str['threetype'], //View第四个下拉框值
+                    $str['threeval'],  //View第五个文本框值
+                    $str['threevals'], //View第六个文本框值
+                    '',                //Page每页显示的条数    
+                    $str['size'],      //Page跳的页数
+                    'c.status = 6',    //初始搜索条件，编修通过
+                    $order,            //View右侧排序
+                    $res_status,       //View注册证下发三种状态
+                    $store,            //View审核失败 店铺搜索
+                    $cause,            //view审核失败 失败原因搜索
+                    '2'                //当前操作的状态 1 编修审核
+                );
+
+        $this -> assign('sort', $order);
+        $this -> assign('map', $result['map']);
+        $this -> assign('p', trim(I("p")));
+        $this -> assign('size', trim(I("size")));
+        $this -> assign('page', $result['pagesize']);
+        $this -> assign('compileinfo', $result['data']);
         $this -> assign('style', $style);
         $this -> display('editManage_FWJS');
     }
@@ -424,24 +515,40 @@ class CompileController extends Controller{
      * @var array $style 四十五大类类别
      */
     public function comshsb(){
-        $order = isset($_REQUEST['sort']) ? $_REQUEST['sort'] : "QQ";
-        $store = isset($_POST['store']) ? $_POST['store'] : "";
-        $cause = isset($_POST['cause']) ? $_POST['cause'] : "";
-        $count = isset($_PSOT['size']) ? $_POST['size'] : "";
-        $str = I('post.');
-        $result = $this ->comsearch($str['onetype'], $str['oneval'], $str['two'], $str['threetype'], $str['threeval'], $str['threevals'], '', $str['size'], 'c.is_pass = 2', $order,$res_status, $store, $cause, '2');
+        $str = I('get.');
         $style = C('SELF_STYLE');
-        $cause = C('SELF_CAUSE');
         $com = new CompileModel;
+        
+        $order = isset( $str['sort'] ) ? $str['sort'] : "QQ";
+        $store = isset( $str['store'] ) ? $str['store'] : "";
+        $cause = isset( $str['cause'] ) ? $str['cause'] : "";
+        $count = isset( $str['size'] ) ? $str['size'] : "";
+        $result = $this -> comsearch(
+                    $str['onetype'],   //View第一个下拉框值
+                    $str['oneval'],    //View第二个文本框值
+                    $str['two'],       //View第三个下拉框值
+                    $str['threetype'], //View第四个下拉框值
+                    $str['threeval'],  //View第五个文本框值
+                    $str['threevals'], //View第六个文本框值
+                    '',                //Page每页显示的条数    
+                    $str['size'],      //Page跳的页数
+                    'c.status = 1 and c.is_pass = 2',    //初始搜索条件，编修通过
+                    $order,            //View右侧排序
+                    $res_status,       //View注册证下发三种状态
+                    $store,            //View审核失败 店铺搜索
+                    $cause,            //view审核失败 失败原因搜索
+                    '2'                //当前操作的状态 1 编修审核
+                );
         $obj = $com -> findStore(); 
-        $this -> assign('obj',$obj);
-        $this -> assign('cause',$cause);
-        $this -> assign('sort',$order);
-        $this -> assign('map',$result['map']);
-        $this -> assign('p',trim(I("p")));
-        $this -> assign('size',trim(I("size")));
-        $this -> assign('page' , $result['pagesize']);
-        $this -> assign('compileinfo',$result['data']);
+        
+        $this -> assign('obj', $obj);
+        $this -> assign('cause', $cause);
+        $this -> assign('sort', $order);
+        $this -> assign('map', $result['map']);
+        $this -> assign('p', trim(I("p")));
+        $this -> assign('size', trim(I("size")));
+        $this -> assign('page', $result['pagesize']);
+        $this -> assign('compileinfo', $result['data']);
         $this -> assign('style', $style);
         $this -> display('editManage_SHSB');
     }
@@ -454,53 +561,37 @@ class CompileController extends Controller{
      * @4 代表返回，不做操作
      */
     public function comzcxfjudge(){
-        $status = isset($_GET['type']) ? $_GET['type'] : 1;
-        $oid = isset($_POST['oid']) ? $_POST['oid'] : "";
-        if(!is_numeric($status)){
-            echo '网络繁忙，非法参数...';die;
-        }
-        $com = new CompileModel;
+        $get = I('get.');
         $resul = I('post.');
-        if($status == 1){
-            $com -> ChangeStatus('8', '6', $oid);
-            $arr = $com -> SaveZcxfData($resul);
-            if(empty($arr)){
-                echo "<script>alert('网络故障，审核失败。。');location.href='/Admin/Compile/comshsb';</script>";die;
-            }
-            $this -> redirect('Admin/Compile/comzcxf');
-        }else if($status == 2){
+        $com = new CompileModel;
+        
+        $status = isset( $get['type'] ) ? intval( $get['type'] ) : 1;
+        $oid = isset( $resul['oid'] ) ? $resul['oid'] : "";
+        if(!is_numeric($status)){
+           $this -> error('对不起，非法参数，请联系技术人员处理。。');die;
+        }
+
+        if($status == 2){
+             $com -> ChangeStatus('8', '6', $oid);
             $arr = $com -> SaveZcxfData($resul);
             if(empty($arr)){
                 echo "<script>alert('网络故障，审核失败。。');location.href='/Admin/Compile/comzcxf';</script>";die;
             }
             $this -> redirect('Admin/Compile/comzcxf');
         }else if($status == 3){
+            $com -> ChangeStatus('8', '6', $oid);
             $arr = $com -> SaveZcxfData($resul);
-            $str = $com -> GetFirstData(4);
-            if(empty($arr)){
-               echo "<script>alert('网络故障，审核失败。。');location.href='/Admin/Compile/comminute/cid/".$str[0]['co_id']."/oid/".$str[0]['ordergoods_id']."/type/5/rtype/10';</script>";die;
+            $str = $com -> GetFirstValData($resul['res_status']);
+            if(empty($str) || $res['res_status'] == 3){
+                echo "<script>alert('已无可提交的数据，返回列表！');location.href='/Admin/Compile/comzcxf';</script>";die;
             }
-            $this -> redirect("/Admin/Compile/comminute/cid/".$str[0]['co_id']."/oid/".$str[0]['ordergoods_id']."/type/5/rtype/10");
+            if($arr != 1){
+                echo "<script>alert('网络故障，审核失败。。');location.href='/Admin/Compile/comminute/cid/".$str[0]['co_id']."/oid/".$str[0]['ordergoods_id']."/type/5/rtype/1';</script>";die;
+            }
+            $this -> redirect("/Admin/Compile/comminute/cid/".$str[0]['co_id']."/oid/".$str[0]['ordergoods_id']."/type/5/rtype/1");
         }else{
             $this -> redirect('/Admin/Compile/comzcxf');
         }
-    }
-    
-    /**
-     * 查看各种图片的图样
-     */
-    public function lookdraft(){
-        $src = isset($_GET['src']) ? $_GET['src'] : "";
-        dump($src);die;
-        $data = array();
-        if(empty($src)){
-            $data['message'] = '您好，查看的数据源不存在...';
-            $data['src'] = $src;
-        }else{
-            $data['src'] = $src;
-        }
-        $this->assign('data',$data);
-        $this->display('lookdraft');
     }
     
     /**
@@ -519,13 +610,13 @@ class CompileController extends Controller{
      * @var string $where 总的搜索条件
      * @return array
      */
-    private function comsearch($first, $firstval, $sencond, $third, $thirdval, $thirdvals, $count, $page, $factor, $order, $res_status, $store, $cause, $type){
-        $first = isset($first) ? $first : "";
-        $firstval = isset($firstval) ? $firstval : "";
-        $sencond = isset($sencond) ? $sencond : "";
-        $third = isset($third) ? $third : "";
-        $thirdval = isset($thirdval) ? $thirdval : "";
-        $thirdvals = isset($thirdvals) ? $thirdvals : "";
+    private function comsearch($first, $firstval, $sencond, $third, $thirdval, $thirdvals, $size, $page, $factor, $order, $res_status, $store, $cause, $type){
+        $first = isset( $first ) ? $first : "";
+        $firstval = isset( $firstval ) ? $firstval : "";
+        $sencond = isset( $sencond ) ? $sencond : "";
+        $third = isset( $third ) ? $third : "";
+        $thirdval = isset( $thirdval ) ? $thirdval : "";
+        $thirdvals = isset( $thirdvals ) ? $thirdvals : "";
         $where = $factor;
         if(!empty($res_status)){
             $where.= " and c.res_status = ".$res_status."";
@@ -538,11 +629,11 @@ class CompileController extends Controller{
         }
         if($first != "" && $firstval != "" ){
             switch ($first) {
-                case A: $where .= " and o.order_code = '".$firstval."'";
+                case A: $where .= " and o.order_code like '%".$firstval."%'";
                     break;
-                case B: $where .= " and o.order_code = '".$firstval."'";
+                case B: $where .= " and o.order_code like '%".$firstval."%'";
                     break;
-                case C: $where .= " and o.yiji like '%".$firstval."%'";
+                case C: $where .= " and n.name like '%".$firstval."%'";
                     break;
                 case D: $where .= " and n.subd like '%".$firstval."%'";
                     break;
@@ -562,29 +653,90 @@ class CompileController extends Controller{
         if($sencond != ""){
             $where .= " and o.style_name like '%".$sencond."%'";
         }
-        if($third != "" && $thirdval != ""){
+        if($third != "" && $thirdval != "" && $thirdvals != ""){
+            $thirdval = strtotime($thirdval);
+            $thirdvals = strtotime($thirdvals);
+               switch ($third) {
+                case I: $where .= " and o.pay_time > '".$thirdval."' and o.pay_time < '".$thirdvals."'";
+                    break;
+                case J: $where .= " and c.com_time > '".$thirdval."' and c.com_time < '".$thirdvals."'";
+                    break;
+                case K: $where .= " and c.pieces_time > '".$thirdval."' and c.pieces_time < '".$thirdvals."'";
+                    break;
+                case L: $where .= " and c.trialtime > '".$thirdval."' and c.trialtime < '".$thirdvals."'";
+                    break;
+                case M: $where .= " and c.into_res > '".$thirdval."' and c.into_res < '".$thirdvals."'";
+                    break;
+                case N: $where .= " and c.into_res > '".$thirdval."' and c.into_res < '".$thirdvals."'";
+                    break;
+                case O: $where .= " and c.into_res > '".$thirdval."' and c.into_res < '".$thirdvals."'";
+                    break;
+                case P: $where .= " and c.into_time > '".$thirdval."' and c.into_time < '".$thirdvals."'";
+                    break;
+                case R: $where .= " and c.into_pieces > '".$thirdval."' and c.into_pieces < '".$thirdvals."'";
+                    break;
+                case S: $where .= " and c.into_accept_time > '".$thirdval."' and c.into_accept_time < '".$thirdvals."'";
+                    break;
+                case T: $where .= " and c.trialtime > '".$thirdval."' and c.trialtime < '".$thirdvals."'";
+                    break;
+                default: $where .= "";
+                    break;
+            }
+        }else if($third != "" && $thirdval != "" && $thirdvals == ""){
+            $thirdvals = strtotime(date('Y-m-d',strtotime($thirdval)).' 23:59:59');
+            $thirdval = strtotime($thirdval);
             switch ($third) {
-                case I: $where .= " and o.pay_time > '".strtotime($thirdval)."' and o.pay_time < '".strtotime($thirdvals)."'";
+                case I: $where .= " and o.pay_time > '".$thirdval."' and o.pay_time < '".$thirdvals."'";
                     break;
-                case J: $where .= " and c.com_time > '".strtotime($thirdval)."' and c.com_time < '".strtotime($thirdvals)."'";
+                case J: $where .= " and c.com_time > '".$thirdval."' and c.com_time < '".$thirdvals."'";
                     break;
-                case K: $where .= " and c.pieces_time > '".strtotime($thirdval)."' and c.pieces_time < '".strtotime($thirdvals)."'";
+                case K: $where .= " and c.pieces_time > '".$thirdval."' and c.pieces_time < '".$thirdvals."'";
                     break;
-                case L: $where .= " and c.trialtime > '".strtotime($thirdval)."' and c.trialtime < '".strtotime($thirdvals)."'";
+                case L: $where .= " and c.trialtime > '".$thirdval."' and c.trialtime < '".$thirdvals."'";
                     break;
-                case M: $where .= " and c.into_res > '".strtotime($thirdval)."' and c.into_res < '".strtotime($thirdvals)."'";
+                case M: $where .= " and c.into_res > '".$thirdval."' and c.into_res < '".$thirdvals."'";
                     break;
-                case N: $where .= " and c.into_res > '".strtotime($thirdval)."' and c.into_res < '".strtotime($thirdvals)."'";
+                case N: $where .= " and c.into_res > '".$thirdval."' and c.into_res < '".$thirdvals."'";
                     break;
-                case O: $where .= " and c.into_res > '".strtotime($thirdval)."' and c.into_res < '".strtotime($thirdvals)."'";
+                case O: $where .= " and c.into_res > '".$thirdval."' and c.into_res < '".$thirdvals."'";
                     break;
-                case P: $where .= " and c.into_time > '".strtotime($thirdval)."' and c.into_time < '".strtotime($thirdvals)."'";
+                case P: $where .= " and c.into_time > '".$thirdval."' and c.into_time < '".$thirdvals."'";
                     break;
-                case R: $where .= " and c.into_pieces > '".strtotime($thirdval)."' and c.into_pieces < '".strtotime($thirdvals)."'";
+                case R: $where .= " and c.into_pieces > '".$thirdval."' and c.into_pieces < '".$thirdvals."'";
                     break;
-                case S: $where .= " and c.into_accept_time > '".strtotime($thirdval)."' and c.into_accept_time < '".strtotime($thirdvals)."'";
+                case S: $where .= " and c.into_accept_time > '".$thirdval."' and c.into_accept_time < '".$thirdvals."'";
                     break;
-                case T: $where .= " and c.trialtime > '".strtotime($thirdval)."' and c.trialtime < '".strtotime($thirdvals)."'";
+                case T: $where .= " and c.trialtime > '".$thirdval."' and c.trialtime < '".$thirdvals."'";
+                    break;
+                default: $where .= "";
+                    break;
+            }
+        }else if($third != "" && $thirdval == "" && $thirdvals != ""){
+            
+            $thirdval = strtotime(date('Y-m-d',strtotime($thirdvals)).' 00:00:00');
+            $thirdvals = strtotime($thirdvals);
+            switch ($third) {
+                case I: $where .= " and o.pay_time > '".$thirdval."' and o.pay_time < '".$thirdvals."'";
+                    break;
+                case J: $where .= " and c.com_time > '".$thirdval."' and c.com_time < '".$thirdvals."'";
+                    break;
+                case K: $where .= " and c.pieces_time > '".$thirdval."' and c.pieces_time < '".$thirdvals."'";
+                    break;
+                case L: $where .= " and c.trialtime > '".$thirdval."' and c.trialtime < '".$thirdvals."'";
+                    break;
+                case M: $where .= " and c.into_res > '".$thirdval."' and c.into_res < '".$thirdvals."'";
+                    break;
+                case N: $where .= " and c.into_res > '".$thirdval."' and c.into_res < '".$thirdvals."'";
+                    break;
+                case O: $where .= " and c.into_res > '".$thirdval."' and c.into_res < '".$thirdvals."'";
+                    break;
+                case P: $where .= " and c.into_time > '".$thirdval."' and c.into_time < '".$thirdvals."'";
+                    break;
+                case R: $where .= " and c.into_pieces > '".$thirdval."' and c.into_pieces < '".$thirdvals."'";
+                    break;
+                case S: $where .= " and c.into_accept_time > '".$thirdval."' and c.into_accept_time < '".$thirdvals."'";
+                    break;
+                case T: $where .= " and c.trialtime > '".$thirdval."' and c.trialtime < '".$thirdvals."'";
                     break;
                 default: $where .= "";
                     break;
@@ -592,18 +744,17 @@ class CompileController extends Controller{
         }
         
         $com = new CompileModel;
-        
         $count = $com -> GetComPileNum($where);
         //setcookie('pagesize', $page, time()+3600);
         // $page = $_COOKIE['pagesize'];
-        $page_count = 5; //每页显示条数
-        $page = new Page($count, $page_count);// 实例化分页类 传入总记录数
+        $pageSize = isset( $size ) ? intval( $size ) : 10; //每页显示条数
+        $page = new Page($count, $pageSize);// 实例化分页类 传入总记录数
         $map['onetype'] = $first;
         $map['oneval'] = $firstval;
         $map['two'] = $sencond;
         $map['threetype'] = $third;
-        $map['threeval'] = $thirdval;
-        $map['threevals'] = $thirdvals;
+        $map['threeval'] = date('Y-m-d H:i:s',$thirdval);
+        $map['threevals'] = date('Y-m-d H:i:s',$thirdvals);
         $map['order'] = $order;
         $map['res_status'] = $res_status;
         $map['store'] = $store;

@@ -33,11 +33,7 @@
     	<tr>
         	<th  colspan="2">申请信息填写</th>
         </tr>
-
          <if condition="('商标服务' eq $style && $num eq 1)">
-
-      
-
 	    	<tr>
 	        	<td width="150" class="text-right padding_top20"><span>*</span> 商标名称：</td>
 	            <td  class="text-left padding_top20" ><input name ='name' id ='name' class="lineheight29" type="text" size="43"   value="输入中文、英文、拼音、数字或上述组合字符" style="color:#666;" onfocus="javascript:this.style.color='#666';if(this.value=='输入中文、英文、拼音、数字或上述组合字符')this.value='';" onblur="javascript:if(this.value==''){this.value='输入中文、英文、拼音、数字或上述组合字符';this.style.color='#666';}" /></td>        
@@ -80,7 +76,6 @@
             </td>
         </tr>
 </if>
-<if condition="(1 neq $style )">
         <tr>
         	<td class="text-right"><span>*</span>需求描述：</td>
             <td class="text-left">
@@ -89,95 +84,18 @@
             	
             </td>
         </tr>
-          <input type='hidden' value="0" id = 'all' name ='all'>
-          <tr>
-        	   <td></td>
-               <td class="button_pad"><a href="javascript:CheckGoodsForm();"><img src="{$Think.HOME_IMAGES}button_submit.png" /></a></td>
-          </tr>
-        <else/>
         <tr>
-        	<td width="150" class="text-right padding_top20" style="vertical-align:top;">商标申请声明：</td>
-            <td  class="text-left padding_top20" >
-            	<p><input type="checkbox" name='need_state[]' value='1'/> 集体商标</p>
-                <p><input type="checkbox" name='need_state[]' value='2'/> 证明商标</p>
-                <p><input type="checkbox" name='need_state[]' value='3'/> 以三维标志申请商标注册</p>
-                <p><input type="checkbox" name='need_state[]' value='4'/> 以颜色组合申请商标注册</p>
-                <p><input type="checkbox" name='need_state[]' value='5'/> 以声音标志申请商标注册</p>
-                <p><input type="checkbox" name='need_state[]' value='6'/> 两个以上申请人共同申请注册同一商标</p>
-            </td>        
+        	<td></td>
+            <td class="button_pad"><a href="javascript:CheckGoodsForm();"><img src="{$Think.HOME_IMAGES}button_submit.png" /></a></td>
         </tr>
-        <tr>
-        	<td class="text-right"> 要求优先权声明：</td>
-            <td><input  type="checkbox" name='need_prior[]' value='1'/> 基于第一次申请的优先权 
-            <input style="margin-left:30px;"  type="checkbox" name='need_prior[]' value='2'/> 基于展会的优先权 
-            <input style="margin-left:30px;"  type="checkbox" name='need_prior[]' value='3'/> 优先权证明文件后补</td>
-        </tr>
-        <tr>
-        	<td class="text-right" style="vertical-align:top;"> 申请/展出国家/地区：</td>
-            <td>
-            	<textarea name='area'></textarea>
-            </td>
-        </tr>
-
-        <tr>
-        	<td class="text-right"> 申请/展出日期：</td>
-            <td>
-       
-               <input class="select80_30" readonly="readonly" name ="need_time" type="text" onclick="SelectDate(this,'yyyy-MM-dd')">
-            </td>
-        </tr>
-        <tr>
-        	<td class="text-right" style="vertical-align:top;">  申请号：</td>
-            <td>
-            	<input class="text300_30" name="need_number" type="text" />
-            </td>
-        </tr>
-         <tr>
-        	<td class="text-right" style="vertical-align:top;"> <span>*</span> 商标名称：</td>
-            <td>
-            	<input class="text300_30" type="text" name='name' id='name' placeholder ='输入中文、英文、拼音、数字或上述组合字符'  />
-            </td>
-        </tr>
-        <tr>
-        	<td class="text-right" style="vertical-align:top;"> <span>*</span> 商标分类：</td>
-            <td>
-            	<div class="brand_type" onmouseout="this.className='brand_type'" onmouseover="this.className='brand_type active_brand_type'"> 
-                    <p style="cursor:pointer" id ='update_zhuce'>请选择商标所属行业 </p>  
-                    <ul class="brand_type_ct" id='selectFenleiZuce' name ='selectFenleiZuce'> 
-                      <foreach name='self_style' item='style' key = 'key'>
-	                       <li style="cursor:pointer" data-clsval='{$key}' data-cls='{$style}' >{$style}</li>
-	                  </foreach>
-                    </ul> 
-         		</div> 
-                
-                <select class="select300_30" >
-                	<option >请选择</option>
-                </select>
-                <span id='append'>
-</span>
-            </td>
-        </tr>
-         <input type='hidden' value="1" id = 'all' name ='all'>
-           <tr>
-        	   <td></td>
-               <td class="button_pad"><a href="javascript:CheckZhuceForm();"><img src="{$Think.HOME_IMAGES}button_submit.png" /></a></td>
-           </tr>
-       
-      
-        </if>
-        
-      
      <input type='hidden' value="{$goods_id}" id = 'goods_id' name ='goods_id'>
      <input type='hidden' value="{$cart_ids}" id = 'cart_ids' name ='cart_ids'>
      <input type='hidden' value="{$aid}" id = 'aid' name ='aid'>
-
       <input type='hidden' value="{$onsaleId}" id = 'onsaleId' name ='onsaleId'>
-
-     
-     
-
      <input type='hidden' value="goods"  name ='type'>
-       
+       <if condition="(isset($all) && $all eq 1)">
+             <input type='hidden' value="1" id = 'all' name ='all'>
+       </if>
     </table>
     </form>
       <if condition="(!empty($recommends))">
@@ -313,4 +231,3 @@
 
 <script language="JavaScript" src="{$Think.HOME_JS}package.js"></script>
 <script language="JavaScript" src="{$Think.HOME_JS}ScrollPic.js"></script>
-<script language="JavaScript" src="{$Think.HOME_JS}Calendar1.js"></script>

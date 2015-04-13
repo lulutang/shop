@@ -43,7 +43,7 @@ class ActivityController extends Controller{
         $this -> assign('p',trim(I("p")));
         $this -> assign('page' , $Pagesize);
         $this -> assign('data',$info);
-        $this -> display();
+        $this -> display('activitylist');
     }
     /**
      * 促销活动添加

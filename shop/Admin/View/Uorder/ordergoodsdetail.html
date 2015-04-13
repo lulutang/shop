@@ -10,7 +10,7 @@
 <body>
   <div class="content_right">
     <div class="indent"  onclick="changeWin()"></div>
-    <div class="link_path">您所在的位置：<a href="/admin/Uorder/ordergoods">服务管理</a>&nbsp;>&nbsp;{$orderGoods["bargain"]}</div>
+    <div class="link_path">您所在的位置：<a href="/admin/Uorder/judge">订单管理</a>&nbsp;>&nbsp;<a href="/admin/Uorder/ordergoods">所有服务</a>&nbsp;>&nbsp;{$orderGoods["bargain"]}</div>
     <ul class="s_state_link clearfix">
       <li class="s_stated">
         <p class="p1"><span>下单时间</span></p>
@@ -31,12 +31,14 @@
         </li>
       </foreach>
     </ul>
+    <p class="s_pgoods"></p>
+<p class="s_pprice">
     <div class="s_detail">
       <div class="s_title">
         <p class="s_pcaseid">订单编号：{$orderGoods["order_code"]}<a href="/admin/Uorder/orderdetailed/orderid/{$orderGoods['order_id']}">查看</a></p>
-        <p class="s_pcasestate">合同编号：{$orderGoods["bargain"]}<a href="/admin/Uorder/ordergoodsdetail/ordergid/{$orderGoods['id']}">查看</a></p>
-        <p class="s_pgoods">商品信息：{$orderGoods["message"]["short_title"]}[￥{$orderGoods["goods_price"]}]</p>
-        <p class="s_pprice">服务价：￥{$orderGoods["service_price"]}
+        <p class="s_pcasestate" style="width: 19%;">合同编号：{$orderGoods["bargain"]}<a href="/admin/Uorder/trademarkbook/ordergid/{$orderGoods['id']}" target="_blank">查看</a></p>
+        <p class="s_pgoods" style="width: 25%;">商品信息：{$orderGoods["message"]["short_title"]}[￥{$orderGoods["goods_price"]}]</p>
+        <p class="s_pprice" style="width: 25%;">服务价：￥{$orderGoods["service_price"]}
             <if condition="$orderGoods['status'] eq 7 || $orderGoods['status'] eq 2">
                 <a href="/admin/Uorder/shopenrollover/ordergid/{$orderGoods['id']}" class="f90" id="up">编辑</a>
             </if>
@@ -50,16 +52,20 @@
         </p>
       </div>
       <div class="s_content">
-        <a href="javascript:void(0)" class="s_a_sqs">申请书</a>
-        <a href="javascript:void(0)" class="s_a_wts">委托书</a>
+          <a href="/admin/Uorder/apply/ordergid/{$orderGoods['id']}" class="s_a_sqs" target="_blank">申请书</a>
+        <a href="/admin/Uorder/deput/ordergid/{$orderGoods['id']}" class="s_a_wts" target="_blank">委托书</a>
         <div class="s_dtr">
           <p class="s_pn">商标名称：</p>
           <p class="s_pd">
-            <b>{$orderGoods["message"]["name"]}</b><b>商标类别：{$orderGoods["style_name"]}</b>
+            <b>{$orderGoods["message"]["name"]}</b><b style="width:30%">商标类别：{$orderGoods["style_name"]}</b>
+          <if condition="!empty($orderGoods['enroll'])">
+              <a href="{$orderGoods['enroll']}" target="_blank">商标图样</a>
+              <else/>
+              <a href="javascript:;" onclick="alert('没有商标图样');">商标图样</a>
+          </if>
             
-            <a href="{$orderGoods['enroll']}" target="_blank">商标图样</a>
           <if condition="$traderfind['is_person'] eq 2">
-                <a href="{$traderfind['company_subject']}" target="_blank">企业主体资格</a>
+                <a href="{$traderfind['trader_fbfphoto']}" target="_blank">企业主体资格</a>
            </if>
           <if condition="$traderfind['is_person'] eq 1">
                 <a href="{$traderfind['trader_photo']}" target="_blank">身份证</a>
@@ -67,46 +73,47 @@
           </if>
           </p>
         </div>
-        <div class="s_dtr"><p class="s_pn">商品/服务项目：</p><p class="s_pd">{$orderGoods['subd']}</p></div>
+        <div class="s_dtr clearfix" style="height:auto;"><p class="s_pn">商品/服务项目：</p><p class="s_pd">{$orderGoods['subd']}</p></div>
         <div class="s_line"></div>
         <div class="s_dtr"><p class="s_pn">申请人名称（中文）：</p><p class="s_pd">{$traderfind["trader_name"]} {$traderfind["trader_number"]}</p></div>
         <div class="s_dtr"><p class="s_pn">申请人名称（英文）：</p><p class="s_pd">{$traderfind["e_trader_name"]}</p></div>
-        <div class="s_dtr"><p class="s_pn">申请人国际/地区：</p><p class="s_pd">{$traderfind["trader_nation"]}</p></div>
-        <div class="s_dtr"><p class="s_pn">申请人地址（中文）：</p><p class="s_pd">{$traderfind["trader_nation"]}</p></div>
+        <div class="s_dtr"><p class="s_pn">申请人国际/地区：</p><p class="s_pd">{$traderfind["trader_province"]}</p></div>
+        <div class="s_dtr"><p class="s_pn">申请人地址（中文）：</p><p class="s_pd">{$traderfind["trader_address"]}</p></div>
         <div class="s_dtr"><p class="s_pn">申请人地址（英文）：</p><p class="s_pd">{$traderfind["e_trader_address"]}</p></div>
         <div class="s_dtr"><p class="s_pn">邮政编码：</p><p class="s_pd">{$traderfind["postcode"]}</p></div>
-        <div class="s_dtr"><p class="s_pn">联系人：</p><p class="s_pd">{$traderfind["salesman_name"]}</p></div>
-        <div class="s_dtr"><p class="s_pn">电话：</p><p class="s_pd">{$traderfind["tel"]}</p></div>
+        <div class="s_dtr"><p class="s_pn">联系人：</p><p class="s_pd">{$adminuserfind["truename"]}</p></div>
+        <div class="s_dtr"><p class="s_pn">电话：</p><p class="s_pd">{$adminuserfind["mobile"]}</p></div>
         <div class="s_dtr"><p class="s_pn">代理机构名称：</p><p class="s_pd">北京细软智谷知识产权代理有限公司</p></div>
         <div class="s_dtr"><p class="s_pn">外国申请人的国内接收人：</p>{$traderfind["in_accept_name"]}</p></div>
         <div class="s_dtr"><p class="s_pn">国内接收人地址：</p><p class="s_pd">{$traderfind["in_accept_address"]}</p></div>
         <div class="s_dtr"><p class="s_pn">邮政编码：</p><p class="s_pd">{$traderfind["in_accept_postcode"]}</p></div>
         <div class="s_dtr">
           <p class="s_pn">商标申请声明：</p>
+          
           <p class="s_pd">
-            <if condition='in_array(1,$traderfind["apply"])'><label>集体商标</label></if>
-            <if condition='in_array(2,$traderfind["apply"])'><label>证明商标</label></if>
-            <if condition='in_array(3,$traderfind["apply"])'><label>以三维标志申请商标注册</label></if>
-            <if condition='in_array(4,$traderfind["apply"])'><label>以颜色组合申请商标注册</label></if>
-            <if condition='in_array(5,$traderfind["apply"])'><label>以声音标志申请商标注册</label></if>
-            <if condition='in_array(6,$traderfind["apply"])'><label>两个以上申请人共同申请注册同一商标</label></if>
+            <if condition='in_array(1,$goodsneeddata["need_state"])'><label>集体商标</label></if>
+            <if condition='in_array(2,$goodsneeddata["need_state"])'><label>证明商标</label></if>
+            <if condition='in_array(3,$goodsneeddata["need_state"])'><label>以三维标志申请商标注册</label></if>
+            <if condition='in_array(4,$goodsneeddata["need_state"])'><label>以颜色组合申请商标注册</label></if>
+            <if condition='in_array(5,$goodsneeddata["need_state"])'><label>以声音标志申请商标注册</label></if>
+            <if condition='in_array(6,$goodsneeddata["need_state"])'><label>两个以上申请人共同申请注册同一商标</label></if>
           </p>
         </div>
         <div class="s_dtr">
           <p class="s_pn">要求优先权声明：</p>
           <p class="s_pd">
-           <if condition='in_array(1,$traderfind["priority"])'><lable>基于第一次申请的优先权&nbsp;&nbsp&nbsp;&nbsp</lable></if>
-<if condition='in_array(2,$traderfind["priority"])'><lable>基于展会的优先权&nbsp;&nbsp&nbsp;&nbsp</lable></if>         
-<if condition='in_array(3,$traderfind["priority"])'><lable>优先权证明文件后补</lable></if>
+           <if condition='in_array(1,$goodsneeddata["need_prior"])'><lable>基于第一次申请的优先权&nbsp;&nbsp&nbsp;&nbsp</lable></if>
+<if condition='in_array(2,$goodsneeddata["need_prior"])'><lable>基于展会的优先权&nbsp;&nbsp&nbsp;&nbsp</lable></if>         
+<if condition='in_array(3,$goodsneeddata["need_prior"])'><lable>优先权证明文件后补</lable></if>
           </p>
         </div>
-        <div class="s_dtr"><p class="s_pn">申请/展出国家/地区：</p><p class="s_pd">{$traderfind["applyshowstate"]}</p></div>
+        <div class="s_dtr"><p class="s_pn">申请/展出国家/地区：</p><p class="s_pd">{$goodsneeddata["area"]}</p></div>
         <div class="s_dtr"><p class="s_pn">申请/展出日期：</p><p class="s_pd">
-                <if condition="!empty($traderfind['applyshowtime'])">
-                {$traderfind["applyshowtime"]|date="Y-m-d H:i:s",###}
+                <if condition="!empty($goodsneeddata['need_time'])">
+                {$goodsneeddata["need_time"]|date="Y-m-d H:i:s",###}
                 </if>
             </p></div>
-        <div class="s_dtr"><p class="s_pn">申请号：</p><p class="s_pd">{$traderfind["applynum"]}</p></div>
+        <div class="s_dtr"><p class="s_pn">申请号：</p><p class="s_pd">{$goodsneeddata["need_number"]}</p></div>
       </div>
       <div class="s_title_path">
           <if condition="!empty($compiledata['com_time'])">
@@ -116,7 +123,7 @@
                 <if condition="$compiledata['is_pass'] eq 2">不通过</if>
             </span><span>审核日期：{$compiledata["com_time"]|date="Y-m-d H:i:s",###}</span><span>审核人：{$compiledata['co_user_name']}</span></div>
          </if>
-        <if condition="!empty($compiledata['into_pieces'])">
+        <if condition="!empty($compiledata['pieces_time'])">
         <p>编修报件</p>
         <div><span>报件方式：
                 <if condition="$compiledata['pieces_status'] eq 1">窗口报件</if>
@@ -126,23 +133,23 @@
             <if condition="$compiledata['pieces_status'] eq 2"> 
                 <span>网络注册号：{$compiledata['pieces_rennumber']}</span>
             </if>
-            <span>报件日子：{$compiledata["into_pieces"]|date="Y-m-d H:i:s",###}</span><span>报件人：{$compiledata['pie_user_name']}</span></div>
+            <span>报件日期：{$compiledata["pieces_time"]|date="Y-m-d H:i:s",###}</span><span>报件人：{$compiledata['pie_user_name']}</span></div>
        </if>
-        <if condition="!empty($compiledata['into_accept_time'])">
+        <if condition="!empty($compiledata['trialtime'])">
         <p>下发受理</p>
         <div><span>受理附件：<a href="{$compiledata['accept_adj']}" target="_blank">查看</a></span>
             <span>发文编号：{$compiledata['dispatch_num']}</span>
-            <span>发文日子：{$compiledata["dispatch_time"]|date="Y-m-d H:i:s",###}</span>
+            <span>发文日期：{$compiledata["trialtime"]|date="Y-m-d H:i:s",###}</span>
             <span>录入人：{$compiledata['xf_user_name']}</span></div>
         </if>
-        <if condition="!empty($compiledata['trialtime'])">
+        <if condition="!empty($compiledata['into_res'])">
         <p>初审公告</p>
         <div><span>初审附件：<a href="{$compiledata['c_accept_adj']}" target="_blank">查看</a></span>
             <span>公告期号：{$compiledata['notice_num']}</span>
-            <span>发文日子：{$compiledata["dispatch_time"]|date="Y-m-d H:i:s",###}</span>
+            <span>发文日期：{$compiledata["into_res"]|date="Y-m-d H:i:s",###}</span>
             <span>录入人：{$compiledata['cs_user_name']}</span></div>
         </if>
-        <if condition="!empty($compiledata['into_res']) && $compiledata['res_status'] eq 3">
+        <if condition="!empty($compiledata['into_endtime']) && $compiledata['res_status'] eq 3">
         <p>注册证下发</p>
       </div>
     </div>

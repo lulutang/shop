@@ -23,7 +23,7 @@
     <li><a href="/Admin/Compile/comfwjs">服务结束<b></b></a></li>
     <li class="s_red"><a href="/Admin/Compile/comshsb">审核失败</a></li>
     </ul>
-    <form action="/Admin/Compile/comxfsl" method="post" name="search">
+    <form action="/Admin/Compile/comxfsl" method="get" name="search">
 <div class="table_list casePay s" style="border:none;padding-top:49px;">
   <div class="case_search" style="left:0">
     <select onchange="searchSelectE()" name="onetype">
@@ -36,7 +36,7 @@
       <option value="G" <php> if($map['onetype']=='G'){echo 'selected';}</php>>跑堂</option>
       <option value="H" <php> if($map['onetype']=='H'){echo 'selected';}</php>>跑堂电话</option>
     </select>
-    <input type="text" class="input" placeholder="请输入订单编号" name="oneval" value="{$map['oneval']}"/>
+    <input type="text" class="input" placeholder="请输入订单编号" name="oneval" value="{$map['oneval']}" style="width: 240px"/>
     <select name="two"><option value="">商标类型</option>
         <foreach name='style' item='sty'>
             <if condition="$map['two'] eq $sty">
@@ -68,14 +68,14 @@
             <th width="20%" id="jt" style="cursor: pointer">报至商标局时间<a href="javascript:void(0)" class="<if condition="( 'QQ' eq $sort )">cur</if>"><b></b></a></th>
             <input type='hidden' name='sort' id='sort' value='{$sort}'>
           </tr>
-           <foreach name="compileinfo" item="com">
-            <tr class="tr_bgc1">
+           <foreach name="compileinfo" item="com" key="k">
+            <tr class='<if condition="$k%2 eq 1">tr_bgc2<else/>tr_bgc1</if>'>
               <td><a href="/Admin/Compile/comminute/oid/{$com['id']}/cid/{$com['co_id']}/type/3/order_code/{$com['order_code']}/rtype/<if condition="$com['res_status'] eq 1">1<elseif condition="$com['res_status'] eq 2"/>2<else/>3</if>">{$com['order_code']}</a></td>
               <td>{$com['short_title']}<br/>{$com['style_name']}</td>
-              <td>编修报件</td>
+              <td>下发受理</td>
               <td><if condition="$com['pieces_status'] eq 1">窗报<elseif condition="$com['pieces_status'] eq 2"/>网报-[{$com['pieces_rennumber']}]<else/>急报</if></td>
               <td><if condition="empty($com['pay_time'])"><else/>{$com['pay_time']|date='Y-m-d H:i:s',###}</if></td>
-              <td><if condition="empty($com['pieces_time'])"><else/>{$com['pieces_time']|date='Y-m-d H:i:s',###}}</if></td>
+              <td><if condition="empty($com['pieces_time'])"><else/>{$com['pieces_time']|date='Y-m-d H:i:s',###}</if></td>
             </tr>
           </foreach>
           <if condition="empty($compileinfo)">
@@ -113,13 +113,13 @@
     }else if(selectedVal=='F'){
         inputPObj.attr('placeholder','请输入申请人地址');
     }else if(selectedVal=='G'){
-        inputPObj.attr('placeholder','请输入联系人');
+        inputPObj.attr('placeholder','请输入跑堂名字');
     }else if(selectedVal=='H'){
-        inputPObj.attr('placeholder','请输入联系电话');
+        inputPObj.attr('placeholder','请输入跑堂电话');
     }else{
         inputPObj.attr('placeholder','请输入搜索关键字');
     }
-}
+  }
    $(function(){
    //列表标题排序
    $("#jt").bind("click",function(){

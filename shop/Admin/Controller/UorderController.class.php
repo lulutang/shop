@@ -89,6 +89,8 @@ class UorderController extends Controller {
         //获取订单数据
         $orderall   = $order -> getOrderAll ($pageModel->firstRow , $pageModel->listRows , $sort ,$where);
         $this -> assign("cate" , $cate);
+        $this -> assign("startseat",$pageModel->firstRow);
+        $this -> assign("endseat",$pageModel->listRows);
         $this -> assign("get",$get);
         $this -> assign ('pages', $pages);
         $this -> assign ('sortorder', $sortorder);
@@ -189,13 +191,21 @@ class UorderController extends Controller {
         $goodsflow  = $order -> commodityFlow($ordergid);
         //获取订单商品数据
         $orderGoods = $order -> getFindOrderGoods($ordergoodswhere);
+        $needWhere = "need_id=".$orderGoods["need_id"];
+        $goodsneeddata = $order -> goodsNeed($needWhere);
+        $trawhere = "id=".$orderGoods["deal_id"];
         //获取申请人信息
-        $traderfind = $order -> getFindtrader($traderwhere);
+        $traderfind = $order -> getFindtrader($trawhere);
         //获取操作人信息
         $compiledata = $order -> compileData($traderwhere); 
+        //获取该商品跑堂信息
+        $adminuserwhere = "bwm.kid=".$orderGoods["user_id"];
+        $adminuserfind = $order -> adminUserFind($adminuserwhere);
         $traderfind["apply"]    = explode(',', $traderfind["apply"]);
         $traderfind["priority"] = explode(',', $traderfind["priority"]);
         $ordergoodsflow  = $order -> orderGoodsStatus;
+        $this -> assign("adminuserfind" , $adminuserfind);
+        $this -> assign("goodsneeddata" , $goodsneeddata);
         $this -> assign("traderfind" , $traderfind);
         $this -> assign("compiledata" , $compiledata);
         $this -> assign("goodsflow",$goodsflow);
@@ -233,7 +243,6 @@ class UorderController extends Controller {
     public function uppatent($ordergoods_id) {
         $order   = new UorderModel();
         $get = I ( 'get.' );
-        $get["status"] = $order -> six;
         $user    = session();
         //修改流程状态信息
         $orderid = $order -> addCompile($user , $get);
@@ -288,8 +297,11 @@ class UorderController extends Controller {
         $traderfind = $order -> getFindtrader($traderwhere);
         //申请人多条数据
         $traderall = $order -> getAlltrader($traderallwhere);
+        $needWhere = "need_id=".$orderGoods["need_id"];
+        $goodsneeddata = $order -> goodsNeed($needWhere);
         $traderfind["apply"]    = explode(',', $traderfind["apply"]);
         $traderfind["priority"] = explode(',', $traderfind["priority"]);
+        $this -> assign("goodsneeddata" , $goodsneeddata);
         $this -> assign("traderall" , $traderall);
         $this -> assign("traderfind" , $traderfind);
         $this -> assign("goodsflow",$goodsflow);
@@ -344,6 +356,8 @@ class UorderController extends Controller {
         //获取订单数据
         $orderall   = $order -> getOrderAll ($pageModel->firstRow , $pageModel->listRows , $sort ,$where);
         $this -> assign("get" , $get);
+        $this -> assign("startseat" , $pageModel->firstRow);
+        $this -> assign("endseat" , $pageModel->listRows);
         $this -> assign("crumbs",$this -> crumbs);
         $this -> assign("daytime",$get["daytime"]);
         $this -> assign('pages', $pages);
@@ -426,7 +440,7 @@ class UorderController extends Controller {
         //取出下载标题头
         $ordertitle = $Publicel -> ordertle();
         //下载数据
-        $orderdata = $order -> novileDownData($where);
+        $orderdata = $order -> novileDownData($where , $get["startseat"], $get["endseat"]);
         $Publicel -> out($orderdata , $ordertitle["invoicetitle"] ,"财务订单");
     }
 
@@ -434,21 +448,31 @@ class UorderController extends Controller {
      * 下载订单管理excel表格
      * @param array $get 下载条件
      */
+
     public function down(){
         $order = new UorderModel();
         $get = I ( 'get.' );
+        $startdata = strtotime(date("Y-m-d")."23:59:59");
+        $enddata = strtotime(date("Y-m-d")."0:0:0");
         //调用Pubcel下载控制器 
         $Publicel   = A("Pubcel");
         //取出下载标题头
         $ordertitle = $Publicel -> ordertle();
-        $start = str_replace("+"," ",$get["starttime"]);
-        $end = str_replace("+"," ",$get["endtime"]);
+        $start = strtotime(str_replace("+"," ",$get["starttime"]));
+        $end = strtotime(str_replace("+"," ",$get["endtime"]));
         $where = isset ( $get ['pay'] ) ? "od.status =". intval ($get["pay"]) : "od.status =1";
-        if(!empty($get["starttime"]) && !empty($get["endtime"])){
-            $where = isset ( $get ['pay'] ) ? "od.status =". intval ($get["pay"]) : "od.status =1 and od." . $get['ordertime'] ." BETWEEN ". strtotime($start) ." AND ". strtotime($end);
+        if(is_numeric($start) && !is_numeric($end)){
+            $where .= " AND od.pay_time" ." BETWEEN ". $start ." AND ". $startdata;
+        }elseif(!is_numeric($start) && is_numeric($end)){
+            $where .= " AND od.pay_time" ." BETWEEN ". $enddata ." AND ". $end;
+        }elseif(is_numeric($start) && is_numeric($end)){
+            $where = isset ( $get ['pay'] ) ? "od.status =". intval ($get["pay"]) : "od.status =1 and od." . $get['ordertime'] ." BETWEEN ". $start ." AND ". $end;
+        }
+        if(!empty($get["order_card"]) && $get["order_card"] != "ordertime"){
+            $where .=" AND od.order_card like '%".$get["order_card"]."%'";
         }
         //取出下载数据
-        $orderdata = $order -> orderDownData($where);
+        $orderdata = $order -> orderDownData($where , $get);
         $Publicel -> out($orderdata , $ordertitle["ordertle"] ,"财务订单");
     }
     
@@ -475,5 +499,63 @@ class UorderController extends Controller {
         $style = getAllCategory();
         $twocate = $order -> searchCate($style , $get);
         echo json_encode($twocate);
+    }
+    
+    /**
+     * 申请书
+     * @param array $get 查询的数据
+     */
+    public function apply() {
+        $get = I("get.");
+        $order = new UorderModel();
+        $where = "ogd.id=".$get["ordergid"];
+        $apply = $order -> applyFind($where);
+        $this -> assign("apply" , $apply);
+         if($get["down"] == "downpdf"){
+            $downpdfhtml = $this ->fetch();
+            $Publicel = A("pubcel");
+            $Publicel -> downpdf("apply" , $downpdfhtml);   
+        }else{
+            $this -> display();
+        }
+    }
+    
+    /**
+     * 委托书
+     * @param array $get 查询的数据
+     */
+    public function deput() {
+        $get = I("get.");
+        $order = new UorderModel();
+        $where = "ogd.id=".$get["ordergid"];
+        $deputdata = $order -> deputFind($where);
+        $this -> assign("deputdata" , $deputdata);
+        if($get["down"] == "downpdf"){
+            $downpdfhtml = $this -> fetch();
+            $Publicel = A("pubcel");
+            $Publicel -> downpdf("deput" , $downpdfhtml);   
+        }else{
+            $this -> display();
+        }
+    }
+    
+    /**
+     * 商标注册协议书
+     * @param array $get 查询的数据
+     */
+    public function trademarkbook() {
+        $Publicel = A("pubcel");
+        $get = I("get.");
+        $order = new UorderModel();
+        $where = "ogd.id=".$get["ordergid"];
+        $trademarkdata = $order -> trademarkbookFind($where);
+        $trademarkdata["replacemoney"] = $Publicel -> replaceMoney($trademarkdata["service_price"]); 
+        $this -> assign("trademarkdata" , $trademarkdata);
+        if($get["down"] == "downpdf"){
+            $downpdfhtml = $this -> fetch();
+            $Publicel -> downpdf("trademarkbook" ,$downpdfhtml);   
+        }else{
+            $this -> display();
+        }
     }
 }

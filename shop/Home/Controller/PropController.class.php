@@ -10,29 +10,44 @@ namespace Home\Controller;
 
 use Think\Controller;
 use Home\Model\ActivityModel;
+use Home\Model\PropModel;
 define('WEIXIN_YOUHUI', 1);
 class PropController extends Controller {
-	/**
-	 * 红包展示
-	 */
+	
 	const WEIXIN = 1;
-	public function hbShow() {
-		$this->assign ( "datatime", $dataTime );
-		$this->display ();
-	}
 	/**
-	 * 用户申请红包
+	 * 用户领取优惠卷
 	 */
-	public function applyHongbao() {
-		/* $session = session ( 'user' );
-		$user_id = $session ['user_id'];
+	public function applyOnsale() {
+		$session = session ( 'user' );
+		$userId = $session ['user_id'];
+		$userName = $session ['user_name'];
 		
-		if (empty ( $user_id )) {
-			$this->assign ( 'message', '请登录后再操作' );
-			$this->display ( 'Public/error' );
+		if (empty ( $userId )) {
+			$this->assign ('message', '请登录后再操作');
+			$this->display ('Public/error');
 			exit ();
-		} */
+		} 
 		
+		$get = I('get.');
+		$id = isset($get['id']) ? intval($get['id']) : 0;
+		
+		$m = new PropModel();
+		$result = $m -> getPropByOnsale(array('sale_id' => $id, 'uid' => $userId, 'is_use' => 0, 'endTime' => array('egt' , time())));
+		
+		if($result['num'] < 1) {
+			$numId = $m ->addOnsale($userId, $userName, array('id' => $id));
+			//领取成功
+			if($numId > 0) {
+				echo 1;exit();
+			}else{//领取失败
+				echo 2;exit();
+			}
+			
+		}else{
+			//已领取，没有使用
+			echo 0;exit();
+		}
 		
 	}
 	

@@ -262,15 +262,31 @@ class LoginController extends Controller {
 	/**
 	 * 添加首页搜索信息
 	 */
-	public function ajaxAddInfo(){
+	public function ajaxAddInfo() {
 		$data = I('get.');
-		if(is_array($data)){
+		if(is_array($data) && $data['name'] != '' && $data['user_name'] != '' && $data['phone'] != ''){
 			$m = M ( 'Glean_info' );
-			$data ['addTime'] = time ();
-			$m->add ( $data );
+			$res = $m -> field('id') -> where(array('name' => $data['name'], 'user_name' => $data['user_name'], 'phone' => $data['phone'], 'style' => $data['style'])) -> find();
+			
+			if(!$res['id']) {
+				$data ['addTime'] = time ();
+				$m->add ( $data );
+			}
+			
 			echo 1;exit();
 		}
 		echo 0;exit();
 		
+	}
+	
+	/**
+	 * 增加统计次数功能
+	 */
+	public function ajaxAddCensusInfo() {
+		$data = I('get.');
+		$m = M('Census');
+		$data['channel'] = isset($data['channel']) ? intval($data['channel']) : 0;
+		$data ['add_time'] = time ();
+		$m->add ( $data );
 	}
 }

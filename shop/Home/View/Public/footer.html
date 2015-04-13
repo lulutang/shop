@@ -29,7 +29,7 @@ foreach ($data as $key => $val) {
       </ul>
     </div>
 </div>
-<div class="copy">
+<div class="copy" style='margin-bottom:100px'>
 	<div class="container">
     	<ul class="copybox">
         	<li>
@@ -67,6 +67,47 @@ foreach ($data as $key => $val) {
 </div>
 
 <!--页脚 结束-->
+
+<!--优惠券活动2015-04-07sdd 开始-->
+<div class="maycoupon" >
+<?php 
+$result = getCommonOnsale();
+
+?>
+    <div class="maycoupon_fix"></div>
+    <ul class="maycoupon_con">
+    
+     <foreach name='result' item='val' key='key'>
+        <li class="coupon{$key+1}">
+            <a href="javascript:onsale({$val.id})" id='onsale_onsale' title="{$val.name}">
+                <p class="p1">
+                 <if condition="($val['use'] eq 0)">
+                	 全场通用
+                 </if>
+                 <if condition="($val['use'] eq 1)">
+                 	商标服务
+                 </if>
+                 <if condition="($val['use'] eq 2)">
+                	 专利服务
+                 </if>
+                <if condition="($val['use'] eq 3)">
+               	       版权服务
+                 </if>
+                <if condition="($val['use'] eq 4)">
+                	其他
+                 </if>
+                </p>
+                <p class="p2">￥{$val.money}</p>
+                <p class="p3">使用条件：满￥{$val.sale_where}</p>
+            </a>
+        </li>
+        
+      </foreach>
+        
+       
+       
+    </ul>
+</div>
 </body>
 </html>
 <script type="text/javascript" src="{$Think.HOME_JS}jquery-1.7.2.js"></script>

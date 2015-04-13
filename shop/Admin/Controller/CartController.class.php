@@ -33,13 +33,13 @@ class CartController extends Controller {
 		$get = I ( 'get.' );
 		
 		$page = isset ( $get ['p'] ) ? intval ( $get ['p'] ) : 1;
-		$pageSize = isset ( $get ['pageSize'] ) ? intval ( $get ['pageSize'] ) : 10;
+		$pageSize = isset ( $get ['size'] ) ? intval ( $get ['size'] ) : 10;
 		$sort = isset ( $post ['sort'] ) ? intval ( $post ['sort'] ) : 1;
 		
 		$model = new CartModel ();
 		$cartInfo = $model->getCartInfo ( $page, $pageSize, '', $sort);
 		
-		$pageModel = new Page ( $cartInfo ['count'] );
+		$pageModel = new Page ( $cartInfo ['count'], $pageSize );
 		$pages = $pageModel->show ();
 		$userModel = new UserOrderModel ();
 		$yewu = $userModel->getYewu ( 0 );
@@ -71,7 +71,7 @@ class CartController extends Controller {
 		$keywords = $post ['keywords'];
 		$buy_timeb = str_replace('+', ' ', $post ['buy_timeb']) ;
 		$buy_timeend = str_replace('+', ' ', $post ['buy_timeend']);
-		$pageSize = isset ( $post ['pageSize'] ) ? intval ( $post ['pageSize'] ) : 10;
+		$pageSize = isset ( $post ['size'] ) ? intval ( $post ['size'] ) : 10;
 		$sort = isset ( $post ['sort'] ) ? intval ( $post ['sort'] ) : 1;
 		$page = isset ( $post ['p'] ) ? intval ( $post ['p'] ) : 1;
 		
@@ -146,7 +146,7 @@ class CartController extends Controller {
 			);
 		$cartInfo = $model->getCartInfo ( $page, $pageSize, $where, $sort);
 	
-		$pageModel = new Page ( $cartInfo ['count'] );
+		$pageModel = new Page ( $cartInfo ['count'], $pageSize);
 		$pages = $pageModel->show ();
 		$userModel = new UserOrderModel ();
 		$yewu = $userModel->getYewu ( 0 );

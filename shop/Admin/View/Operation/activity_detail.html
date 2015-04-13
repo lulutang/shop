@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>活动详情</title>
+<link href="{$Think.ADMIN_CSS}global.css" rel="stylesheet" type="text/css">
+<link href="{$Think.ADMIN_CSS}g_style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+    <div class="content_right">
+    <div id="indent" class="indent" onClick="changeWin()"></div>
+    <div class="link_path">您所在的位置：<a href="/Admin/Operation/coupon">运营管理</a>&nbsp;>&nbsp;<a href="/Admin/Operation/activity">活动管理</a>&nbsp;>&nbsp;<a href="javascript:void(0)">{$huodong.name}</a></div>
+    <div class="promotion"><b>活动详情</b></div>
+    <div class="gsd_div">
+      <div class="g_head">
+		<img src="{$Think.ADMIN_IMAGES}title.jpg">
+		<div class="gh_div">
+		    
+			<p><span>活动标题：</span>{$huodong.name}</p>
+			<p><span>商品类型：</span>
+			<if condition="($huodong['type'] eq 0)">优惠卷</if>
+			<if condition="($huodong['type'] eq 1)">单品促销</if>
+			<if condition="($huodong['type'] eq 2)">优惠卷促销</if>
+			
+			</p>
+			<if condition="($huodong['type'] eq 1)">
+			<p><span>商品数量：</span>{$huodong.num}件</p>
+			</if>
+			<p><span>活动时间：</span>{$huodong.startTime|date='Y-m-d',###}&nbsp;至&nbsp;{$huodong.endTime|date='Y-m-d',###}</p>
+		</div>
+		<div class="clear"></div>
+	  </div>
+    </div>
+    <if condition="($huodong['type'] eq 1)">
+	<div class="promotion"><b>本活动商品</b></div>
+	
+	<ul class="gsd_div">
+		  <foreach name='list' item='val'  >
+		  <if condition="($val['type'] eq 1)">
+			 
+		  </if>
+		  <if condition="($val['type'] eq 0)">
+		       <li class="gt_div">
+			   <div class="top top1"></div>
+						<div class="middle middle1">
+							<div class="m_top">
+								<img src="{$val.thumb}"/>
+								<div class="mt_goods">
+									<p>商品名称：{$val.short_title}</p>
+									<p title="{$val.goods_code}">商品编码：{$val.goods_code|sub_str=###,8}</p>
+								</div>
+								<div class="clear"></div>
+							</div>
+							<p class="coupon">优惠券：￥{$val.money}</p>
+							<p>使用条件：￥{$val.sale_where}</p>
+							<p>使用范围：
+							 <if condition="($val['use'] eq 0)">
+							 全场
+							 </if>
+							 <if condition="($val['use'] eq 1)">
+							 商标服务
+							 </if>
+							 <if condition="($val['use'] eq 2)">
+							 专利服务
+							 </if>
+							 <if condition="($val['use'] eq 3)">
+							 版权服务
+							 </if>
+							  <if condition="($val['use'] eq 4)">
+							其他
+							 </if>
+							</p>
+							<p>有效时间：
+							{$val.sale_startTime|date='Y-m-d',###}&nbsp;至&nbsp;{$val.sale_endTime|date='Y-m-d',###}</p>
+						</div>
+						<div class="bottom bottom1"></div>
+		         </li>
+		  </if>
+		  <if condition="($val['type'] eq 2)">
+		  	<li class="gt_div">
+				<div class="top top2"></div>
+						<div class="middle middle2">
+							<div class="m_top">
+								<img src="../images/active_logo.jpg"/>
+								<div class="mt_goods">
+									<p>商品名称：LOLOO商标</p>
+									<p>商品&nbsp;I&nbsp;&nbsp;D：112222000</p>
+								</div>
+								<div class="clear"></div>
+							</div>
+						</div>
+						<div class="bottom2">中细软币-盘缠：￥150.00</div>
+						<div class="down">
+							<img src="../images/bi.png"/>
+							<p>中细软币-盘缠</p>
+							<div class="clear"></div>
+						</div>
+			</li>
+		  </if>
+		  <if condition="($val['type'] eq 3)">
+		  	  <li class="gt_div">
+			     <div class="top top2"></div>
+						<div class="middle middle2">
+							<div class="m_top">
+								<img src="../images/active_logo.jpg"/>
+								<div class="mt_goods">
+									<p>商品名称：LOLOO商标</p>
+									<p>商品&nbsp;I&nbsp;&nbsp;D：112222000</p>
+								</div>
+								<div class="clear"></div>
+							</div>
+						</div>
+						<div class="bottom3"><img src="../images/cup.jpg"/><div>赠品-卡通水杯</div></div>
+		       </li>
+		  </if>
+		  </foreach>
+
+	</ul>
+	</if>
+
+	<div class="foot">
+		<a class="back" style="display: inline-block;" href="javascript:history.go(-1);">返&nbsp;&nbsp;回</a>
+	</div>
+  </div>
+
+</body>
+</html>
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script>
+//菜单缩放
+openclose=true;
+function changeWin() { 
+    parent.bodyFrame.cols =openclose?"1,*":"210,*";//这句话有报错
+    $(".indent").toggleClass('ind');
+    openclose=!openclose;
+}
+</script>

@@ -6,37 +6,40 @@
 <link href="{$Think.ADMIN_CSS}global.css" rel="stylesheet" type="text/css">
 <link href="{$Think.ADMIN_CSS}m_style.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
-
+<script type="text/javascript" src="{$Think.ADMIN_JS}guest.js"></script>
 </head>
 
 <body>
 <div class="content_right addproducts_success">
     <div id="indent" class="indent" onClick="changeWin()"></div>
-    <div class="link_path">您所在的位置：<a href="customer_list.html">客官管理 </a>&nbsp;>&nbsp;<a href="javascript:void(0)">添加购物车商品成功</a></div>
+    <div class="link_path">您所在的位置：<a href="/index.php/Admin/Guest/lists">客官管理 </a>&nbsp;>&nbsp;<a>添加购物车商品成功</a></div>
 	<table class="addproducts_successbox">
+             
     	<tr>
         	<td width="313" class="icon_bg" rowspan="4"></td>
-            <td class="text-left success_title" colspan="2"><span>恭喜您</span>，为客官【孙小姐-15201110631】创建购物车商品成功！</td>
+            <td class="text-left success_title" colspan="2"><span>恭喜您</span>，客官【{$username}】创建购物车商品成功！</td>
         </tr>
         <tr>
         	<td class="text-right ver_top" width="129">服务信息：</td>
             <td  class="text-left" width="1131">
-            	<p>商标注册[天利-33类-￥1590.00]</p>
-                <p>商标注册[天利-33类-￥1590.00]</p>
+                <foreach name="data" item="vo" key="k" >
+                    <p><if condition="$k eq 0 "><b>{$vo.erji}</b><else />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</if>[{$vo.style_name}-￥{$vo.service_price}]</p>
+                </foreach>
+
             </td>
         </tr>
         <tr>
         	<td class="text-right">总额：</td>
-            <td  class="text-left"><span class="colf00">￥3180.00</span></td>
+            <td  class="text-left"><span class="colf00">￥{$total}</span></td>
         </tr>
         <tr>
         	<td class="text-right"></td>
             <td  class="text-left">
-            	<p>短信通知客官立即付款 <a href="">[发送短信]</a></p>
-                <p><a href="">复制付款链接</a> <a href="customer_list.html">查看客户</a></p>
+            	<p>短信通知客官立即付款 <a href="javascript:sendInfo({$uid},'3')">[发送短信]</a></p>
+                <p><a href="/Home/User/mycart">复制付款链接</a> <a href="/Admin/Guest/detail/uid/{$uid}">查看客户</a></p>
             </td>
         </tr>
-    
+             </foreach>
     </table>
 </div>
 

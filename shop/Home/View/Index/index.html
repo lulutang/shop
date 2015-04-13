@@ -7,22 +7,13 @@
 <meta name = "keywords" content = "商标注册,商标设计,商标异议申请,专利申请,实用新型专利,版权申请"/>
 <meta name = "description" content = "全国第一家知识产权业务服务商城,中细软服务商城包含商标服务,专利服务,版权服务等知识产权相关业务。"/>
 <link href="{$Think.HOME_CSS}index.css" rel="stylesheet" type="text/css">
-<style type="text/css">
-.main_slider{position: relative;height: 430px;}
-.main_slider img {display: block;width: 100%;height: 430px;margin: 0 auto;}
-.slidesjs-container{height: 100%!important;}
-.slidesjs-control {height: 100%!important;}
-.slidesjs-pagination{left:50%;top:400px;width:500px;height:30px;margin-left:-75px;position:absolute;z-index: 11;}
-.slidesjs-pagination-item{width:35px;height:6px;overflow:hidden;float:left;display:inline; margin:0px 5px;}
-.slidesjs-pagination-item a{background-color:#aaa; width:35px;height:25px;line-height:6px;overflow:hidden;text-align:center;color:#aaa; font-size:0px; float:left;display:inline-block;}
-.slidesjs-pagination-item a:hover{background-color:#333; color:#333;}
-.slidesjs-pagination-item a.active{background-color:#333; color:#333;}
-
-</style>
 </head>
 
 <body>
 <!--<div id="tan_zhezaocen" style="position:fixed;width:100%;height:100%;z-index:20000;  background-color:gray;opacity:0.5;"></div>-->
+
+
+<!--优惠券活动 开始-->
 <!--顶部导航 开始-->
 <div class="topnav-box">
 	<div class="container">
@@ -616,7 +607,7 @@
                     <?php }?>
 
                     <ul class="index-login-row02">
-                        <a href="http://zkb.gbicom.cn/#/PublicSearch" target="_blank">
+                        <a href="javascript:void(0);" id ='submit_shop' onclick="$('#search_box').find('.bg').show();$('#search_box').show();">
                             <li class="index-login-icon01">
                                 商标查询
                             </li>
@@ -666,11 +657,27 @@
 <!--主要内容 开始-->
 
 <!--顶部广告 开始sdd150319-->
-<div class="main_slider">
-    <a href="/Home/Goods/gooddetails/id/8" style="background:#33c6a1 url({$current|current_cdn_img}{$Think.HOME_IMAGES}banner07.png) center 0 no-repeat;height:429px;"></a>
-    <a href="/home/package/details/id/2" style="background:#1c72d3 url({$current|current_cdn_img}{$Think.HOME_IMAGES}banner_01.jpg) center 0 no-repeat;height:429px;"></a>
-    <a href="/home/package/details/id/1" style="background:#f5685f url({$current|current_cdn_img}{$Think.HOME_IMAGES}banner_02.jpg) center 0 no-repeat;height:429px;"></a>
-    <a href="/home/package/details/id/3" style="background:#27b7b8 url({$current|current_cdn_img}{$Think.HOME_IMAGES}banner_03.jpg) center 0 no-repeat;height:429px;"></a>
+
+<!--顶部广告 开始-->
+<div class="mainbanner">
+	<div class="mainbanner_window">
+		<ul id="slideContainer">
+		    <li><a href="/Home/Goods/gooddetails/id/8" ><img src="{$Think.HOME_IMAGES}banner04_01.png" width="1600"  /></a></li>
+			<li><a href="/home/package/details/id/2" ><img src="{$Think.HOME_IMAGES}banner_01.jpg" width="1600"  /></a></li>
+			<li><a href="/home/package/details/id/1" ><img src="{$Think.HOME_IMAGES}banner_02.jpg" width="1600"  /></a></li>
+			<li><a href="/home/package/details/id/3" ><img src="{$Think.HOME_IMAGES}banner_03.jpg" width="1600"  /></a></li>
+		<!-- 	<li><a href="/Home/activity/activitydesition" ><img src="{$Think.HOME_IMAGES}banner5.png" width="1600"  /></a></li> -->
+          <!--   <li><a href="/Home/activity/bill" ><img src="{$Think.HOME_IMAGES}banner6.jpg" width="1600"  /></a></li> -->
+		</ul>
+	</div>
+	<ul class="mainbanner_list">
+		<li><a href="javascript:void(0);">1</a></li>
+		<li><a href="javascript:void(0);">2</a></li>
+		<li><a href="javascript:void(0);">3</a></li>
+		<!-- <li><a href="javascript:void(0);">5</a></li> -->
+        <li><a href="javascript:void(0);">6</a></li>
+	</ul>
+
 </div>
 <!--顶部广告 结束-->   
     
@@ -728,7 +735,14 @@
                         foreach( $value['data'] as $v){ 
                 ?>
                 <?php if( $i!=1 ) {?><div class="index-trademark-xian"></div> <?php } ?>
-            	<li onMouseOver="reveal(<?php echo $v['goods_id'];?>)" onMouseOut="hide(<?php echo $v['goods_id'];?>)">
+            	<li 
+            	<if condition="(1 eq $i && $value['name']=='商标服务')">
+            	    class="hover"
+            	<else/>
+            	     onMouseOver="reveal(<?php echo $v['goods_id'];?>)" onMouseOut="hide(<?php echo $v['goods_id'];?>)"
+            	</if>
+            	
+            	>
                     
                     <div class="index-trademark-img">
                         <a target="_blank" href="/Home/Goods/gooddetails/id/<?php echo $v['goods_id'];?>"><img title="<?php echo $v['title'];?>" alt="<?php echo $v['title'];?>" width="290" height="165" src="{$current|current_cdn_img}<?php if($v['thumb']){ echo  $v['thumb'];}else{?>{$Think.HOME_IMAGES}nopic.jpg<?php } ?>" /></a>
@@ -743,7 +757,7 @@
                     </h4>
                     <p>已有<?php echo $v['number'];?>人购买</p>
                    
-                    <div class="index-trademarkbutton" style="display: none;"  id="g_id<?php echo $v['goods_id'];?>" >
+                    <div class="index-trademarkbutton" <if condition="(1 eq $i && $value['name']=='商标服务')"><else/>style="display: none;"</if> id="g_id<?php echo $v['goods_id'];?>" >
                     	<a class="button button04" target="_blank" href="/Home/Goods/gooddetails/id/<?php echo $v['goods_id'];?>">查看详情</a>
                     </div>
                     

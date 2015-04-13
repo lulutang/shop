@@ -9,13 +9,13 @@ use Home\Model\LoginModel;
 use Home\Model\UserModel;
 use Think\Controller;
 class UserController extends Controller{
-    /*
+   
     public function _initialize() {
         $user = session('user');
         if(!isset($user)) {
                 $this->redirect('/Home/index/');
         }
-    }*/
+    }
     
     /**
     * 显示个人中心
@@ -61,11 +61,11 @@ class UserController extends Controller{
     */
     public function edituserinfo(){
         if(IS_POST){
-                $_user = new UserModel();
-                $data = I('post.');
-                $result = $_user->EditMyInfo($data);
-                echo "<meta http-equiv='Content-Type'' content='text/html; charset=utf-8'>";
-                echo "<script>alert('个人资料修改成功!');location.href='userhome';</script>";
+            $_user = new UserModel();
+            $data = I('post.');
+            $result = $_user->EditMyInfo($data);
+            echo "<meta http-equiv='Content-Type'' content='text/html; charset=utf-8'>";
+            echo "<script>alert('个人资料修改成功!');location.href='userhome';</script>";
         }
     }
     /**
@@ -92,11 +92,17 @@ class UserController extends Controller{
         $extend = explode(".",$_FILES[$file]["name"]);
         $key = count($extend)-1;
         $ext = ".".$extend[$key];
-        $newfile = time().$ext;
+        if($file == 'y_file'){
+            $newfile = 'y_'.time().$ext;
+        }else{
+            $newfile = 's_'.time().$ext;
+        }
+        
         $savePath = "./uploads/thumb/".date('Ymd',time())."/"; 
         if(is_dir($savePath)==FALSE){
               mkdir($savePath,0777);  
         } 
+        
         $thumb_path=$savePath.$newfile;
         move_uploaded_file($_FILES[$file]['tmp_name'] , $thumb_path);
         return substr($thumb_path, 1);
@@ -139,6 +145,17 @@ class UserController extends Controller{
     public function EditTraders(){
         $_user = new UserModel();
         $data = I('post.');
+        
+        if(empty($_FILES['y_file']['name'])){
+            $data['y_url'] = "";
+        }  else {
+            $data['y_url'] = $this -> uploadpic('y_file');
+        }
+        if(empty($_FILES['s_file']['name'])){
+            $data['s_url'] = "";
+        }  else { 
+            $data['s_url'] = $this -> uploadpic('s_file');
+        }
         $arr = $_user->EditTraderInfo($data);
         if(empty($arr)){
             echo "<script>alert('网络故障，修改失败。。');location.href='/Home/User/getdealinfo';</script>";die;

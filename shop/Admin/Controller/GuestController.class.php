@@ -27,22 +27,52 @@ class GuestController extends Controller{
      */
     public function lists(){
 
-        $where ='1=1';
-        if(!empty($_GET['keywords'])){
-                $where.=" and user_name like '%".$_GET['keywords']."%' or email like '%".$_GET['keywords']."%' or mobile_phone like '%".$_GET['keywords']."%'";
+        $where =' 1=1 ';
+        
+        $titlename = $_POST['titlename'];
+        $searchdata = $_POST['searchdata'];
+        
+        if( $searchdata ){
+            $where .= " and $titlename like '%$searchdata%' ";
         }
+
+        //创建时间排序
+        if(  I('regtime')  &&  I('regtime') ==='asc' ){
+            $order = " reg_time asc ";
+            $ordertime ='desc';
+        }else{
+            $order = " reg_time desc ";
+            $ordertime ='asc';
+        }
+        
+        if( I('login') && I('login') ==='asc' ){
+            $order = " last_login asc ";
+            $login ='desc';
+        }
+        if( I('login') && I('login') ==='ascdesc' ){
+            $order = " last_login desc ";
+            $login ='';
+        }
+
         $user = new GuestModel();
         $Count = $user -> UserCount($where);
         $page_count = 10; 
         $Page = new Page($Count, $page_count);
-        $map['keywords'] = @$_GET['keywords'];
+        
+        $map['titlename'] = $titlename;
+        $map['searchdata'] = $searchdata;
+        $map['regtime'] = $regtime;
+        $map['login'] = $login;
         foreach($map as $key=>$val) {   
                 $p->parameter .= "$key=".urlencode($val)."&";   
         }
+
         $Pagesize =$Page ->show(); 
-        $userinfo = $user -> UserInfos($Page->firstRow , $Page->listRows ,$where);
+        $userinfo = $user -> UserInfos($Page->firstRow , $Page->listRows , $where, $order);
       
         $this->assign('map',$map);
+        $this->assign('ordertime',$ordertime);
+        $this->assign('login',$login);
         $this->assign('p',trim(I("p")));
         $this->assign('page' , $Pagesize);
         $this->assign('userinfo',$userinfo);
@@ -95,7 +125,8 @@ class GuestController extends Controller{
             session('addguestmobile',$data['mobile_phone']);
             session('addguestemail',$data['email']);
             //添加订单
-            if( $result ) $this->redirect("Admin/Guest/addMemOrder/uid/$result");    
+          //  if( $result ) $this->redirect("Admin/Guest/addMemOrder/uid/$result"); 
+            if( $result ) $this->redirect("Admin/Guest/addDealer/uid/$result"); 
         }
 
         $this -> display();   
@@ -132,6 +163,13 @@ class GuestController extends Controller{
             $result = $W -> AddUserInfos($arr);   
         }
         return $result;
+    }
+    /**
+     * 添加申请人
+     */
+    public function addDealer() {
+        
+        $this -> display();    
     }
     /**
      * 添加订单
@@ -176,12 +214,13 @@ class GuestController extends Controller{
                 'type' => $oneTypeid,
                 'title' => $goods['title'] ,
                 'short_title' => $goods['short_title'] ,
+                'creator' => $_SESSION['user_id'],
                 'addtime' => time()   
             );
-           
+          
             //向购物车cart表插入一条数据
-          //  $cartId = $UU -> saveGoodsCart( $data );
-            
+            $cartId = $UU -> saveGoodsCart( $data );
+
             $dataorder = array(
                 'goods_id' => $goods['goods_id'] ,
                 'goods_price' => $goods['now_price'],
@@ -194,9 +233,10 @@ class GuestController extends Controller{
                 'style' => $oneTypeid,
                 'yiji' => $twotypename ,
                 'erji' => $goods['short_title'] ,
+                'cartid' => $cartId,
                 'addtime' => time()   
             );
-           // $orderId = $UU -> saveGoodsOrder( $dataorder );
+            $orderId = $UU -> saveGoodsOrder( $dataorder );
             $this -> assign('short_title',$goods['short_title']);
             $this -> assign('oneTypeid',$oneTypeid);
             $this -> assign('oneType',$oneType);
@@ -230,37 +270,102 @@ class GuestController extends Controller{
      */
     public function addSBMemOrder() {
         $UU = new GuestModel();
-        
+      //  var_dump($_POST);
 
         if( $_POST ){
             
             $uid = $_POST['uid']; //用户id
-           // $cartId = $_POST['cartId']; //购物车id
-            $data['id'] = $_POST['orderId']; //未支付订单id
-
-            $message = array(
-                'text'=> $_POST['message'],
-                'short_title'=> $_POST['short_title'],
-                'name'=> $_POST['name'],
-                'style'=> $_POST['style']
-            );  
-            $data['message'] = json_encode($message);
-            $data['goods_style'] = $_POST['style'];
-//            $data['style_name'] = $_POST['']; //一级大类
-//            $data['enroll'] =  ;//商标图片
-//            $data['service_price'] = ;//总价钱
-//            $data['subd'] = ;//商品小类
-            //生成订单编号
-            $data['order_code'] = makeOrderCardId();
-            //生成合同号
-
-            $res = $UU -> updateData(' id ='.$data['id'], $data);
-
-            if( $res && $_POST['GWSave']==='1'){
-                $this->redirect("Admin/Guest/addProductsSuccess");
+            $cartId = $_POST['cartId']; //购物车id  
+            $orderId = $_POST['orderId']; //未支付订单id
+            
+            //根据大类个数进行处理
+            $need_state = implode(',',I('need_state'));
+            $need_prior = implode(',',I('need_prior'));
+            $thumb = $this -> uploadpic();
+            $name = I('name');
+            if( empty( $name ) || empty( $thumb )) {
+                exit( '商标名称为空或商标图样没有上传！ [ <A HREF="javascript:history.back()">返 回</A> ]');
             }
-            if( $res && $_POST['GWSave']==='2'){
-                $this->redirect("Admin/Guest/addMemOrder/uid/$uid");
+            
+            $OneType = I('OneType');
+            $subtype = I('subtype');
+            $serverprice = I('serverprice');
+            $subnum = I('subnum');
+            $message = array(
+                'text'=> I('message'),
+                'short_title'=> I('short_title'),
+                'name'=> I('name'),
+                'style'=> I('style')
+            );  
+            
+            $commoninfo = $UU -> getCart(' id='.$cartId );
+            
+            $count = count(I('OneType'));
+            for( $i = 0; $i < $count; $i++ ){
+                //更新need表 第一次的时候update >1进行复制添加操作
+                $need = array(
+                    'uid' => $commoninfo['user_id'],
+                    'user_name' => $commoninfo['userName'],
+                    'phone' => $commoninfo['phone'],
+                    'goods_id' => $commoninfo['goods_id'],
+                    'name' => $name,
+                    'need_state' => $need_state,
+                    'need_prior' => $need_prior,
+                    'area' => I('area') ,
+                    'need_time' => strtotime(I('need_time')),
+                    'need_number' => I('need_number'),
+                    'style' => $OneType[$i],
+                 //   'style_part' => I('OneType')[$i],二级小类和三级组合
+                 //   'trader_uname' => I('OneType')[$i],商标申请人
+                    'subd' => $subtype[$i],
+                    'price' => $serverprice[$i],
+                    'subd_num' => $subnum[$i],
+                    'create_time' => time()  
+                );
+              
+                $needId = $UU -> saveGoodsNeed( $need );
+                
+                if( $i>= 1) {
+                   //cart表  >1进行复制添加操作
+                   $cartId = $UU -> copyCartRecord( $cartId );
+                }
+               //更新cart的now_price字段
+               $cart = array('now_price'=>$serverprice[$i]);
+               $UU -> updateCartRecord($cart,$cartId);
+               
+               //临时表 第一次的时候update >1进行复制添加操作
+                $dataorder = array(
+
+                    'message' => json_encode($message), 
+                    'style_name' => $OneType[$i],
+                    'enroll' => $thumb,
+                //    'deal_id' =>,
+//                    'deal_name' =>,
+//                    'deal_phone' =>,
+//                    'deal_address' =>,
+                    'service_price' => $serverprice[$i] ,
+                    'subd' => $subtype[$i],
+                    'subd_num' => $subnum[$i],
+                    'cartid' => $cartId,
+                    'need_id' => $needId   
+                );
+                
+                if( $i >= 1 ) {
+                    //复制更新操作
+                    $where = " id=$orderId  ";
+                    $neworderId = $UU -> copyTempCart($where);
+                    
+                    $res = $UU -> updateData(' id ='.$neworderId, $dataorder);                  
+                }else{
+                    $res = $UU -> updateData(' id ='.$orderId, $dataorder);
+                }                 
+            }
+
+            if( $res && $_POST['GNSave']==='1'){
+                $this->redirect("/Admin/Guest/addProductsSuccess/cid/$cartId");
+            }
+            if( $res && $_POST['GNSave']==='2'){
+                $this->redirect("/Admin/Guest/addMemOrder/uid/$uid");
             }
         } 
     }
@@ -274,7 +379,7 @@ class GuestController extends Controller{
         if( $_POST ){
             
             $uid = $_POST['uid']; //用户id
-           // $cartId = $_POST['cartId']; //购物车id
+            $cartId = $_POST['cartId']; //购物车id
             $data['id'] = $_POST['orderId']; //未支付订单id
 
             $message = array(
@@ -287,13 +392,13 @@ class GuestController extends Controller{
             $data['goods_style'] = $_POST['style'];
 
             //生成订单编号
-            $data['order_code'] = makeOrderCardId();
+           // $data['order_code'] = makeOrderCardId();
             //生成合同号
 
             $res = $UU -> updateData(' id ='.$data['id'], $data);
 
             if( $res && $_POST['GWSave']==='1'){
-                $this->redirect("Admin/Guest/addProductsSuccess");
+                $this->redirect("Admin/Guest/addProductsSuccess/cid/$cartId");
             }
             if( $res && $_POST['GWSave']==='2'){
                 $this->redirect("Admin/Guest/addMemOrder/uid/$uid");
@@ -311,7 +416,7 @@ class GuestController extends Controller{
         if( $_POST ){
             
             $uid = $_POST['uid']; //用户id
-           // $cartId = $_POST['cartId']; //购物车id
+            $cartId = $_POST['cartId']; //购物车id
             $data['id'] = $_POST['orderId']; //未支付订单id
 
             $message = array(
@@ -323,13 +428,13 @@ class GuestController extends Controller{
             $data['message'] = json_encode($message);
 
             //生成订单编号
-            $data['order_code'] = makeOrderCardId();
+           // $data['order_code'] = makeOrderCardId();
             //生成合同号
 
             $res = $UU -> updateData(' id ='.$data['id'], $data);
 
             if( $res && $_POST['BQSave']==='1'){
-                $this->redirect("Admin/Guest/addProductsSuccess");
+                $this->redirect("Admin/Guest/addProductsSuccess/cid/$cartId");
             }
             if( $res && $_POST['BQSave']==='2'){
                 $this->redirect("Admin/Guest/addMemOrder/uid/$uid");
@@ -348,7 +453,7 @@ class GuestController extends Controller{
         if( $_POST ){
             
             $uid = $_POST['uid']; //用户id
-           // $cartId = $_POST['cartId']; //购物车id
+            $cartId = $_POST['cartId']; //购物车id
             $data['id'] = $_POST['orderId']; //未支付订单id
 
             $message = array(
@@ -360,13 +465,13 @@ class GuestController extends Controller{
             $data['message'] = json_encode($message);
 
             //生成订单编号
-            $data['order_code'] = makeOrderCardId();
+            //$data['order_code'] = makeOrderCardId();
             //生成合同号
 
             $res = $UU -> updateData(' id ='.$data['id'], $data);
 
             if( $res && $_POST['ZLSave']==='1'){
-                $this->redirect("Admin/Guest/addProductsSuccess");
+                $this->redirect("Admin/Guest/addProductsSuccess/cid/$cartId");
             }
             if( $res && $_POST['ZLSave']==='2'){
                 $this->redirect("Admin/Guest/addMemOrder/uid/$uid");
@@ -390,6 +495,25 @@ class GuestController extends Controller{
      */
     public function addProductsSuccess() {
         
+        $cartid = $_REQUEST['cid'];
+        
+        if( $cartid ){
+            
+            $UU = new GuestModel();
+            
+            $data = $UU -> getTempCartGoods( $cartid );
+            $total = 0;
+            foreach ($data as $key => $value) {
+                $username = $value['user_name'];
+                $uid = $value['user_id'];
+                $total +=$value['service_price'];
+            }
+
+            $this -> assign('total',$total);
+            $this -> assign('username',$username);
+            $this -> assign('uid',$uid);
+            $this -> assign('data',$data);
+        }
         $this -> display();    
     }
 
@@ -417,15 +541,77 @@ class GuestController extends Controller{
             $carts = $UU -> getCarts($uid);
             $cartsnum = $carts ? count($carts):'0';
             //查询未支付订单
-            $carts = $UU -> getNoPayorders($uid);
-            $cartsnum = $carts ? count($carts):'0';
+            $noPays = $UU -> getNoPayorders($uid);
+            $noPaysnum = $noPays ? count($noPays):'0';
+            //算总钱和拆分json
+            $noPays = $this ->processPaysArray( $noPays );
+           
+            //查询支付订单
+            $Pays = $UU -> getPayorders($uid);
+            $Paysnum = $noPays ? count($Pays):'0';
+            //算总钱和拆分json
+            $Pays = $this -> processPaysArray( $Pays );
+            //交易人信息
+            $Traders = $UU -> getTraders( $uid );
+            //收货人
+            $Consignee = $UU -> getConsignee($uid);
+            //优惠券
+            $Coupon = $UU -> getCoupon($uid);
             
             $this -> assign('carts',$carts);
             $this -> assign('cartsnum',$cartsnum);
+            $this -> assign('noPays',$noPays);
+            $this -> assign('noPaysnum',$noPaysnum);
+            $this -> assign('Pays',$Pays);
+            $this -> assign('Paysnum',$Paysnum);
+            $this -> assign('Person',$Traders['Person']);
+            $this -> assign('Company',$Traders['Company']);
+            $this -> assign('Consignee',$Consignee);
+            $this -> assign('Coupon',$Coupon);
             $this -> assign('waiters',$waiters);
             $this -> assign('data',$data);
         }
         $this -> display();    
+    }
+    /**
+     * 处理得到相应数据
+     * @param array $data
+     * @return array
+     */
+    public function processPaysArray( $data ) {
+
+        if( $data ){
+            
+            $total = $panchan = $youhui = 0;
+            $PiPeiData = array( '1' =>'编修审核' ,'2' =>'信息初审' ,'3' =>'报件' ,'4' => '下发受理','5' => '已支付','6' => '服务已结束','7' => '服务已开始','8' =>'下发注册证' ,'9' => '初审');
+            $snum = 0;
+            
+            foreach ($data as $key => $value) {
+ 
+                foreach ($value['goods'] as $k => $val) {
+                   
+                     $message = json_decode($val['message'],true); 
+                     $data[$key]['goods'][$k]['short_title'] = $message['short_title'];
+                     $data[$key]['goods'][$k]['name'] = $message['name'];
+                     $data[$key]['goods'][$k]['style'] = $message['style'];  
+                    // echo $val['virt_status'];echo "====";
+                     if( $val['virt_status'] ){ $data[$key]['goods'][$k]['status'] = $PiPeiData[$val['virt_status']] ;}
+                } 
+                $snum += count( $value['goods'] );
+                
+                $panchan +=$value['coil_money'];
+                $youhui +=$value['onsale_money'];
+                $total +=$value['totalprice'];
+            }
+            
+            $data['snum'] = $snum; //记录服务商品数
+            $data['total'] = $total;
+            $data['coil_money'] = $panchan ? $panchan : '0';
+            $data['onsale_money'] = $youhui ? $youhui: '0';
+            $data['pay_money'] = $total- $panchan -$youhui;
+         //    print_r($data);
+            return $data;
+        }
     }
     /**
      * 获取请求ip
@@ -570,7 +756,8 @@ class GuestController extends Controller{
             $res = M('brand_category_detail') -> where(' item_id='.$twoID  ) -> order(" id " ) -> select();
 
             foreach ($res as $key => $val) {
-                $rows[$key]['id'] = $val['key_name'];
+                $rows[$key]['id'] = $val['id'];
+                $rows[$key]['key_name'] = $val['key_name'];
                 $rows[$key]['name'] = $val['value_name'];
                 $rows[$key]['pid'] = $twoID;
             } 
@@ -578,5 +765,31 @@ class GuestController extends Controller{
         }
     }
     
+    /**
+     * ajax发送短信
+     */
+    public function sendInfoOrder(){
+
+        $type = $_REQUEST['type']; 
+        $sucess = $_REQUEST['sucess']; 
+        
+        if( $_REQUEST['uid'] && ($type==='sendInfoOrder') ){
+            //获取用户手机号码
+            $UU = new GuestModel();
+            $uid = $_REQUEST['uid'];
+            $where = " user_id='$uid' ";
+            $info = $UU -> getUidPhone( $where );
+            $phone = $info['mobile_phone'];
+            $name = $info['user_name']?$info['user_name']:$info['truename'];
+        //    $phone = '13011855842';
+            if( $sucess ==='3' ) {
+                $str="$name:您好，您已在中细软服务商城购买中细软知识产权相关服务，请到 http://shop.gbicom.cn [个人中心]->[我的购物车]进行确认。";
+            }else{
+                $str="$name:您好，您在中细软服务商城购买的中细软知识产权相关服务还有未付款商品，如您还有需求请确认。";
+            }
+           
+            send_msgnote($phone,$str);
+        }
+    }
 
 }

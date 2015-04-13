@@ -19,9 +19,9 @@ class UserModel extends Model {
         header ( "content-type:text/html;charset=utf-8" );
         $u = (session ( 'user' ) != NULL) ?   session ( 'user' )  : " ";
         $this->model  = $this->db(1,"DB_CONFIG1")->table("ecs_users");
-        $this->_user = 3177;
-        //$this->_user = $u['user_id'];
-        //$this->_username = $u['user_name'];
+        //$this->_user = 3177;
+        $this->_user = $u['user_id'];
+        $this->_username = $u['user_name'];
     }
     /**
     * 获取个人详细信息
@@ -365,7 +365,7 @@ class UserModel extends Model {
     * @return array
     */
     public function GetAllOrder() {
-        $_goods = M ( 'goods' );
+         $_goods = M ( 'goods' );
         $_package = M ( 'package' );
         $orderModel = M ( 'order' );
         $data = $orderModel -> where ( "status=1 AND user_id = " . $this->_user  )->order("createtime desc") ->select ();
@@ -585,6 +585,7 @@ class UserModel extends Model {
         }
         return FALSE;
     }
+    
     /**
     * 获取所有未支付订单
     * @return array

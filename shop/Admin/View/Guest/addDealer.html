@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>添加交易人</title>
+<link href="{$Think.ADMIN_CSS}global.css" rel="stylesheet" type="text/css">
+<link href="{$Think.ADMIN_CSS}m_style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+
+</head>
+
+<body>
+<div class="content_right addproducts">
+    <div id="indent" class="indent" onClick="changeWin()"></div>
+    <div class="link_path">您所在的位置：<a href="../customer/customer_list.html">客官管理 </a>&nbsp;>&nbsp;<a href="members_detail.html">个人详情</a>&nbsp;>&nbsp;<a href="javascript:void(0)">添加交易人</a></div>
+    <div class="addDealer_title"><span>增加交易人</span></div>
+    <div class="addDealer">
+        <div class="addDealer_radio">
+            <table border="0">
+                <tr>
+                    <th width="20%">请选择：</th>
+                    <td width="20%"><label><input type="radio" name="address" value="1">中国大陆</label></td>
+                    <td><label><input type="radio" name="address" value="2">其他国家</label></td>
+                </tr>
+                <tr>
+                    <th>主体资格：</th>
+                    <td><label><input type="radio" name="zg" value="1">个人（个体工商户）</label></td>
+                    <td><label><input type="radio" name="zg" value="2">企业（机构）</label></td>
+                </tr>
+            </table>
+        </div>
+        <!--中国，个人开始-->
+        <div class="addDealer_con hide" id="china_person">
+            <table border="0">
+                <tr>
+                    <th width="20%"><span>*</span>申请人姓名（中文）： </th>
+                    <td width="70%"><input type="input" class="input" id="trader_name" name="trader_name" placeholder="请输入真实姓名"/></td>
+                </tr>
+                <tr>
+                    <th><span>*</span>身份证号码：</th>
+                    <td ><input type="input" class="input" id="trader_number" name="trader_number" placeholder="请输入18位身份证号码"/></td>
+                </tr>
+                <tr>
+                    <th><span>*</span>申请人地址（中文）：</th>
+                    <td ><input type="input" class="input" id="trader_address" name="trader_address" placeholder="请输入身份证上的地址"/></td>
+                </tr>
+                <tr>
+                    <th><span>*</span>邮政编码：</th>
+                    <td ><input type="input" class="input" id="postcode" name="postcode" placeholder="请输入申请地邮政编码"/></td>
+                </tr>
+                <tr>
+                    <th width="20%"  class="th1">上传身份证：</th>
+                    <td width="70%">
+                        <div class="td_up">
+                            <div class="upload float-left">
+                                <img src="{$Think.ADMIN_IMAGES}w_icon02.jpg">
+                                <p class="p1">
+                                    <input type="file" class="file"/>
+                                    <a href="javascript:void(0)" class="a1">上传</a>
+                                    <a href="javascript:void(0)" class="float-right">删除</a>
+                                </p>
+                                <p class="p2">请上传清晰的申请人身份证（正面和反面），图片要求小于2M，图片格式支持 jpg、gif、png、bmp</p>
+                            </div>
+                            <div class="upload float-right">
+                                <img src="{$Think.ADMIN_IMAGES}w_icon02.jpg">
+                                <p class="p1">
+                                    <input type="file" class="file"/>
+                                    <a href="javascript:void(0)" class="a1">上传</a>
+                                    <a href="javascript:void(0)" class="float-right">删除</a>
+                                </p>
+                                <p class="p2">请上传清晰的申请人个体工商户营业执 照，图片要求小于2M，图片格式支持 jpg、gif、png、bmp</p>
+                            </div>
+                            <p class="float-right th1">个体工商户营业执照：</p>
+                        </div>                        
+                    </td>
+                </tr>
+            </table>
+            <div class="addDealer_btn">
+                <a href="javascript:void(0)" class="a1">保存</a>
+                <a href="javascript:void(0)">取消</a>
+            </div>
+        </div>
+        <!--中国，个人结束-->
+        <!--中国，企业开始-->
+        <div class="addDealer_con hide" id="china_company">
+            <table border="0">
+                <tr>
+                    <th width="20%"><span>*</span>申请人姓名（中文）： </th>
+                    <td width="70%"><input type="input" class="input"  id="trader_name" name="trader_name"  placeholder="请输入企业姓名"/></td>
+                </tr>
+                <tr>
+                    <th><span>*</span>申请人地址（中文）：</th>
+                    <td ><input type="input" class="input" id="trader_address" name="trader_address" placeholder="请输入企业注册地址"/></td>
+                </tr>
+                <tr>
+                    <th><span>*</span>邮政编码：</th>
+                    <td ><input type="input" class="input"  id="postcode" name="postcode" placeholder="请输入申请地邮政编码"/></td>
+                </tr>
+                <tr>
+                    <th width="20%"  class="th1">企业执照：</th>
+                    <td width="70%">
+                        <div class="td_up">
+                            <div class="upload float-left">
+                                <img src="{$Think.ADMIN_IMAGES}w_icon02.jpg">
+                                <p class="p1">
+                                    <input type="file" class="file"/>
+                                    <a href="javascript:void(0)" class="a1">上传</a>
+                                    <a href="javascript:void(0)" class="float-right">删除</a>
+                                </p>
+                                <p class="p2">请上传清晰的企业营业执照，图片要求小于2M，图片格式支持jpg、gif、png、 bmp</p>
+                            </div>
+                        </div>                        
+                    </td>
+                </tr>
+            </table>
+            <div class="addDealer_btn">
+                <a href="javascript:void(0)" class="a1">保存</a>
+                <a href="javascript:void(0)">取消</a>
+            </div>
+        </div>
+        <!--中国，企业结束-->
+        <!--其他国家，个人开始-->
+        <div class="addDealer_con hide" id="other_person">
+            <table border="0">
+                <tr>
+                    <th width="20%"><span>*</span>国籍名称： </th>
+                    <td width="70%"><select class="select" id="trader_province" name="trader_province" ><option>请选择国籍</option><option>中国</option><option>美国</option><option>英国</option></select></td>
+                </tr>
+                <tr>
+                    <th><span>*</span>申请人名称（中文）：</th>
+                    <td ><input type="input" class="input"  id="trader_name" name="trader_name" placeholder="请输入真实姓名"/></td>
+                </tr>
+                <tr>
+                    <th><span>*</span>申请人名称（英文）：</th>
+                    <td ><input type="input" class="input"  id="e_trader_name" name="e_trader_name" placeholder="请输入英文真实姓名"/></td>
+                </tr>
+                <tr>
+                    <th><span>*</span>护照号：</th>
+                    <td ><input type="input" class="input" id="trader_Passport" name="trader_Passport" placeholder="请输入护照号"/></td>
+                </tr>
+                <tr>
+                    <th><span>*</span>申请人地址（中文）：</th>
+                    <td ><input type="input" class="input" id="trader_address" name="trader_address" placeholder="请输入护照持有人居住地址"/></td>
+                </tr>
+                <tr>
+                    <th><span>*</span>申请人地址（英文）：</th>
+                    <td ><input type="input" class="input" id="e_trader_address" name="e_trader_address" placeholder="请输入英文护照持有人居住地址"/></td>
+                </tr>
+                <tr>
+                    <th><span>*</span>邮政编码：</th>
+                    <td ><input type="input" class="input" id="postcode" name="postcode" placeholder="请输入申请地邮政编码"/></td>
+                </tr>
+                <tr>
+                    <th>国外申请人的国内接收人：</th>
+                    <td ><input type="input" class="input" id="in_accept_name" name="in_accept_name" placeholder="请输入国内接收人姓名"/></td>
+                </tr>
+                <tr>
+                    <th>国内接收人地址：</th>
+                    <td ><input type="input" class="input" id="in_accept_address" name="in_accept_address" placeholder="请输入国内接收人地址"/></td>
+                </tr>
+                <tr>
+                    <th>邮政编码：</th>
+                    <td ><input type="input" class="input" id="in_accept_postcode" name="in_accept_postcode" placeholder="请输入国内接收人地址邮政编码"/></td>
+                </tr>
+                <tr>
+                    <th width="20%"  class="th1">上传护照：</th>
+                    <td width="70%">
+                        <div class="td_up">
+                            <div class="upload float-left">
+                                <img src="{$Think.ADMIN_IMAGES}w_icon02.jpg">
+                                <p class="p1">
+                                    <input type="file" class="file"/>
+                                    <a href="javascript:void(0)" class="a1">上传</a>
+                                    <a href="javascript:void(0)" class="float-right">删除</a>
+                                </p>
+                                <p class="p2">请上传清晰的申请人的护照，图片要求小于2M，图片格式支持jpg、gif、png、bmp</p>
+                            </div>
+                            <div class="upload float-right">
+                                <img src="{$Think.ADMIN_IMAGES}w_icon02.jpg">
+                                <p class="p1">
+                                    <input type="file" class="file"/>
+                                    <a href="javascript:void(0)" class="a1">上传</a>
+                                    <a href="javascript:void(0)" class="float-right">删除</a>
+                                </p>
+                                <p class="p2">请上传清晰的申请人个体工商户营业执照，图片要求小于2M，图片格式支持jpg、gif、png、bmp</p>
+                            </div>
+                            <p class="float-right th1">个体工商户营业执照：</p>
+                        </div>                        
+                    </td>
+                </tr>
+            </table>
+            <div class="addDealer_btn">
+                <a href="javascript:void(0)" class="a1">保存</a>
+                <a href="javascript:void(0)">取消</a>
+            </div>
+        </div>
+        <!--其他国家，个人结束-->
+        <!--其他国家，企业开始-->
+        <div class="addDealer_con hide" id="other_company">
+            <table border="0">
+                <tr>
+                    <th width="20%"><span>*</span>国籍名称：</th>
+                    <td width="70%"><select class="select" id="trader_province" name="trader_province" ><option>请选择国籍</option><option>中国</option><option>美国</option><option>英国</option></select></td>
+                </tr>
+                <tr>
+                    <th><span>*</span>申请人姓名（中文）：</th>
+                    <td ><input type="input" class="input"  id="trader_name" name="trader_name"  placeholder="请输入中文企业名称"/></td>
+                </tr>
+                <tr>
+                    <th><span>*</span>申请人姓名（英文）：</th>
+                    <td ><input type="input" class="input" id="e_trader_name" name="e_trader_name"  placeholder="请输入英文企业名称"/></td>
+                </tr>
+                <tr>
+                    <th><span>*</span>申请人地址（中文）：</th>
+                    <td ><input type="input" class="input"  id="trader_address" name="trader_address" placeholder="请输入中文企业注册地址"/></td>
+                </tr>
+                <tr>
+                    <th><span>*</span>申请人地址（英文）：</th>
+                    <td ><input type="input" class="input"  id="e_trader_address" name="e_trader_address" placeholder="请输入英文企业注册地址"/></td>
+                </tr>
+                <tr>
+                    <th><span>*</span>邮政编码：</th>
+                    <td ><input type="input" class="input" id="postcode" name="postcode"  placeholder="请输入申请地邮政编码"/></td>
+                </tr>
+                <tr>
+                    <th>国外申请人的国内接收人：</th>
+                    <td ><input type="input" class="input"  id="in_accept_name" name="in_accept_name"  placeholder="请输入国内接收人姓名"/></td>
+                </tr>
+                <tr>
+                    <th>国内接收人地址：</th>
+                    <td ><input type="input" class="input" id="in_accept_address" name="in_accept_address" placeholder="请输入国内接收人地址"/></td>
+                </tr>
+                <tr>
+                    <th>邮政编码：</th>
+                    <td ><input type="input" class="input" id="in_accept_postcode" name="in_accept_postcode" placeholder="请输入国内接收人地址邮政编码"/></td>
+                </tr>
+                <tr>
+                    <th width="20%"  class="th1">上传企业证书：</th>
+                    <td width="70%">
+                        <div class="td_up">
+                            <div class="upload float-left">
+                                <img src="{$Think.ADMIN_IMAGES}w_icon02.jpg">
+                                <p class="p1">
+                                    <input type="file" class="file"/>
+                                    <a href="javascript:void(0)" class="a1">上传</a>
+                                    <a href="javascript:void(0)" class="float-right">删除</a>
+                                </p>
+                                <p class="p2">请上传清晰的企业证书，图片要求小于2M，图片格式支持jpg、gif、png、bmp</p>
+                            </div>
+                        </div>                        
+                    </td>
+                </tr>
+            </table>
+            <div class="addDealer_btn">
+                <a href="javascript:void(0)" class="a1">保存</a>
+                <a href="javascript:void(0)">取消</a>
+            </div>
+        </div>
+        <!--其他国家，企业结束-->
+
+    </div>
+</div>
+
+
+<script type="text/javascript">
+//菜单缩放
+openclose=true;
+function changeWin(){ 
+      parent.bodyFrame.cols =openclose?"1,*":"210,*";//这句话有报错
+      $(".indent").toggleClass('ind');
+      openclose=!openclose;
+}
+$(function(){
+    //address zg
+    $("input[name='address']:eq(0)").attr("checked",'checked');
+    $("input[name='zg']:eq(0)").attr("checked",'checked');
+    $("#china_person").removeClass('hide');
+    $(".addDealer_radio").find("input[type='radio']").change(function(){ 
+        var addressFlag=$('input:radio[name="address"]:checked').val();
+        var zgFlag=$('input:radio[name="zg"]:checked').val();        
+        $(".addDealer_con").addClass('hide');
+        if(addressFlag==1&&zgFlag==1){            
+            $("#china_person").removeClass('hide');
+        }else if(addressFlag==1&&zgFlag==2){
+            $("#china_company").removeClass('hide');
+        }else if(addressFlag==2&&zgFlag==1){
+            $("#other_person").removeClass('hide');
+        }else if(addressFlag==2&&zgFlag==2){
+            $("#other_company").removeClass('hide');
+        }else{
+            $("#china_person").removeClass('hide');
+        }
+    });
+});
+</script>
+</body>

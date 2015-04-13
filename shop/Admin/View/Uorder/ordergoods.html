@@ -15,7 +15,7 @@
     <div class="table_list casePay s">
       <div class="case_search">
       <form method="get" action="/admin/Uorder/ordergoods">
-        <select onchange="searchSelectS()" name="titlename">
+        <select onchange="searchSelectS()" name="titlename" style="width:90;">
             <if condition="$get['titlename'] eq 'bargain'">
                 <option value="bargain" selected>合同编号</option>
                 <else/>
@@ -41,7 +41,7 @@
             </if>
           
         </select>
-        <input type="text" class="input" name="searchdata" placeholder="请输入合同编号" style="width:200px" value="{$get['searchdata']}"/>
+        <input type="text" class="input" name="searchdata" placeholder="请输入合同编号" style="width:160px" value="{$get['searchdata']}"/>
         <select name="erji" onchange="changestatus(this)">
             <option value="">请选择商品类型</option>
             <foreach name='goodsdata' item="sd">
@@ -64,10 +64,10 @@
                     <if condition="$get['status'] eq 9"><option value="9" selected>初审</option><else/><option value="9">初审</option></if>
                     <if condition="$get['status'] eq 8"><option value="8" selected>下发注册证</option><else/><option value="8">下发注册证</option></if>
                     <if condition="$get['status'] eq 6"><option value="6" selected>服务结束</option><else/><option value="6">服务结束</option></if>
-                    
+                    <if condition="$get['status'] eq 'is_pass'"><option value="is_pass" selected>审核失败</option><else/><option value="is_pass">审核失败</option></if>
                 </select>
             </if>
-        <if condition="$get['erji'] neq 8 && !empty($get['status'])">
+        <if condition="$get['erji'] neq 8 && !empty($get['erji'])">
             <select name="status" id="statusid">
                 <option value="">请选择状态</option>
                 <if condition="$get['status'] eq 5"><option value="5" selected>已支付</option><else/><option value="5">已支付</option></if>
@@ -75,7 +75,7 @@
                 <if condition="$get['status'] eq 6"><option value="6" selected>服务结束</option><else/><option value="6">服务结束</option></if>
             </select>
         </if>
-        <if condition="empty($get['status'])">
+        <if condition="empty($get['status']) && empty($get['erji'])">
             <select name="status" id="statusid">
                 <option value="">请选择状态</option>
             </select>
@@ -83,7 +83,6 @@
         &nbsp;&nbsp;&nbsp;&nbsp;支付时间：<input type="text" class="input_d" name="starttime" value="{$get['starttime']}" onclick="SelectDate(this,'yyyy-MM-dd hh:mm:ss')" id="sstarttime"/>&nbsp;至&nbsp;
             <input type="text" class="input_d" name="endtime" value="{$get['endtime']}" onclick="SelectDate(this,'yyyy-MM-dd hh:mm:ss')" id="sstarttime"/>
         <input name="input" type="submit" value="搜索" class="search_btn">
-        </form>
       </div>
       <table class="spffxx">
         <tbody>
@@ -105,9 +104,20 @@
             <th width="8%">状态</th>
             <th width="6%">操作</th>
           </tr>
-        <foreach name="ordergoodsdata" item="ogd">
-          <tr class="{$ogd['trcolor']}">
-            <td>{$ogd["bargain"]}</a>
+        <foreach name="ordergoodsdata" item="ogd" key="k">
+            <if condition="$k%2 eq 0">
+                <tr class="tr_bgc1">
+                    <else/>
+                <tr class="tr_bgc2">
+            </if>
+            <td>
+                <if condition="$ogd['goods_id'] neq 8">
+                    <a href="/Admin/Uorder/patentdetail/ordergid/{$ogd['id']}" class="s_deal">
+                <else/>
+                    <a href="/Admin/Uorder/ordergoodsdetail/ordergid/{$ogd['id']}" class="s_deal">
+            </if> 
+                 {$ogd["bargain"]}</a>
+                </a>
             <td>{$ogd["user_name"]}</td>
             <td>{$ogd["phone"]}</td>
             <td><a href="/Home/Goods/gooddetails/id/{$ogd['goods_id']}" target="_blank">{$ogd["message"]["short_title"]}<br>[￥{$ogd["goods_price"]}]</a></td>
@@ -152,7 +162,6 @@
       </table>
     </div>    
     <div class="pageNew">
-        <form method="get" action="/Admin/Uorder/ordergoods">
            {$pages}
         </form>
     </div>

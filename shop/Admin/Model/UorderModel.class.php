@@ -21,19 +21,20 @@ class UorderModel extends Model {
     public $twenty  = 20;
     public $fifty  = 50;
     public $mem    ='m';
+    private $orderGoodsstatus = "审核失败";
     private $flowdel = array(2,3,4,5,6,7);
     //订单商品流程轴顺序
     private $processOrder = array(5,7,2,1,3,4,9,8,6);
     public $orderGoodsStatus = array(
         "1" => array("编修审核",   "s_c_qingse", "time" => "com_time" , "name" =>"co_user_name"),
         "2" => array("信息初审",   "s_c_blue",   "time" => "infomationtime" , "name" =>"informationhuman"),
-        "3" => array("报件",      "s_c_purple", "time" => "into_pieces" , "name" =>"pie_user_name"),
-        "4" => array("下发受理",   "s_c_yellow", "time" => "into_accept_time" , "name" =>"xf_user_name"),
+        "3" => array("报件",      "s_c_purple", "time" => "pieces_time" , "name" =>"pie_user_name"),
+        "4" => array("下发受理",   "s_c_yellow", "time" => "trialtime" , "name" =>"xf_user_name"),
         "5" => array("已支付",     "s_c_red",    "time" => "pay_time" , "name" => "user_name"),
         "6" => array("服务已结束",  "s_c_grey",   "time" => "server_endtime" , "name" =>"server_endhuman"),
         "7" => array("服务已开始",  "s_c_green",  "time" => "server_starttime" , "name" =>"server_starthuman"),
-        "8" => array("下发注册证",  "s_c_green2", "time" => "into_res" , "name" =>"zc_user_name"),
-        "9" => array("初审公告",    "s_c_brown",  "time" => "trialtime" , "name" =>"cs_user_name"),
+        "8" => array("下发注册证",  "s_c_green2", "time" => "into_endtime" , "name" =>"zc_user_name"),
+        "9" => array("初审公告",    "s_c_brown",  "time" => "into_res" , "name" =>"cs_user_name"),
     );
 
     /**
@@ -50,24 +51,21 @@ class UorderModel extends Model {
         {
             $sort=array("order_id","desc");
         }
-        //订单商品
-        $orderGoods = $this -> getOrderGoods();
+        $field = "pname,order_id,order_card,goods_number,totalprice,status,createtime,user_name,user_id,goods_id,is_package,package_id,pay_type,is_invoile,nvoile_title,message,is_prop,trade_no,type,pay_time,pay_money,pay_bank,phone,onsale_money,onsale_id,coil_money,paypaper,bill_status,bill_createtime,pid";
         //订单
-        $getOrder = $order -> where($where) -> order("$sort[0] $sort[1]") -> limit($start,$end) ->select();
-        //用户
-        $bossWitMemData = $this -> bossWaiterMember();
+        $getOrder = $order ->field($field) -> where($where) -> order("$sort[0] $sort[1]") -> limit($start,$end) ->select();
+        $strId = "";
+        foreach($getOrder as $k => $v){
+            $strId .= $v["order_id"].",";
+        }
+        $orderGoodsWhere = "order_id in (".trim($strId, ',').")";
+        //订单商品
+        $orderGoods = $this -> getOrderGoods($orderGoodsWhere);
         $interArr= array();
         $orderAll = array();
-        $str=$this -> zero;
+        $str = $this -> zero;
         foreach($getOrder as $k => $v)
         {
-            foreach($bossWitMemData as $bw => $md)
-            {
-                if($v["user_id"] == $md["kid"])
-                {
-                    $v["salesman"] = $md["pname"];
-                }
-            }
             foreach($orderGoods as $key => &$val) 
             {
                 if($v["order_id"] == $val["order_id"])
@@ -77,24 +75,18 @@ class UorderModel extends Model {
                     $str++;
                 }   
             }
-            if($k%$this -> two == $this -> zero)
-            {
-                $v["trcolor"]="tr_bgc1";
-            }else{
-                $v["trcolor"]="tr_bgc2";
-            }
             $v['orderfind'] = $interArr[0];
             unset($interArr[0]);
             $v["orderg"] = $interArr;
             $v["count"] = $str;
+            $v["strcount"] = count($orderGoods); 
             $str=$this -> zero;
             $orderAll[] = $v;
             $interArr = array();
         }
         return $orderAll;
-      
     }
-    
+
     /**
      * 拼接跳转链接
      */
@@ -126,21 +118,23 @@ class UorderModel extends Model {
     public function term($getData) {
         $start = str_replace("+"," ",$getData["starttime"]);
         $end = str_replace("+"," ",$getData["endtime"]);
+        $startdata = strtotime(date("Y-m-d")."23:59:59");
+        $enddata = strtotime(date("Y-m-d")."0:0:0");
         if(isset($getData["status"]))
         {
             $where = "status=".$getData["status"];
         }else{
-            $where = "status=1";
+            $where = "status=".$this -> one;
         }
         if(!empty($start) && !empty($end))
         {
             $where .=" AND ". $getData['ordertime'] ." BETWEEN ". strtotime($start) ." AND ". strtotime($end);
         }else if(!empty($start) && empty($end))
         {
-            $where .=" AND ". $getData['ordertime']."=". strtotime($start);
+            $where .=" AND ". $getData['ordertime'] ." BETWEEN ". strtotime($start) ." AND ". $startdata;
         }else if(empty($start) && !empty($end))
         {
-            $where .=" AND ". $getData['ordertime']."=". strtotime($end);
+            $where .=" AND ". $getData['ordertime'] ." BETWEEN ". $enddata ." AND ". strtotime($end);
         }
         if(!empty($getData["order_card"]))
         {
@@ -184,7 +178,7 @@ class UorderModel extends Model {
         $orderGoods = M("order_goods");
         if(empty($where))
         {
-            $where = "1=1";
+            $where = $this -> one."=".$this -> one;
         }
         $needData = $this -> goodsNeedAll();
         $brandStatus   = $this -> orderGoodsStatus;
@@ -210,16 +204,13 @@ class UorderModel extends Model {
         {
             foreach($needData as $nk => $nv)
             {
-                if($nv["goods_id"] == $v["id"]){
+                if($nv["need_id"] == $v["need_id"]){
                     $v["subd_num"] = $nv["subd_num"] - $this -> ten;
                     $v["subd"] = $nv["subd"];
                 }
             }
-            if($k%$this -> two == $this ->zero)
-            {
-                $v["trcolor"]="tr_bgc1";
-            }else{
-                $v["trcolor"]="tr_bgc2";
+            if($v["is_pass"] == $this -> two){
+                $v["brandStatus"] = $this -> orderGoodsstatus;
             }
             $v["message"]  = json_decode($v["message"],true);
             if(!empty($v["message"]["text"])){
@@ -234,7 +225,9 @@ class UorderModel extends Model {
      * @param array $getData 要拼接数据
      */
     public function termOrderGoods($getData) {
-        $where = "is_pay=1";
+        $where = "is_pay=".$this -> one;
+        $startdata = strtotime(date("Y-m-d")."23:59:59");
+        $enddata = strtotime(date("Y-m-d")."0:0:0");
         if(isset($getData["titlename"]) && !empty($getData["searchdata"]))
         {
             $where .=" AND ". $getData["titlename"]." like '%".$getData["searchdata"]."%'";
@@ -244,10 +237,10 @@ class UorderModel extends Model {
             $where .=" AND pay_time BETWEEN ". strtotime($getData["starttime"]) ." AND ". strtotime($getData["endtime"]);
         }else if(!empty($getData["starttime"]) && empty($getData["endtime"]))
         {
-            $where .=" AND pay_time"."=". strtotime($getData["starttime"]);
+            $where .=" AND pay_time BETWEEN ". strtotime($getData["starttime"]) ." AND ". $startdata;
         }else if(empty($getData["starttime"]) && !empty($getData["endtime"]))
         {
-            $where .=" AND pay_time"."=". strtotime($getData["endtime"]);
+            $where .=" AND pay_time BETWEEN ". $enddata ." AND ". strtotime($getData["endtime"]);
         }
         if(!empty($getData["erji"]))
         {
@@ -255,9 +248,15 @@ class UorderModel extends Model {
         }
         if(!empty($getData["status"]))
         {
-            $where .=" AND virt_status =". $getData["status"];
+            if($getData["status"] == 'is_pass'){
+                $where .=" AND is_pass =". $this -> two;
+            }else{
+                $where .=" AND virt_status =". $getData["status"];
+                if($getData["status"] == $this -> two){
+                    $where .= " AND is_pass =" . $this -> one;
+                }  
+            } 
         }
-        
         return $where;
     }
     
@@ -278,11 +277,12 @@ class UorderModel extends Model {
     public function getFindOrderGoods($where) {
         $orderGoods = M("order_goods");
         $orderGoodsFind = $orderGoods -> where($where) -> find();
-        $needWhere = "goods_id=".$orderGoodsFind["id"];
+        $needWhere = "need_id=".$orderGoodsFind["need_id"];
         $goodsNeedFind  = $this ->goodsNeed($needWhere);
         if(!empty($goodsNeedFind["goods_id"])){
             $orderGoodsFind["subd_num"] = $goodsNeedFind["subd_num"];
             $orderGoodsFind["subd"] = $goodsNeedFind["subd"];
+            $orderGoodsFind["needid"] = $goodsNeedFind["id"];
         }
         $orderGoodsFind["message"] = json_decode($orderGoodsFind["message"],true);
         return $orderGoodsFind;
@@ -320,11 +320,20 @@ class UorderModel extends Model {
     /**
      * 获取excel订单下载数据
      * @param string $where 下载订单搜索条件
+     * @param int $start    查询开始位置
+     * @param int $end      查询条数
      */
-    public function orderDownData($where) {
+    public function orderDownData($where , $get) {
+        $sortorder='';
+        if($get['sortf'] == "desc")
+        {
+            $sortorder = "asc";
+        }else{
+            $sortorder = "desc";
+        }
         $order = M("order od");
-        $field="od.paypaper,od.coil_money,od.pay_money,od.onsale_money,od.goods_number,od.totalprice,od.order_card,od.status,od.createtime,od.pay_time,od.is_invoile,ogs.erji,ogs.goods_price,ogs.bargain,ogs.user_name,ogs.phone,goods.short_title,goods.cost,bwm.pname";
-        $odOgsGoods= $order -> field($field) -> join("shop_order_goods AS ogs ON od.order_id=ogs.order_id") -> join("shop_goods AS goods ON ogs.goods_id=goods.goods_id") -> join("shop_boss_waiter_member AS bwm ON od.user_id=bwm.kid") -> where($where) -> select();
+        $field="od.pname,od.paypaper,od.coil_money,od.pay_money,od.onsale_money,od.goods_number,od.totalprice,od.order_card,od.status,od.createtime,od.pay_time,od.is_invoile,od.pname,od.pid,ogs.erji,ogs.goods_price,ogs.bargain,ogs.user_name,ogs.phone,goods.short_title,goods.cost";
+        $odOgsGoods= $order -> field($field) -> join("shop_order_goods AS ogs ON od.order_id=ogs.order_id") -> join("shop_goods AS goods ON ogs.goods_id=goods.goods_id")-> order("od.".$get['ordertime'] ." $sortorder") -> where($where) -> select();
         foreach($odOgsGoods as $k => &$v)
         {
             if($v["status"] == $this -> one){
@@ -339,7 +348,7 @@ class UorderModel extends Model {
                 $v["is_invoile"]="不开";
             }
             $v["createtime"] = date("Y-m-d H:i:s" , $v["createtime"]);
-            $v["profit"] = $v["cost"] - $v["goods_price"];
+            $v["profit"] = $v["goods_price"] - $v["cost"];
             
         }
         return $odOgsGoods;
@@ -482,6 +491,9 @@ class UorderModel extends Model {
     public function tardUpData($orderGoods , $post , $ordergid) {
         $orderG = M("order_goods");
         $trader = M("trader");
+        $compile = M("compile");
+        $traderWhere = "id=".$post["trader_name"];
+        $traderFindData = $this -> gateFindTrader($traderWhere);
         $goodsNeedModel = M("goods_need");
         $orderGoods = $orderGoods["message"];
         $jsonMessage = array(
@@ -493,8 +505,9 @@ class UorderModel extends Model {
                         "address"     => $orderGoods["address"]
                 );
         $dataArr= explode('|', $post["twosmall"]);
-        $goodsNeedWhere = "goods_id=$ordergid";
+        $goodsNeedWhere = "id=".$post['nid'];
         $goodsDataFind = $this -> goodsNeed($goodsNeedWhere);
+        
         foreach($dataArr as $k=>$v)
         {
             $strsmall[] = explode(":",$v);
@@ -505,33 +518,33 @@ class UorderModel extends Model {
         }
         $bigData["num"]=$goodsDataFind["style_part"]["num"];
         $bigData["price"]=$goodsDataFind["style_part"]["price"];
-        
         //订单商品
         $orderGoodsData["style_name"] = $post["style_name"];
         $orderGoodsData["message"]    = json_encode($jsonMessage);
+        $orderGoodsData["deal_name"] = $traderFindData["trader_name"];
+        $orderGoodsData["deal_phone"] = $traderFindData["trader_phone"];
+        $orderGoodsData["deal_address"] = $traderFindData["trader_address"];
+        $orderGoodsData["deal_id"] = $traderFindData["id"];
+        $orderGoodsData["is_pass"] = $this -> one;
         !empty($post["enroll"]) ? $orderGoodsData["enroll"]     = $post["enroll"] : false;
-        
-        //申请人表
-        $traderData["apply"] = implode(",", $post["apply"]);
-        $traderData["priority"] = implode(",", $post["priority"]);
-        $traderData["applyshowstate"] = $post["applyshowstate"];
-        $traderData["applyshowtime"]  = strtotime($post["applyshowtime"]);
-        $traderData["applynum"]       = $post["applynum"];
-        $traderData["trader_name"]    = $post["trader_name"];
-        
+         
         //商品需求表
         $goodsNeedsave["name"] = $post["goods_name"];
-        $goodsNeedsave["need_state"] = implode(",", $post["priority"]);
-        $goodsNeedsave["need_prior"] = implode(",", $post["apply"]);
+        $goodsNeedsave["need_prior"] = implode(",", $post["priority"]);
+        $goodsNeedsave["need_state"] = implode(",", $post["apply"]);
         $goodsNeedsave["area"] = $post["applyshowstate"];
         $goodsNeedsave["need_time"] = strtotime($post["applyshowtime"]);
         $goodsNeedsave["need_number"] = $post["applynum"];
         $goodsNeedsave["style"] = $post["style_name"];
         !empty($post["twosmall"]) ? $goodsNeedsave["style_part"]=  json_encode($bigData):false;
-        $goodsNeedsave["trader_uname"] = $post["trader_name"];
+        $goodsNeedsave["trader_uname"] = $traderFindData["trader_name"];
         $goodsNeedsave["subd_num"]   = count(explode(";",$post["subd"]));
         $goodsNeedsave["subd"]       = $post["subd"];
         
+        //编修表
+        $compileData["is_pass"] = $this -> zero;
+        
+        $compilestatus =  $compile -> where("ordergoods_id = $ordergid") -> save($compileData);
         $orderGstatus  = $orderG -> where("id = $ordergid") -> save($orderGoodsData); 
         $traderstatus  = $trader -> where("ordergoods_id = $ordergid") -> save($traderData);
         $goodsSaveData = $goodsNeedModel -> where($goodsNeedWhere) -> save($goodsNeedsave);
@@ -549,6 +562,8 @@ class UorderModel extends Model {
     public function goodsNeed($where) {
         $goodsNeedModel = M("goods_need");
         $goodsData = $goodsNeedModel -> where($where) -> find();
+        $goodsData["need_state"] = explode(',',$goodsData["need_state"]);
+        $goodsData["need_prior"] = explode(',',$goodsData["need_prior"]);
         $goodsData["style_part"] = json_decode($goodsData["style_part"],true);
         return $goodsData;
     }
@@ -560,7 +575,7 @@ class UorderModel extends Model {
     public function goodsNeedAll($where) {
         $need = M("goods_need");
         if(empty($where)){
-            $where = "1=1";
+            $where = $this -> one."=".$this -> one;
         }
         $needData = $need -> where($where) -> select();
         return $needData;
@@ -578,15 +593,37 @@ class UorderModel extends Model {
     }
     
     /**
+     * 获取编修表中数据
+     * @param string $where 根据where条件获取编修表数据
+     */
+    public function getCompileData($where) {
+       $compile = M("compile"); 
+       $compileWhere = !empty($where) ? $where : $this -> one."=".$this -> one;
+       $compileData = $compile -> where($compileWhere) -> select();
+       return $compileData;
+    }
+
+    /**
      *服务开始添加信息 
      * @param array $getData 要添加数据
      * @param array $user    用户信息
      */
     public function addCompile($user , $getData) {
+       $order = M("order od");
        $compile    = M("compile");
        $orderGoods = M("order_goods");
+       $adminuser  = M("adminuser ad");
        $where = "id = ".$getData["ordergoods_id"];
        $getFindorderGoods = $this -> getFindOrderGoods($where);
+       if($getFindorderGoods["order_id"] != $user["userid"]){
+           $adminUserWhere = "ad.id=".$user["userid"];
+           $field = "ad.truename,ad.mobile,ad.shopsign,ad.id";
+           $adminUserData = $adminuser -> where($adminUserWhere) -> find();
+       }else{
+           $adminUserWhere = "od.order_id=".$getFindorderGoods["order_id"];
+           $field = "ad.truename,ad.mobile,ad.shopsign,ad.id,od.pid,od.pname,od.order_id";
+           $adminUserData = $order -> field($field)-> join("shop_adminuser AS ad ON ad.id = od.pid") -> where($adminUserWhere) -> find();
+       }
        $flowArr = $this -> processOrder;
        if($getData["goodsstatus"] != $this -> six)
        {
@@ -594,8 +631,14 @@ class UorderModel extends Model {
             if(!empty($getData["status"])){
                 $orderGoodsData["status"] = $getData["status"];
             }else{
-               $orderGoodsData["status"] = $flowArr[$key+1]; 
-               $orderGoodsData["virt_status"] = $flowArr[$key];
+                if($getFindorderGoods["goods_id"] == $this -> eight){
+                    $orderGoodsData["status"] = $flowArr[$key+1]; 
+                    $orderGoodsData["virt_status"] = $flowArr[$key];
+                }else{
+                    $orderGoodsData["status"] = $this -> six; 
+                    $orderGoodsData["virt_status"] = $flowArr[$key];
+                }
+               
             }
             $orderGoods -> where("id=".$getData["ordergoods_id"]) -> save($orderGoodsData); 
        }
@@ -605,14 +648,14 @@ class UorderModel extends Model {
             $getData["server_starttime"]    = time();
             $getData["server_starthuman"]   = $user["truename"];
             $getData["server_starthumanid"] = $user["userid"];
-            $getData["order_id"]            = $getFindorderGoods["order_id"];
+            $getData["run_name"]   = $adminUserData["truename"];
+            $getData["run_phone"]  = $adminUserData["mobile"];
+            $getData["run_branch"] = $adminUserData["shopsign"];
+            $getData["order_id"]   = $getFindorderGoods["order_id"];
             $compile -> add($getData);
        }elseif($getData["goodsstatus"] == $this -> two){
             unset($getData["goodsstatus"]);
             $getData["into_time"]          = time();
-            $getData["run_name"]           = $user["truename"];
-            $getData["run_phone"]          = $user["phone"];
-            $getData["run_branch"]         = $user["branch"];
             $getData["infomationtime"]     = time();
             $getData["informationhuman"]   = $user["truename"];
             $getData["informationhumanid"] = $user["userid"];
@@ -711,8 +754,10 @@ class UorderModel extends Model {
     /**
      * 发票管理下载excel表格
      * @param string $downWhere 下载条件
+     * @param int $start         查询开始位置
+     * @param int $end           查询结束位置
      */
-    public function novileDownData($downWhere) {
+    public function novileDownData($downWhere ,$start , $end) {
         $order = M("order od");
         $field = "og.order_id,og.pay_time,og.bargain,og.user_name,og.erji,";
         $field.= "bl.order_id,bl.bill_type,bl.bill_title,bl.taxes_phore,bl.address,bl.phone,bl.bank,bl.bank_number,bl.bill_status,";
@@ -753,13 +798,16 @@ class UorderModel extends Model {
      */
     private function bigCategory($style , $catename) {
         $twoCategory= array();
+        $strcount = 0;
         foreach($style as $k=>$v)
         {
             if($catename == $k)
             {
                foreach($v as $key=>$val)
                {
-                    $twoCategory[]["name"] = $key;
+                    $twoCategory[$strcount]["name"] = str_replace(' ', '',$key);
+                    $twoCategory[$strcount]["threecount"] = count($val);
+                    $strcount++;
                }
             }
         }
@@ -779,7 +827,7 @@ class UorderModel extends Model {
             {
                 foreach($v as $key=>$val)
                 {
-                    if($key == $catename)
+                    if(str_replace(' ', '',$key) == $catename)
                     {
                         foreach($val as $tk=>$tv)
                         {
@@ -800,8 +848,14 @@ class UorderModel extends Model {
     public function downWhere($get , $where) {
         $start = strtotime(str_replace("+"," ",$get["starttime"]));
         $end = strtotime(str_replace("+"," ",$get["endtime"]));
-        if(is_numeric($start) && is_numeric($end)){
-            $where .= " AND od.pay_time" ." BETWEEN ". $start ." AND ". $end;
+        $startdata = strtotime(date("Y-m-d")."23:59:59");
+        $enddata = strtotime(date("Y-m-d")."0:0:0");
+        if(is_numeric($start) && !is_numeric($end)){
+            $where .= " AND od.pay_time" ." BETWEEN ". $start ." AND ". $startdata;
+        }elseif(!is_numeric($start) && is_numeric($end)){
+            $where .= " AND od.pay_time" ." BETWEEN ". $enddata ." AND ". $end;
+        }elseif(is_numeric($start) && is_numeric($end)){
+             $where .= " AND od.pay_time" ." BETWEEN ". $start ." AND ". $end;
         }else{
             if(is_numeric($get["daytime"])){
                 $gwtwhere = $this -> getWhere($get);
@@ -810,6 +864,9 @@ class UorderModel extends Model {
                     $where .= " AND ".str_replace("pay_time", "od.pay_time", $gwtwhere);
                 }
             }
+        }
+        if(!empty($get["order_card"])){
+            $where .=" AND od.order_card like '%".$get["order_card"]."%'";
         }
         return $where;
     }
@@ -820,7 +877,7 @@ class UorderModel extends Model {
      */
     function goodsDataAll($where) {
         $goods = M("goods");
-        $goodsData = $goods -> where() -> select();
+        $goodsData = $goods -> where($where) -> select();
         return $goodsData;
     }
     
@@ -840,16 +897,20 @@ class UorderModel extends Model {
      */
     public function twoCate($style ,$get) {
         $twoCategory = array();
+        $strcount=0;
         foreach($style as $k => $v)
         {
+            
             if($k == $get["catename"])
             {
                 foreach($v as $key => $val){
                     $percent = strpos($key,$get["twoname"]);
                     if(!empty($percent))
                     {
-                        $twoCategory[]["name"] = $key;
+                        $twoCategory[$strcount]["name"] = $key;
+                        $twoCategory[$strcount]["threecount"] = count($val);
                     }
+                    $strcount++;
                 }
             }
         }
@@ -878,7 +939,6 @@ class UorderModel extends Model {
                             }
                         }
                     }
-                   
                 }
             }
         }
@@ -894,4 +954,76 @@ class UorderModel extends Model {
         $traderAll = $trader -> where($where) -> select();
         return $traderAll;
     }
+    
+    /**
+     * 申请人单条信息
+     * @param string $where 查询条件
+     */
+    public function gateFindTrader($where) {
+        $trader = M("trader");
+        $traderFind = $trader -> where($where) -> find();
+        return $traderFind;
+    }
+    
+    /**
+     * 申请书
+     * @param string $where 查询条件
+     */
+    function applyFind($where) {
+        $orderGoods = M("order_goods ogd");
+        $field  = "au.truename,au.id,au.mobile,";
+        $field .= "ogd.id AS ogdid,ogd.style_name,ogd.need_id,ogd.user_id,ogd.deal_id,ogd.enroll,ogd.order_id,";
+        $field .= "gn.name,gn.need_id,gn.subd,gn.need_state,gn.need_prior,gn.area,gn.need_time,gn.need_number,";
+        $field .="od.pid,od.pname,od.order_id,";
+        $field .= "td.id,td.trader_phone,td.trader_name,td.e_trader_name,td.trader_number,td.trader_belong,td.trader_city,td.trader_province,td.trader_address,td.postcode,td.in_accept_name,td.in_accept_address,td.in_accept_postcode,td.ordergoods_id,td.e_trader_address";
+        $applyData = $orderGoods  ->field($field) -> join("shop_goods_need AS gn ON ogd.need_id=gn.need_id") -> join("shop_trader AS td ON ogd.deal_id=td.id")->join("shop_order AS od ON od.order_id=ogd.order_id") -> join("shop_adminuser AS au ON au.id=od.pid") -> where($where) -> find();
+        $applyData["need_state"] = explode(',',$applyData["need_state"]);
+        $applyData["need_prior"] = explode(',',$applyData["need_prior"]);
+        return $applyData;
+    }
+    
+    /**
+     * 委托书
+     * @param string $where 查询条件
+     */
+    public function deputFind($where) {
+        $orderGoods = M("order_goods ogd");
+        $field  = "au.truename,au.id,au.mobile,";
+        $field .= "ogd.id AS ogdid,ogd.need_id,ogd.user_id,ogd.deal_id,";
+        $field .= "gn.name,";
+        $field .="od.pid,od.pname,od.order_id,";
+        $field .= "td.id,td.trader_phone,td.trader_name,td.trader_number,td.trader_belong,td.trader_province,td.trader_address,td.postcode,td.ordergoods_id";
+        $deputData = $orderGoods  ->field($field) -> join("shop_goods_need AS gn ON ogd.need_id=gn.need_id") -> join("shop_trader AS td ON ogd.deal_id=td.id")->join("shop_order AS od ON od.order_id=ogd.order_id") -> join("shop_adminuser AS au ON au.id=od.pid") -> where($where) -> find();
+        $deputData["nowtime"] = time();
+        return $deputData;
+    }
+    
+    /**
+     * 商标注册代理协议
+     * @param string $where 查询条件
+     */
+    public function trademarkbookFind($where) {
+        $orderGoods = M("order_goods ogd");
+        $field  = "au.truename,au.id,au.mobile,";
+        $field .= "ogd.id AS ogdid,ogd.need_id,ogd.user_id,ogd.deal_id,ogd.style_name,ogd.bargain,ogd.service_price,";
+        $field .= "gn.name,";
+        $field .="od.is_invoile,od.pid,od.pname,od.order_id,";
+        $field .= "td.id,td.trader_phone,td.trader_name,td.trader_number,td.trader_belong,td.trader_province,td.trader_address,td.postcode";
+        $trademarkData = $orderGoods  ->field($field) -> join("shop_order AS od ON ogd.order_id=od.order_id") -> join("shop_goods_need AS gn ON ogd.need_id=gn.need_id") -> join("shop_trader AS td ON ogd.deal_id=td.id") -> join("shop_adminuser AS au ON au.id=od.pid") -> where($where) -> find();
+        $trademarkData["nowtime"] = time();
+        return $trademarkData;
+    }
+    
+    /**
+     * 获取用户跑堂
+     * @param string $where 查询条件
+     */
+    public function adminUserFind($where) {
+        $shopbwm = M("boss_waiter_member bwm");
+        $field  = "bwm.pid,bwm.pname,bwm.kid,bwm.kname,";
+        $field .= "ad.id,ad.truename,ad.mobile";
+        $adminUserData = $shopbwm -> field($field) -> join("shop_adminuser AS ad ON bwm.pid = ad.id") -> where($where) -> find();
+        return $adminUserData;
+    }
+    
 }

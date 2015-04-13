@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+   	<meta charset="UTF-8">
+   	<title>商标注册申请书</title>
+        <link href="{$Think.ADMIN_CSS}s_style_add.css" rel="stylesheet" type="text/css">
+</head> 
+<body>
+	<div class="apply">
+		<table class="a_first">
+			<h3>商标注册申请书</h3>
+			<tr>
+				<td class="af_left">申请人名称(中文)：</td>
+				<td class="af_right">{$apply["trader_name"]}{$apply["trader_number"]}</td>
+			</tr>
+			<tr>
+				<td class="af_left">(英文)：</td>
+				<td class="af_right">{$apply["e_trader_name"]}</td>
+			</tr>
+			<tr>
+				<td class="af_left">申请人国籍/地区：</td>
+				<td class="af_right">{$apply["trader_province"]}</td>
+			</tr>
+			<tr>
+				<td class="af_left">申请人地址(中文)：</td>
+				<td class="af_right">{$apply["trader_address"]}</td>
+			</tr>
+			<tr>
+				<td class="af_left">(英文)：</td>
+				<td class="af_right">{$apply["e_trader_address"]}</td>
+			</tr>
+			<tr>
+				<td class="af_left">邮政编码：</td>
+				<td class="af_right">{$apply["postcode"]}</td>
+			</tr>
+			<tr>
+				<td class="af_left">联系人：</td>
+				<td class="af_right">{$apply["truename"]}</td>
+			</tr>
+			<tr>
+				<td class="af_left">电话：</td>
+				<td class="af_right">{$apply["mobile"]}</td>
+			</tr>
+			<tr>
+				<td class="af_left">代理机构名称：</td>
+				<td class="af_right">北京细软智谷知识产权代理有限责任公司</td>
+			</tr>
+			<tr>
+				<td class="af_left">外国申请人的国内接收人：</td>
+				<td class="af_right">{$apply["in_accept_name"]}</td>
+			</tr>
+			<tr>
+				<td class="af_left">国内接收人地址：</td>
+				<td class="af_right">{$apply["in_accept_address"]}</td>
+			</tr>
+			<tr>
+				<td class="af_left">邮政编码：</td>
+				<td class="af_right">{$apply["in_accept_postcode"]}</td>
+			</tr>
+			<tr>
+				<td class="af_left">商标申请声明：</td>
+				<td class="af_right">
+					<label class="af_label" for="chk_01"><input  id="chk_01" type="checkbox" name="apply[]" value="1" <if condition='in_array(1,$apply["need_state"])'>checked</if>/><span>集体商标</span></label>
+					<label for="chk_02"> <input id="chk_02" type="checkbox" name="apply[]" value="2" <if condition='in_array(2,$apply["need_state"])'>checked</if>/><span>证明商标</span></label>
+				</td>
+			</tr>
+			<tr>
+				<td class="af_left"></td>
+				<td class="af_right">
+					<label for="chk_03"><input id="chk_03" type="checkbox" name="apply[]" value="3" <if condition='in_array(3,$apply["need_state"])'>checked</if>/><span>以三维标志申请商标注册</span></label>
+				</td>
+			</tr>
+			<tr>
+				<td class="af_left"></td>
+				<td class="af_right">
+					<label for="chk_04"><input id="chk_04" type="checkbox" name="apply[]" value="4" <if condition='in_array(4,$apply["need_state"])'>checked</if>/><span>以颜色组合申请商标注册</span></label>
+				</td>
+			</tr>
+			<tr>
+				<td class="af_left"></td>
+				<td class="af_right">
+					<label for="chk_05"><input id="chk_05" type="checkbox" name="apply[]" value="5" <if condition='in_array(5,$apply["need_state"])'>checked</if>/><span>以声音标志申请商标注册</span></label>
+				</td>
+			</tr>
+			<tr>
+				<td class="af_left"></td>
+				<td class="af_right">
+					<label for="chk_06"><input id="chk_06" type="checkbox" name="apply[]" value="6" <if condition='in_array(6,$apply["need_state"])'>checked</if>/><span>两个以上申请人共同申请注册同一商标</span></label>
+				</td>
+			</tr>
+			<tr>
+				<td class="af_left">要求优先权声明：</td>
+				<td class="af_right">
+					<label class="af_label" for="chk_07"><input id="chk_07" type="checkbox" name="priority[]" value="1" <if condition='in_array(1,$apply["need_prior"])'>checked</if>/><span>基于第一次申请的优先权</span></label>
+					<label class="af_label" for="chk_08"><input id="chk_08" type="checkbox" name="priority[]" value="2" <if condition='in_array(2,$apply["need_prior"])'>checked</if>/><span>基于展会的优先权</span></label>
+					<label for="chk_09"><input id="chk_09" type="checkbox" name="priority[]" value="3" <if condition='in_array(3,$apply["need_prior"])'>checked</if>/><span>优先权证明文件后补</span></label>
+				</td>
+			</tr>
+			<tr>
+				<td class="af_left">申请/展出国家/地区：</td>
+				<td class="af_right">{$apply["area"]}</td>
+			</tr>
+			<tr>
+				<td class="af_left">申请/展出日期：</td>
+                                <td class="af_right">
+                                    <if condition="!empty($apply['need_time'])">
+                                        {$apply["need_time"]|date="Y-m-d H:i:s",###}
+                                     </if>
+                                </td>
+			</tr>
+			<tr>
+				<td class="af_left">申请号：</td>
+				<td class="af_right">{$apply["need_number"]}</td>
+			</tr>
+		</table>
+		<div class="a_other" border="0">
+			<img src="{$Think.ADMIN_IMAGES}seal.png" class="seal">
+			<div class="btns">
+                                <a class="input text-center" onclick="$('.a_other .seal').toggle();">签章</a>
+                                <a class="input text-center" onclick='javascript:window.print();'>打印</a>
+                                <a class="input text-center" href="/admin/Uorder/apply/ordergid/{$apply['ogdid']}/down/downpdf">保存</a>
+
+			</div>			
+			<table class="a_second">
+				<tr class="as_tr">
+					<td class="as_left">申请人章戳（签字）：{$apply["trader_name"]}</td>
+					<td class="as_center">代理机构章戳：</td>
+					<td class="as_right"></td>
+				</tr>
+				<tr class="as_tr">
+					<td class="as_left"></td>
+					<td class="as_center">代理人签字：{$apply["truename"]}</td>
+					<td>&nbsp;</td>
+				</tr>			
+			</table>
+		</div>
+		<div style="height:260px"></div>
+		<p>注：请按说明填写</p>
+		<table class="a_last">
+			<tr>
+				<td class="al_descri" colspan="2">
+				下框为商标图样粘贴处。图样应当不大于10×10cm，不小于5×5cm。以颜色组合或者着色图样申请商标注册的，应当提交着色图样并提交黑白稿1份；不指定颜色的，应当提交黑白图样。以三维标志申请商标注册的，应当提交能够确定三维形状的图样，提交的商标图样应当至少包含三面视图。以声音标志申请商标注册的，应当以五线谱或者简谱对申请用作商标的声音加以描述并附加文字说明；无法以五线谱或者简谱描述的，应当使用文字进行描述；商标描述与声音样本应当一致。
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2"></td>
+			</tr>
+			<tr>
+				<td class="al_td" colspan="2">
+					<img alt="duck" title="duck" src="{$apply['enroll']}"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2"></td>
+			</tr>
+			<tr>
+				<td class="af_left">商标说明：</td>
+				<td class="af_right">{$apply["name"]}</td>
+			</tr>
+			<tr>
+				<td class="af_left">类别：</td>
+				<td class="af_right">{$apply["style_name"]}</td>
+			</tr>
+			<tr>
+				<td class="af_left">商品/服务项目：</td>
+				<td class="af_right">{$apply["subd"]}</td>
+			</tr>
+			<tr>
+				<td class="af_left">类别：</td>
+				<td class="af_right"></td>
+			</tr>
+			<tr>
+				<td class="af_left">商品/服务项目：</td>
+				<td class="af_right"></td>
+			</tr>
+		</table>
+	</div>
+</body>
+</html>
+<script src="{$Think.ADMIN_JS}jquery-1.7.2.min.js" type="text/javascript"></script>

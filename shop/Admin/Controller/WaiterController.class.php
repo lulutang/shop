@@ -288,5 +288,70 @@ class WaiterController extends Controller{
             if( $result ){ echo 1;}
         }
     }
+    /**
+     * 编修失败列表
+     */
+    public function failServer() {
+        
+        $WW = new WaiterModel();
+        
+        $where = ' shop_compile.is_pass=2 and shop_compile.status=1 ';
+     //   $where = ' a.order_id=b.id and a.is_pass=2  ';
+        
+        $titlename = $_POST['titlename'];
+        $searchdata = $_POST['searchdata'];
+        $starttime = $_POST['starttime'] ? strtotime($_POST['starttime']) :'';
+        $endtime = $_POST['endtime'] ? strtotime($_POST['endtime']) :'';
+        
+        if( $searchdata ){
+            $where .= " and b.$titlename like '%$searchdata%' ";
+        }
+        if( $starttime ){
+            $where .= " and b.pay_time >= '$starttime' ";
+        }
+        if( $endtime ){
+            $where .= " and b.pay_time <= '$endtime' ";
+        }
+        
+        $Count = $WW -> getfailServerCount( ' is_pass = 2 and a.status=1 ' );
+    //    $Count = $WW -> getfailServerCount( ' is_pass = 2  ' );
+       
+        $page_count = 10; 
+        $Page = new Page($Count, $page_count);
+        //回扣值      
+        $map['titlename'] = $titlename;
+        $map['searchdata'] = $searchdata;
+        $map['starttime'] = date('Y-m-d H:i:s',$starttime);
+        $map['endtime'] = date('Y-m-d H:i:s',$endtime);
+        foreach($map as $key => $val) {   
+                $p->parameter .= "$key=".urlencode($val)."&";   
+        }
+        $Pagesize = $Page -> show(); //得到分页模板
+    
+        $data = $WW -> getFailData( $Page->firstRow , $Page->listRows , $where);
+        
+        $this -> assign('map',$map);
+        $this -> assign('p',trim(I("p")));
+        $this -> assign('page' , $Pagesize);
+        $this -> assign("data" , $data);
+        $this -> display();
+    }
+    
+    /**
+     * 处理编修失败数据
+     * @return unknown 
+     */
+//    public function changeIspass() {
+//        
+//        $WW = new WaiterModel();
+//        
+//        if( $_POST['type'] === 'changeIspass' && !empty( $_POST['co_id'] ) ){
+//            
+//            $co_id = trim( $_POST['co_id'] );
+//            
+//            $result = $WW -> changeIspass( $co_id );
+//            if( $result ){ echo 1;}
+//        }
+//    }
    
 }

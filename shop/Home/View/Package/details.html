@@ -55,10 +55,15 @@
                 <h4>编码：<span>{$val.package_code}</span></h4>
 				<h4> {$val['description']}</h4>
                 <div class="preferential-choose">
-                	<p style="margin-bottom:5px; display:inline; float:left; width:220px;">优惠价：<b>￥{$val.now_price}</b></p>
-                    <p style=" float:left;">原&nbsp;&nbsp;&nbsp;价：<s>￥{$val.old_price}</s></p>
-                    <div style="clear:both; height:0;"></div>
-                    <p>销售量：{$val.sales}</p>
+                      <ul>
+						<li>原价：<s>￥{$val.old_price}</s></li>
+						<li class="simg"><img style="margin-top:3px;" src="{$Think.HOME_IMAGES}sale_03.png"/></li>
+						<li class="sale">销售量：{$val.sales}</li>
+						<li class="clear"></li>
+					</ul>
+                	<ul>
+						<li>优惠价：<b id='youhuijia'>￥{$val.now_price}</b></li>
+					</ul>
                 </div>
                 <ul class="preferential-icon">
                
@@ -162,6 +167,7 @@
 
 <!--页脚 开始-->
 <include file="Public/footer" />
+<script type="text/javascript" src="{$Think.HOME_JS}package.js"></script>
 
 <!--页脚 结束-->
 

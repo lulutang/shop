@@ -46,7 +46,7 @@
       <ul class="twoul">
         <li class="twoli"><a href="/index.php/Admin/User/roleinfo" target="main" class="a2">角色管理</a></li>
         <li class="twoli"><a href="/index.php/Admin/User/userinfo" target="main" class="a2">员工管理</a></li>
-        <li class="twoli"><a href="/index.php/Admin/User/optionlog" target="main" class="a2">操作日志</a></li>
+        <li class="twoli"><a href="/index.php/Admin/User/log" target="main" class="a2">操作日志</a></li>
       </ul>
     </li>
     <li class="menuli">
@@ -66,20 +66,21 @@
       <a href="javascript:void(0)" class="a1 zggj">掌柜工具<b class="b"></b></a>
       <ul class="twoul">
         <li class="twoli"><a href="/index.php/Admin/Waiter/lists" target="main" class="a2">我的跑堂</a></li>
+        <li class="twoli"><a href="/index.php/Admin/Waiter/failServer" target="main" class="a2">未通过的服务</a></li>
       </ul>
     </li> 
-    <li class="menuli">
+<!--     <li class="menuli">
       <a href="javascript:void(0)" class="a1 fwgl">服务管理<b class="b"></b></a>
       <ul class="twoul">
         <li class="twoli"><a href="../service/serviceManage.html" target="main" class="a2">服务管理</a></li>
       </ul>
-    </li>
+    </li> -->
     <li class="menuli">
       <a href="javascript:void(0)" class="a1 hygl">会员管理<b class="b"></b></a>
       <ul class="twoul">
-        <li class="twoli"><a href="../members/members_index.html" target="main" class="a2">个人设置</a></li>
+     <!--    <li class="twoli"><a href="../members/members_index.html" target="main" class="a2">个人设置</a></li> -->
          
-        <li class="twoli"><a href="/Admin/OnSale/userOnsale" target="main">优惠券列表</a></li>
+        <li class="twoli"><a href="/Admin/OnSale/userOnsale" target="main" class="a2">优惠券列表</a></li>
 
       
       </ul>
@@ -99,20 +100,26 @@
     </li>
 
     <li class="menuli">
-      <a href="javascript:void(0)" class="a1 yygl">运营管理<b class="b"></b></a>
+      <a href="javascript:void(0)" class="a1 fwgl">运营管理<b class="b"></b></a>
 
       <ul class="twoul">
-        <li class="twoli"><a  href="/Admin/Operation/singlePromotion" target="main" class="a2">单品促销</a></li>
-        <li class="twoli"><a href="/Admin/Operation/giftPromotion" target="main" class="a2">赠品促销</a></li>
+       <!--  <li class="twoli"><a  href="/Admin/Operation/singlePromotion" target="main" class="a2">单品促销</a></li>
+        <li class="twoli"><a href="/Admin/Operation/giftPromotion" target="main" class="a2">赠品促销</a></li> -->
 		<li class="twoli"><a  href="/Admin/Operation/coupon" target="main" class="a2">优惠券</a></li>
-        <li class="twoli"><a href="/Admin/Operation/money" target="main" class="a2">盘缠</a></li>
+      <!--   <li class="twoli"><a href="/Admin/Operation/money" target="main" class="a2">盘缠</a></li> -->
 		<li class="twoli"><a  href="/Admin/Operation/activity" target="main" class="a2">活动管理</a></li>
+		<li class="twoli"><a  href="/Admin/User/getGleanUserInfo" target="main" class="a2">会员查询信息</a></li>
+		<li class="twoli"><a  href="/Admin/Census/lists" target="main" class="a2">会员查询信息统计</a></li>
 
+ 		<li class="twoli"><a  href="/Admin/OnSale/lists" target="main" class="a2">订单优惠</a></li>
+ 		<li class="twoli"><a  href="/Admin/Activity/Activitylist" target="main" class="a2">促销活动</a></li>
       </ul>
     </li>
 
 
+      
   </ul>
+
 
 <script type="text/javascript"> 
 $(function(){

@@ -10,7 +10,7 @@
 <body>
   <div class="content_right">
     <div class="indent"  onclick="changeWin()"></div>
-    <div class="link_path">您所在的位置：<a href="/admin/Uorder/ordergoods">服务管理</a>&nbsp;>&nbsp;{$orderGoods["bargain"]}</div>
+    <div class="link_path">您所在的位置：<a href="/admin/Uorder/judge">订单管理</a>&nbsp;>&nbsp;<a href="/admin/Uorder/ordergoods">服务管理</a>&nbsp;>&nbsp;{$orderGoods["bargain"]}</div>
     <ul class="s_state_link clearfix">
       <li class="s_stated">
         <p class="p1"><span>下单时间</span></p>
@@ -32,9 +32,9 @@
     <div class="s_detail">
       <div class="s_title">
         <p class="s_pcaseid">订单编号：{$orderGoods["order_code"]}<a href="/admin/Uorder/orderdetailed/orderid/{$orderGoods['order_id']}">查看</a></p>
-        <p class="s_pcasestate" style="width: 21%;">合同编号：{$orderGoods["bargain"]}<a href="/admin/Uorder/patentdetail/ordergid/{$orderGoods['id']}">查看</a></p>
+        <p class="s_pcasestate" style="width: 19%;">合同编号：{$orderGoods["bargain"]}<a href="/admin/Uorder/patentdetail/ordergid/{$orderGoods['id']}">查看</a></p>
         <p class="s_pgoods" style="width: 25%;">商品信息：{$orderGoods["message"]["short_title"]}[￥{$orderGoods["goods_price"]}]</p>
-        <p class="s_pprice" style="width: 23%;">服务价：￥{$orderGoods["service_price"]}
+        <p class="s_pprice" style="width: 25%;">服务价：￥{$orderGoods["service_price"]}
             <if condition="$orderGoods['status'] neq 6">
                 <span id="sji"><a href="javascript:;" class="f90" id="up">编辑</a></span>
                 

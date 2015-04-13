@@ -24,12 +24,12 @@ class OperationController extends Controller {
     	$goodsModel = new OperationModel();
     	$get = I('get.');
     	
-    	$pageSize = isset ( $get ['pageSize'] ) ? intval ( $get ['pageSize'] ) : 10;
+    	$pageSize = isset ( $get ['size'] ) ? intval ( $get ['size'] ) : 10;
     	$page = isset ( $get ['p'] ) ? intval ( $get ['p'] ) : 1;
     	$groupTypeKey = isset ( $get ['groupType'] ) ? $get ['groupType'] : -1;
     	$list = $goodsModel ->getGoodsList($page, $pageSize, $groupTypeKey);
     	
-    	$pageModel = new Page ( $list ['count'] );
+    	$pageModel = new Page ( $list ['count'], $pageSize);
     	$pages = $pageModel->show ();
     	$this -> assign('pages' ,$pages);
     		
@@ -50,12 +50,12 @@ class OperationController extends Controller {
     	$goodsModel = new OperationModel();
     	$get = I('get.');
     	 
-    	$pageSize = isset ( $get ['pageSize'] ) ? intval ( $get ['pageSize'] ) : 10;
+    	$pageSize = isset ( $get ['size'] ) ? intval ( $get ['size'] ) : 10;
     	$page = isset ( $get ['p'] ) ? intval ( $get ['p'] ) : 1;
     	$groupTypeKey = isset ( $get ['groupType'] ) ? $get ['groupType'] : -1;
     	$list = $goodsModel ->getGoodsList($page, $pageSize, $groupTypeKey);
     	 
-    	$pageModel = new Page ( $list ['count'] );
+    	$pageModel = new Page ( $list ['count'], $pageSize);
     	$pages = $pageModel->show ();
     	$this -> assign('pages' ,$pages);
     	
@@ -69,10 +69,89 @@ class OperationController extends Controller {
     	$this -> display();
     }
     
+    /**
+     * 活动列表
+     */
     public function activity() {
+    	$get = I('get.');
+    	$pageSize = isset ( $get ['size'] ) ? intval ( $get ['size'] ) : 10;
+    	$page = isset ( $get ['p'] ) ? intval ( $get ['p'] ) : 1;
+    	$model = new OperationModel();
+    	$list = $model ->getActivity($page, $pageSize);
+    	
+    	$pageModel = new Page ( $list ['count'], $pageSize );
+    	$pages = $pageModel->show ();
+    	$this -> assign('list', $list['list']);
+    	$this -> assign('page', $pages);
     	$this -> display();
     }
     
+    /**
+     * 搜索
+     */
+    public function searchActivity() {
+    	$get = I('get.');
+    	$pageSize = isset ( $get ['size'] ) ? intval ( $get ['size'] ) : 10;
+    	$page = isset ( $get ['p'] ) ? intval ( $get ['p'] ) : 1;
+    	$keywords = isset ( $get ['keywords'] ) ? $get ['keywords'] : '';
+    	$buy_timeb = str_replace('+', ' ', $get ['buy_timeb']) ;
+    	$buy_timeend = str_replace('+', ' ', $get ['buy_timeend']);
+    	
+    	$array =array(1,2,3);
+    	$where =array();
+    	if($keywords && in_array($keywords, $array)) {
+    		if($keywords == '1') {
+    			$keywords = 1;
+    		}
+    		if($keywords == '2') {
+    			$keywords = 2;
+    		}
+    		$where['type'] = $keywords;
+    		$this->assign ( 'keywords', $keywords );
+    	}
+    	 
+    	if (! empty ( $buy_timeb ) && ! empty ( $buy_timeend )) {
+    		$where ['createTime'] = array (
+    				'between',
+    				strtotime ( $buy_timeb ) . ',' . strtotime ( $buy_timeend )
+    		);
+    	} else if (! empty ( $buy_timeb )) {
+    		$where ['createTime'] = array (
+    				'egt',
+    				strtotime ( $buy_timeb )
+    		);
+    	} else if (! empty ( $buy_timeend ))
+    		$where ['createTime'] = array (
+    				'elt',
+    				strtotime ( $buy_timeend )
+    		);
+    		
+    	$model = new OperationModel();
+    	$list = $model ->searchActivity($page, $pageSize, $where);
+    		 
+    	$pageModel = new Page ( $list ['count'], $pageSize );
+    	$pages = $pageModel->show ();
+    	$this -> assign('list', $list['list']);
+    	$this -> assign('page', $pages);
+    	$this->assign ( 'buy_timeb', $buy_timeb );
+    	$this->assign ( 'buy_timeend', $buy_timeend );
+    	$this -> display('activity');
+    }
+    
+    /**
+     * 活动详情页面
+     */
+    public function activityDetail() {
+    	$get = I('get.');
+    	$id = isset ( $get ['id'] ) ? intval ( $get ['id'] ) : 0;
+    	
+    	$model = new OperationModel();
+    	$list = $model ->getActivityDetail($id);
+
+    	$this -> assign('list', $list['list']);
+    	$this -> assign('huodong', $list['huodong']);
+    	$this -> display('activity_detail');
+    }
     public function commonSet(){
     	
     	$this -> display();
@@ -162,11 +241,11 @@ class OperationController extends Controller {
     public function ajaxCouponrelease_success() {
     	$get = I('get.');
     	$saleId = intval($get['saleId']) > 0 ? intval($get['saleId']) : 0;
-    	if($saleId>0){
+    	if($saleId > 0) {
     		$model = new OperationModel();
-    		$info = $model -> couponUpdate(array('onsale_id' =>$saleId ),array('state' => 0));
+    		$info = $model -> couponUpdate(array('onsale_id' =>$saleId ), array('state' => 0));
     		echo 1;exit();
-    	}else{
+    	} else {
     		$this -> error('缺少正确的参数,3秒后自动返回上一页');
     		echo 0;exit();
     	}
@@ -197,6 +276,7 @@ class OperationController extends Controller {
     public function updateCoupon(){
     	$get = I('get.');
     	$id = intval($get['id'])>0 ? intval($get['id']) : 0;
+    	$model = new OperationModel();
     	if($id>0){
     		$model = new OperationModel();
     	

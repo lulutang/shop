@@ -92,8 +92,8 @@
                   <td><if condition="($val.status eq 1)">已支付<else/>未支付</if></td>
                   <td>{$val.createtime|date='Y-m-d H:i:s',###}</td>
                   <td><a style="cursor:pointer" onclick="javaScript:showOrder({$val.id},{$val.user_id},'{$val.totalprice}')">查看详情</a>
-                       <a style="cursor:pointer" onclick="javaScript:payOrder('{$val.order_card}','{$val.totalprice}')">测试环境-支付订单</a>
-                   </td>
+<!--                        <a style="cursor:pointer" onclick="javaScript:payOrder('{$val.order_card}','{$val.totalprice}')">测试环境-支付订单</a>
+ -->                   </td>
               
                 </tr>
               </foreach>

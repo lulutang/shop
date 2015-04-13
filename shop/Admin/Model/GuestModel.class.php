@@ -133,8 +133,17 @@ class GuestModel extends Model{
     * @param  int $end 分页结束值
     * @param  string $where    查询条件
     */
-    public function UserInfos($start,$end,$where){
-        $userInfos = $this -> db(1,"DB_CONFIG1") -> table("ecs_users") -> where($where) -> order("reg_time desc") -> limit($start,$end) -> select();
+    public function UserInfos( $start, $end, $where, $order){
+        
+        $userInfos = $this -> db(1,"DB_CONFIG1") -> table("ecs_users") -> where($where) -> order( $order ) -> limit($start,$end) -> select();
+        foreach ($userInfos as $key => $value) {
+            //获取订单总数
+            $OO = M('order');
+            $userInfos[$key]['totalorder'] = $OO -> where( ' user_id ='.$value['user_id'] ) -> count();
+            $MM = M('order_goods');
+            //获取服务总数
+            $userInfos[$key]['totalserver'] = $MM -> where( ' user_id ='.$value['user_id'] ) -> count();
+        }
         return $userInfos;
     }
     /**
@@ -239,9 +248,50 @@ class GuestModel extends Model{
      */
     public function saveGoodsOrder( $data ){
         
-        $OO = M('order_goods');
+        $OO = M('temp_cart_goods');
         $insertId = $OO -> data( $data ) -> add();
         
+        return $insertId;
+    }
+    /**
+     * 获取用户购物车内商品
+     * @param type $uid 用户id
+     * @return array
+     */
+    public function getCart( $where ) {
+        
+        $CC = M("cart");
+        
+        $res = $CC -> where( $where ) -> find(); 
+
+        return $res;
+        
+    }
+    /**
+     * 添加need表信息
+     * @param type $need
+     * @return type
+     */
+    public function saveGoodsNeed( $need ) {
+        $OO = M('goods_need');
+        $insertId = $OO -> data( $need ) -> add();
+        
+        return $insertId;
+    }
+    /**
+     * 复制一条记录
+     * @param type $cartId
+     */
+    public function copyCartRecord( $cartId ) {
+        
+        $OO = M('cart');
+        $data = $OO -> where( ' id='.$cartId ) -> find(); 
+        unset( $data['id'] );
+        $insertId = $OO -> data( $data ) -> add();
+        
+//        $sql = "insert into shop_cart(`goods_id`,`user_id`,`phone`,`userName`,`old_price`,`now_price`,`thumb`,`short_title`,`title`,`code`,`type`,`addtime`,`creator`) select `goods_id`,`user_id`,`phone`,`userName`,`old_price`,`now_price`,`thumb`,`short_title`,`title`,`code`,`type`,`addtime`,`creator` from shop_cart where id=$cartId";
+//        $insertId = $OO -> execute( $sql );
+
         return $insertId;
     }
     /**
@@ -252,10 +302,22 @@ class GuestModel extends Model{
      */
     public function updateData( $where, $data) {
         
-        $OO = M('order_goods');
+        $OO = M('temp_cart_goods');
         $res = $OO -> where( $where ) -> save($data);
         
         return $res;
+    }
+    /**
+     * 更新need信息表
+     * @param array $need  表数据
+     * @param int $needId  更新条件
+     * @return boolean
+     */
+    public function updateNeed( $need ,$needId) {
+        $OO = M('goods_need');
+        $res = $OO -> where( ' id = '.$needId ) -> save( $need );
+        
+        return $res;       
     }
     /**
      * 获取一级大类
@@ -329,19 +391,196 @@ class GuestModel extends Model{
      */
     public function getCarts( $uid ) {
         
-        $CC = M("carts");
+        $CC = M("cart");
         
-        $res = $CC -> where(" user_id='$uid' ") -> select(); 
-       
+     //   $res = $CC -> where(" user_id='$uid' ") -> select(); 
+        $totalprice = 0;
+        
+        $res = $CC->join('shop_temp_cart_goods ON shop_temp_cart_goods.cartid = shop_cart.id')->where(" shop_cart.user_id='$uid' ")->select();
+        foreach ( $res as $key => $val ) {
+            $res[$key]['message'] = json_decode( $val['message'], true);
+            $res[$key]['creator'] = $this -> getName($val['creator']);
+            
+            $res[$key]['subd_num'] = $val['subd_num'] > 10 ? $val['subd_num']-10 :'0';
+            $totalprice += $val['now_price'];
+        }
+        $res['totalprice'] = $totalprice;
         return $res;
         
     }
     /**
+     * 获取创建者名字
+     * @param type $creator id
+     */
+    private function getName( $creator ) {
+        if( $creator ){
+            $CC = M("adminuser");
+            $res = $CC->field(' username ')->where(' id= '.$creator )->find();
+            return $res['username'];
+        }
+    }
+    /**
      * 获取未支付订单
      * @param type $uid
+     * @return array
      */
     public function getNoPayorders( $uid ) {
+        $OO = M("order");
+        //获取当前人的订单
+       // $uid = 92652;
+        $orders = $OO -> field(' `order_id`,`order_card`,`goods_number`,`createtime`,`totalprice` ') -> where(" user_id='$uid' and  `status`=0 ") -> select(); 
+       // echo $OO->getLastSQL();
+        $CC = M("order_goods");  
+        
+        if( $orders ){
+            foreach ($orders as $key => $value) {
+                $orders[$key]['goods'] = $CC ->field(' `goods_id`,`goods_price`,`service_price`,`message` ') -> where(" `order_id`='".$value['order_id']."'" ) -> select();  
+            //    echo $CC ->getLastSQl();
+            }           
+        }
+        return $orders;    
+    }
+    /**
+     * 获取支付订单
+     * @param type $uid
+     * @return array
+     */
+    public function getPayorders( $uid ) {
+        
+        $OO = M("order");
+        //获取当前人的订单
+        //$uid = 92652;
+        $orders = $OO -> field(' `order_id`,`order_card`,`goods_number`,`createtime`,`totalprice`,`onsale_money`,`coil_money` ') -> where(" user_id='$uid' and  `status`=1 ") -> select(); 
+        
+        $CC = M("order_goods");  
+        
+        if( $orders ){
+            foreach ($orders as $key => $value) {
+                $orders[$key]['goods'] = $CC ->field(' `id`,`goods_id`,`goods_price`,`service_price`,`message`,`virt_status`,`erji` ') -> where(" `order_id`='".$value['order_id']."'" ) -> select();  
+              //  echo $CC ->getLastSQl();
+            }           
+        }       
+        //print_r($orders);
+        return $orders;    
         
     }
+    /**
+     * 得到相应交易人的信息
+     * @param type $uid
+     */
+    public function getTraders( $uid ) {
+        
+        $TT = M("trader");
+       // $uid = 3177;
+        $res = $TT -> where(" trader_belong='$uid' ") -> select(); 
+        if( $res ){
+            $Person = $Company = array();
+            foreach ($res as $key => $value) {
+                //个人
+                if( $value['is_person'] =='1' ){
+                    $Person[] = $value;
+                }
+                 //公司
+                if( $value['is_person'] =='2' ){
+                    $Company[] = $value;
+                }
+            }
+        }
+        
+        $data = array('Person'=>$Person,'Company'=>$Company);
+        
+        return $data;
+    }
+    /**
+     * 获取相应收货人信息
+     * @param type $uid
+     */
+    public function getConsignee($uid) {
+        if( $uid ){
+            $AA = M("address");
+           //  $uid = 3177;
+            $res = $AA -> where(" user_id='$uid' ") -> select(); 
+          
+            return $res;
+        }
+    }
+    
+    /**
+     * 获取优惠券
+     * @param type $uid
+     */
+    public function getCoupon( $uid ) {
+        
+        if( $uid ){
+          
+            $AA = M("user_sale");
+          //  $uid = 3177;
+            $nowTime = time();
+            $res = $AA -> field(' `is_where`,`sale_money`,`startTime`,`endTime` ') -> where(" uid='$uid' and state=1 and endTime > $nowTime ") -> select(); 
+           
+            return $res;
+        } 
+    }
+    
+   /**
+    * 获取用户手机号
+    * @param  string $where    查询条件
+    */
+    public function getUidPhone(  $where ){
+        
+        $data = $this -> db(1,"DB_CONFIG1") -> table("ecs_users") -> where($where) -> find();
+        
+        return $data;
+    }
+    /**
+     * 获取具体的购物车信息
+     * @param int $cartid
+     * @return array 
+     */
+    public function getTempCartGoods( $cartid ) {
+        
+        if( $cartid ){
+          
+            $AA = M("temp_cart_goods");
+           // $cartid = 1302;
+           $sql = " SELECT `style_name`,`erji`,`service_price`,`user_name`,`user_id` FROM `shop_temp_cart_goods` WHERE ( addtime=(SELECT addtime FROM shop_temp_cart_goods where cartid=$cartid) )  ";
+           $data = $AA -> query( $sql ); 
+
+            return $data;
+        } 
+    }
+    
+    /**
+     * 获取用户临时购物车内商品
+     * @param type $where 条件
+     * @return array
+     */
+    public function copyTempCart( $where ) {
+        
+        $CC = M("temp_cart_goods");
+        $data = $CC -> where( $where ) -> find(); 
+        unset( $data['id'] );
+        $insertId = $CC -> data( $data ) -> add();
+        
+//        $sql = "insert into temp_cart_goods(`user_name`,`user_id`,`goods_id`,`goods_price`,`goods_thumb`,`addtime`,`style_name`,`message`,`style`,`yiji`,`erji`,`goods_code`,`phone`,`deal_name`,`deal_phone`,`deal_address`,`consignee_name`,`consignee_phone`,`consignee_address`,`deal_id`,`cost`,`service_price`,`subd`,`subd_num`,`enroll`,`cartid`,`need_id`) ".
+//                " select `user_name`,`user_id`,`goods_id`,`goods_price`,`goods_thumb`,`addtime`,`style_name`,`message`,`style`,`yiji`,`erji`,`goods_code`,`phone`,`deal_name`,`deal_phone`,`deal_address`,`consignee_name`,`consignee_phone`,`consignee_address`,`deal_id`,`cost`,`service_price`,`subd`,`subd_num`,`enroll`,`cartid`,`need_id` from temp_cart_goods $where";
+//        $query = $CC -> execute( $sql );
+//       
+//        $insertId = $CC -> getLastInsID();
+        return $insertId;  
+    }
+    /**
+     * 更新购物车表的价格
+     * @param array $cart 更改的数据
+     * @param int $cartId 自增id
+     */
+    public function updateCartRecord($cart,$cartId) {
+        $CC = M("cart");
+        
+        $res = $CC -> where( 'id='.$cartId ) -> save( $cart );
+
+        return $res;
+    }
+    
     
 }

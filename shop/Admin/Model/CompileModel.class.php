@@ -7,6 +7,16 @@
 namespace Admin\Model;
 use Think\Model;
 class CompileModel extends Model{
+
+    /**
+     * 初始化方法
+     * @var int $this->userid 当前登录用户ID
+     * @var string $this->username 当前登录用户名字
+     */
+    public function _initialize() {
+        $this->userid = session("userid");
+        $this->username = session("truename");
+    }
     /**
      * 获取编修信息
      * @param  int $start [分页开始值]
@@ -21,47 +31,41 @@ class CompileModel extends Model{
      */
     public function GetComPileInfo($start,$end,$where,$order,$type){
         switch ($type) {
-            case 1:
-                if($order == 'Q'){
-                   $str = 'c.into_time desc';
-                }else{
-                   $str = 'c.into_time';
-                }
-                break;
-            case 2:
-                if($order == 'Q'){
-                   $str = 'c.com_time desc';
-                }else{
-                   $str = 'c.com_time';
-                }
-                break;
-            case 3:
-                if($order == 'Q'){
-                   $str = 'c.pieces_time desc';
-                }else{
-                    $str = 'c.pieces_time';
-                }
-                break;
-            case 4:
-                if($order == 'Q'){
-                   $str = 'c.trialtime desc';
-                }else{
-                    $str = 'c.trialtime';
-                }
-                break;
-            case 5:
-                if($order == 'Q'){
-                   $str = 'c.into_res desc';
-                }else{
-                    $str = 'c.into_res';
-                }
-                break;
-            default:
-                break;
+            case 1: if($order == 'Q'){
+                        $str = 'c.into_time desc';
+                    }else{
+                        $str = 'c.into_time';
+                    } break;
+            case 2: if($order == 'Q'){
+                        $str = 'c.com_time desc';
+                    }else{
+                        $str = 'c.com_time';
+                    } break;
+            case 3: if($order == 'Q'){
+                        $str = 'c.pieces_time desc';
+                    }else{
+                        $str = 'c.pieces_time';
+                    } break;
+            case 4: if($order == 'Q'){
+                        $str = 'c.trialtime desc';
+                    }else{
+                        $str = 'c.trialtime';
+                    } break;
+            case 5: if($order == 'Q'){
+                        $str = 'c.into_res desc';
+                    }else{
+                        $str = 'c.into_res';
+                    } break;
+            default: break;
         }
         
-        $data = M()->field('distinct o.id,o.goods_id,o.message,c.co_id,o.pay_time,o.order_code,o.style_name,c.res_status,c.why_pass,c.run_branch,c.into_res,c.pieces_rennumber,c.status,c.into_time,c.com_time,c.pieces_status,c.pieces_time,c.trialtime')->table('shop_order_goods o, shop_compile c, shop_goods_need n')->where("o.id = c.ordergoods_id and o.goods_id = n.goods_id and o.style_name = n.goods_name and ".$where)->order($str)->limit($start,$end)->select();
-        //echo M()->getlastsql();die;
+        $data = M() -> field('o.id,o.goods_id,o.message,c.co_id,o.pay_time,o.order_code,o.style_name,c.res_status,c.why_pass,c.run_branch,c.into_res,c.pieces_rennumber,c.status,c.into_time,c.com_time,c.pieces_status,c.pieces_time,c.trialtime')
+                    -> table('shop_order_goods o, shop_compile c, shop_goods_need n')
+                    -> where("o.id = c.ordergoods_id and o.need_id = n.need_id and ".$where)
+                    -> order($str)
+                    -> limit($start,$end)
+                    -> select();
+        
         foreach ($data as $key => $val) {
             $arr = json_decode($val['message'],true);
             $data[$key]['short_title'] = $arr['name'];
@@ -77,7 +81,10 @@ class CompileModel extends Model{
      * @return int
      */
     public function GetComPileNum($where){
-        $data = M()->table('shop_order_goods o, shop_compile c')->where("o.id = c.ordergoods_id and ".$where)->count();
+        $data = M() -> table('shop_order_goods o, shop_compile c, shop_goods_need n')
+                    -> where("o.id = c.ordergoods_id and o.need_id = n.need_id and ".$where)
+                    -> count("DISTINCT o.id");
+
         return $data;
     }
     
@@ -87,16 +94,25 @@ class CompileModel extends Model{
      * @param int $cid 编修数据id
      * @return array
      */
-    public function GetComMinute($oid, $cid){
-        $fie = 'o.id oid,o.message,o.enroll,c.co_id,o.consignee_name,o.user_name,o.consignee_phone,o.consignee_address,o.order_code,o.deal_id,o.addtime,o.pay_time,o.style_name,o.goods_id,o.goods_thumb,c.trialtime,c.into_pieces,c.pieces_time,c.infomationtime,c.res_status,c.run_name,c.run_phone,c.run_branch,c.server_starttime,c.into_time,c.is_pass,c.com_time,c.co_user_name,c.into_accept_time,c.pie_user_name,c.pieces_status,c.server_starthuman,c.informationhuman,c.pieces_rennumber,c.dispatch_time,c.c_dispatch_time,c.c_dispatch_num,c.c_accept_adj,c.dispatch_num,c.xf_user_name,c.accept_adj,c.server_endtime,c.server_endhuman,c.why_pass,c.zc_user_name,c.user_message,c.into_res,c.into_endtime,c.into_firsttime,c.into_endtime';
-        $data = M()->field($fie)->table('shop_order_goods o, shop_compile c')->where("o.id = c.ordergoods_id and o.id = ".$oid." and c.co_id = ".$cid."")->find();
-        $goodsname = M('goods')->field('short_title')->where("goods_id = ".$data['goods_id']."")->find();
-        $obj = M('trader')->where("id = ".$data['deal_id']."")->find();
-        //$arr = json_decode($data['message'],true);
+    public function GetComMinute($cid){
+        $fie = 'o.id oid,o.goods_id,o.need_id,o.message,o.enroll,c.co_id,o.consignee_name,o.user_name,o.consignee_phone,o.consignee_address,o.order_code,o.deal_id,o.addtime,o.pay_time,o.style_name,o.goods_id,o.goods_thumb,c.trialtime,c.into_pieces,c.pieces_time,c.infomationtime,c.res_status,c.run_name,c.run_phone,c.run_branch,c.server_starttime,c.into_time,c.is_pass,c.com_time,c.co_user_name,c.into_accept_time,c.pie_user_name,c.pieces_status,c.server_starthuman,c.informationhuman,c.pieces_rennumber,c.dispatch_time,c.c_dispatch_time,c.c_dispatch_num,c.c_accept_adj,c.dispatch_num,c.xf_user_name,c.accept_adj,c.server_endtime,c.server_endhuman,c.why_pass,c.zc_user_name,c.user_message,c.into_res,c.into_endtime,c.into_firsttime,c.into_endtime';
+        $data = M() -> field($fie)
+                    -> table('shop_order_goods o, shop_compile c')
+                    -> where("o.id = c.ordergoods_id and  c.co_id = ".$cid."")
+                    -> find();
+        
+        $goodsname = M('goods') -> field('short_title')
+                                -> where("goods_id = ".$data['goods_id']."")
+                                -> find();
+                                
+        $obj = M('trader') -> where("id = ".$data['deal_id']."")
+                           -> find();
+        $arr = json_decode($data['message'],true);
+        
         foreach ($obj as $k => $v) {
             $data[$k] = $v;
         }
-        $str = M('goods_need')->where("goods_id = ".$data['oid']."")->find();
+        $str = M('goods_need') -> where("need_id = ".$data['need_id']."") -> find();
         foreach ($str as $ks => $vs) {
             $data[$ks] = $vs;
         }
@@ -135,17 +151,16 @@ class CompileModel extends Model{
      * return int
      */
     public function SaveBxshData($data){
-        dump($data);
         $arr['com_time'] = time();
         $arr['is_pass'] = $data['is_pass'];
         $arr['why_pass'] = $data['causes'];
-        $arr['co_user_id'] = 1;
-        $arr['co_user_name'] = 'admin';
+        $arr['co_user_id'] = $this->userid;
+        $arr['co_user_name'] = $this->username;
         if($data['is_pass'] == 1){
             $arr['status'] = 2;
             $arr['into_pieces'] = time();
         }
-        return $this->where("co_id = ".$data['cid']."")->save($arr);
+     return $this -> where("co_id = ".$data['cid']."") -> save($arr);
     }
     
     /**
@@ -159,9 +174,9 @@ class CompileModel extends Model{
         $arr['pieces_time'] = strtotime($data['pie_time']);
         $arr['into_accept_time'] = time();
         $arr['status'] = 3;
-        $arr['pie_user_id'] = 1;
-        $arr['pie_user_name'] = 'admin';
-        return $this->where("co_id = ".$data['cid']."")->save($arr);
+        $arr['pie_user_id'] = $this->userid;
+        $arr['pie_user_name'] = $this->username;
+        return $this -> where("co_id = ".$data['cid']."") -> save($arr);
     }
     /**
      * 受理结果录入
@@ -174,8 +189,8 @@ class CompileModel extends Model{
         $arr['dispatch_time'] = strtotime($data['dis_time']);
         $arr['accept_adj'] = $data['ac_url'];
         $arr['trialtime'] = time();
-        $arr['xf_user_id'] = 1;
-        $arr['xf_user_name'] = 'xiaofei';
+        $arr['xf_user_id'] = $this->userid;
+        $arr['xf_user_name'] = $this->username;
         return $this->where("co_id = ".$data['cid']."")->save($arr);
     }
     /**
@@ -190,9 +205,9 @@ class CompileModel extends Model{
         $arr['c_accept_adj'] = $data['ac_url'];
         $arr['into_res'] = time();
         $arr['res_status'] = 1;
-        $arr['cs_user_id'] = 1;
-        $arr['cs_user_name'] = 'xiaofei';
-        return $this->where("co_id = ".$data['cid']."")->save($arr);
+        $arr['cs_user_id'] = $this->userid;
+        $arr['cs_user_name'] = $this->username;
+        return $this -> where("co_id = ".$data['cid']."") -> save($arr);
     }
     /**
      * 注册证下发数据存储
@@ -203,7 +218,7 @@ class CompileModel extends Model{
         if($data['is_call'] == 1){
             $arr['res_status'] = 2;
             $arr['into_firsttime'] = time();
-            return $this->where("co_id = ".$data['cid']."")->save($arr);
+            return $this -> where("co_id = ".$data['cid']."") -> save($arr);
         }else{
             $obj['express'] = $data['express'];
             $obj['numbers'] = $data['numbers'];
@@ -212,10 +227,10 @@ class CompileModel extends Model{
             $obj['address'] = $data['address'];
             $arr['user_message'] = json_encode($obj);
             $arr['res_status'] = 3;
-            $arr['zc_user_id'] = 1;
-            $arr['zc_user_name'] = 'wangwu';
+            $arr['zc_user_id'] = $this->userid;
+            $arr['zc_user_name'] = $this->username;
             $arr['into_endtime'] = time();
-            return $this->where("co_id = ".$data['cid']."")->save($arr);   
+            return $this -> where("co_id = ".$data['cid']."") -> save($arr);   
         }
     }
     /**
@@ -224,21 +239,49 @@ class CompileModel extends Model{
      * return array
      */
     public function GetFirstData($status){
-        return $this->field('co_id,ordergoods_id')->where("status = ".$status."")->limit(1)->select();
+        $str = '';
+        switch ($status) {
+            case 1: $str = 'c.into_time'; $status .= " and c.is_pass != 2";break;
+            case 2: $str = 'c.com_time'; break;
+            case 3: $str = 'c.pieces_time'; break;
+            case 4: $str = 'c.trialtime'; break;
+            case 5: $str = 'c.into_res'; break;
+            default: break;
+        }
+        return $this -> field('c.co_id,c.ordergoods_id')
+                     -> table('shop_order_goods o, shop_compile c, shop_goods_need n')
+                     -> where("o.id = c.ordergoods_id and o.need_id = n.need_id and c.status = ".$status."")
+                     -> order($str)
+                     -> limit(1)
+                     -> select();
+    }
+    
+    /**
+     * 得到下发注册证第一条信息
+     * @param int $status 得到数据的条件
+     * return array
+     */
+    public function GetFirstValData($res){
+        return $this -> field('c.co_id,c.ordergoods_id')
+                     -> table('shop_order_goods o, shop_compile c, shop_goods_need n')
+                     -> where("o.id = c.ordergoods_id and o.need_id = n.need_id and c.status = 5 and c.res_status = ".$res."")
+                     -> order('c.into_res')
+                     -> limit(1)
+                     -> select();     
     }
     /**
      * 记录审核失败记录
      * @param array $obj 失败录入数据
      */
     public function ComFailLog($obj){
-        M('auditlog')->add($obj);
+        M('auditlog') -> add($obj);
     }
     /**
      * 获取审核失败记录
      * @param array $order 合同号
      */
     public function GetAuditLog($order){
-        return M('auditlog')->where("order_code = '".$order."'")->select();
+        return M('auditlog') -> where("order_code = '".$order."'") -> select();
     }
     
     /**
@@ -251,13 +294,24 @@ class CompileModel extends Model{
         
         $data['virt_status'] = $a;
         $data['status'] = $b;
-        M('order_goods')->where("id = ".$oid."")->save($data);
+        M('order_goods') -> where("id = ".$oid."") -> save($data);
     }
     /**
      * 获取店铺信息
      * @return array
      */
     public function findStore(){
-       return M('adminuser')->field('distinct shopsign')->where("shopsign != ''")->select();
+       return M('adminuser') -> field('distinct shopsign')
+                             -> where("shopsign != ''")
+                             -> select();
+    }
+    
+    /**
+     * 编修审核失败改变订单状态
+     * @param int $id 订单商品ID
+     */
+    public function ChageOrderStatus( $oid ){
+        $arr = array('is_pass'=>2);
+        M('order_goods') -> where("id = ".$oid."") -> save($arr);
     }
 }

@@ -52,19 +52,18 @@
         </ul>    
          <div class="download">
              <if condition="empty($daytime)">
-                <a href="/Admin/Uorder/downnovile/invoile/{$num}/daytime/all/starttime/{$get['starttime']}/endtime/{$get['endtime']}">
+                <a href="/Admin/Uorder/downnovile/invoile/{$num}/daytime/all/starttime/{$get['starttime']}/endtime/{$get['endtime']}/startseat/{$startseat}/endseat/{$orderall[0]['strcount']}/order_card/{$get['order_card']}">
                     <else/>
-                <a href="/Admin/Uorder/downnovile/invoile/{$num}/daytime/{$daytime}/starttime/{$get['starttime']}/endtime/{$get['endtime']}">   
+                <a href="/Admin/Uorder/downnovile/invoile/{$num}/daytime/{$daytime}/starttime/{$get['starttime']}/endtime/{$get['endtime']}/order_card/{$get['order_card']}">   
              </if>下载excel账单</a></div>
         <div class="search">
             <form method="get" action="/Admin/Uorder/orderreceipt/invoile/{$num}">
-        	支付时间：<input type="text" class="input_d" name="starttime" value="" onclick="SelectDate(this,'yyyy-MM-dd hh:mm:ss')" id="sstarttime"/>&nbsp;至&nbsp;
-            <input type="text" class="input_d" name="endtime" value="" onclick="SelectDate(this,'yyyy-MM-dd hh:mm:ss')" id="sstarttime"/>
-                    <input type="text" class="text200" placeholder="请输入订单号" name="order_card" />
+        	支付时间：<input type="text" class="input_d" name="starttime" value="{$get['start']}" onclick="SelectDate(this,'yyyy-MM-dd hh:mm:ss')" id="sstarttime"/>&nbsp;至&nbsp;
+            <input type="text" class="input_d" name="endtime" value="{$get['start']}" onclick="SelectDate(this,'yyyy-MM-dd hh:mm:ss')" id="sstarttime"/>
+                    <input type="text" class="text200" placeholder="请输入订单号" name="order_card" value="{$get['order_card']}"/>
                     <input type="hidden" name="daytime" value="{$daytime}">
                     <input type="hidden" name="ordertime" value="pay_time">
                     <input name="input" type="submit" value="搜索" class="search_btn" />
-            </form>
         </div>
         <table class="spffxx">
         	<tr>
@@ -127,7 +126,6 @@
       </div>
       
       <div class="pageNew">
-          <form method='get' action='/Admin/Uorder/orderreceipt/invoile/{$num}'>
               {$pages}
           </form>
     </div>

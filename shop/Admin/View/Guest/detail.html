@@ -84,12 +84,12 @@
             </tr>
             <tr >
                 <td class="m_line"><span>购物车商品：</span>{$cartsnum}个</td>
-                <td class="m_line"><span>未支付订单：</span>3个</td>
+                <td class="m_line"><span>未支付订单：</span>{$noPaysnum}个</td>
                 <td class="m_line"><span></span></td>
             </tr>
             <tr>
-                <td><span>已支付订单：</span>3个</td>
-                <td><span>商品服务总数：</span>3个</td>
+                <td><span>已支付订单：</span>{$Paysnum}个</td>
+                <td><span>商品服务总数：</span>{$Pays.snum}个</td>
                 <td><span>消费总额（元）：</span>￥{$data.user_money}</td>
             </tr>
         </table>
@@ -130,19 +130,30 @@
                         <th width="12%">操作</th>
                     </tr>
                     <foreach name="carts" item="vo" >
+                         <input type="hidden" name='is_send_info_1' id='is_send_info_1' value="1" />
                         <tr class="tr_bgc1">
                             <td>{$vo.addtime|date='Y-m-d H:i:s',###}</td>
                             <td>{$vo.creator}</td>
-                            <td><a href="javascript:void(0)">{$vo.short_title}[￥{$vo.now_price}]</a></td>
-                            <td><a href="javascript:void(0)">{$vo.type}</a></td>
+                            <td><a href="/Home/Goods/gooddetails/id/{$vo['goods_id']}" target="_blank">{$vo.short_title}[￥{$vo.now_price}]</a></td>
+                            <td><a >                
+                                    <if condition="$vo['style'] eq 38">
+                                        {$vo["message"]["name"]}
+                                        <br>{$vo["message"]["style"]}
+                                    </if>
+                                    <if condition="$vo['style'] eq 5">
+                                        {$vo["message"]["name"]}
+                                    </if>
+                                    <if condition="$vo['style'] eq 6"> 
+                                        {$vo["mbtext"]}
+                                    </if></a></td>
                             <td>1</td>
-                            <td class="price"><b class="add">增+1</b>￥3200.00</td>
-                            <td><a href="#">修改</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="">删除</a></td>
+                            <td class="price"><if condition="$vo['subd_num'] gt 0"> <b class="add">增+{$vo.subd_num}</b></if>￥{$vo.now_price}</td>
+                            <td><a href="#">修改</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:delCart({$vo.cartid})">删除</a></td>
                         </tr>
                     </foreach>
                    
                     <tr class="tr_bgc1 m_total_money">
-                        <td colspan="7"><a href="../customer/addProducts.html" title="添加购物车商品"><img src="{$Think.ADMIN_IMAGES}m_icon08.png" /></a><a href="#"  title="短信提醒会员支付"><img src="{$Think.ADMIN_IMAGES}m_icon07.png" /></a>总额：<span>￥5790.00</span></td>
+                        <td colspan="7"><a href="/Admin/Guest/addMemOrder/uid/{$_GET['uid']}" title="添加购物车商品"><img src="{$Think.ADMIN_IMAGES}m_icon08.png" /></a><a href="javascript:sendInfo({$_GET['uid']},'1');"  title="短信提醒会员支付"><img src="{$Think.ADMIN_IMAGES}m_icon07.png" /></a>总额：<span>￥{$carts.totalprice}</span></td>
                     </tr>
                     </tbody>
                 </table>
@@ -158,49 +169,40 @@
                         <th width="10%">服务价（元）</th>
                         <th width="10%">应付款（元）</th>
                     </tr>
+                    
+                    <volist name="noPays" id="vo" mod="2" >
+                      <input type="hidden" name='is_send_info_2' id='is_send_info_2' value="1" />
+                      <tr <eq name="mod" value="0"> class="tr_bgc1" </eq> >   
+                     <if condition="$vo.goods_number gt 1 ">
+                         
+                         <volist name="vo['goods']" id="gg" key="k" >
+                            <if condition="$k eq 1 ">    <td rowspan="{$vo.goods_number}">{$vo.createtime|date='Y-m-d H:i:s',###}</td> </if>
+                            <if condition="$k eq 1 ">    <td rowspan="{$vo.goods_number}" class="cd"><a href="/admin/Uorder/orderdetailed/pay/0/orderid/{$vo.order_id}" target="main">{$vo.order_card}</a></td> </if>
+                            <if condition="$k gt 1 "> <tr> </if> 
+                                <td><a href="javascript:void(0)">{$gg.short_title}[￥{$gg.goods_price}]</a></td>
+                                <td>{$gg.name}【{$gg.style}】</td>
+                                <td class="price">￥{$gg.service_price}</td>
+                                <if condition="$k eq 1 ">    <td rowspan="{$vo.goods_number}" class="m_yfk"> ￥{$vo.totalprice}</td> </if>
+                            <if condition="$k gt 1 ">  </tr> </if> 
+                          </volist> 
+                         
+                    <else />
+                        <volist name="vo['goods']" key="k" id="gg">
+                           
+                                <td>{$vo.createtime|date='Y-m-d H:i:s',###}</td>
+                                <td class="cd"><a href="/admin/Uorder/orderdetailed/pay/0/orderid/{$vo.order_id}" target="main">{$vo.order_card}</a></td>
+                                <td><a href="javascript:void(0)">{$gg.short_title}[￥{$gg.goods_price}]</a></td>
+                                <td>{$gg.name}<if condition="!empty($gg['style'])">【{$gg.style}】</if></td>
+                                <td class="price">￥{$gg.service_price}</td>
+                                <td class="price1" >￥{$gg.service_price}</td>
+                            
+                        </volist>
+                    </if>
+                      </tr>
+                    </volist>
 
-                    <tr class="">
-                        <td rowspan="2">2015-02-12 10:02:03</td>
-                        <td rowspan="2" class="cd"><a href="../case/casePayDetail.html" target="main">ZXRSB00000022888488488488</a></td>
-                        <td><a href="javascript:void(0)">商标注册申请代理服务[￥1590.00]</a></td>
-                        <td>韩馥【45类】</td>
-                        <td class="price">￥3200.00</td>
-                        <td class="price1"> ￥3200.00</td>
-                    </tr>
-                    <tr class="">
-                        <td><a href="javascript:void(0)">商标注册申请代理服务[￥1590.00]</a></td>
-                        <td>韩馥【45类】</td>
-                        <td class="price">￥3200.00</td>
-                        <td class="price1"> ￥3200.00</td>
-                    </tr>
-                    <tr class="tr_bgc1">
-                        <td>2015-02-12 10:02:03</td>
-                        <td class="cd"><a href="../case/casePayDetail.html" target="main">ZXRSB00000022888488488488</a></td>
-                        <td><a href="javascript:void(0)">商标注册申请代理服务[￥1590.00]</a></td>
-                        <td>韩馥【45类】</td>
-                        <td class="price">￥3200.00</td>
-                        <td class="price1" >￥3200.00</td>
-                    </tr>
-                    <tr class="">
-                        <td rowspan="3">2015-02-12 10:02:03</td>
-                        <td rowspan="3" class="cd"><a href="../case/casePayDetail.html" target="main">ZXRSB00000022888488488488</a></td>
-                        <td><a href="javascript:void(0)">商标注册申请代理服务[￥1590.00]</a></td>
-                        <td>韩馥【45类】</td>
-                        <td class="price">￥3200.00</td>
-                        <td rowspan="3" class="m_yfk"> ￥3200.00</td>
-                    </tr>
-                    <tr class="">
-                        <td><a href="javascript:void(0)">商标注册申请代理服务[￥1590.00]</a></td>
-                        <td>韩馥【45类】</td>
-                        <td class="price">￥3200.00</td>
-                    </tr>
-                    <tr class="">
-                        <td><a href="javascript:void(0)">商标注册申请代理服务[￥1590.00]</a></td>
-                        <td>韩馥【45类】</td>
-                        <td class="price">￥3200.00</td>
-                    </tr>
                     <tr class="tr_bgc1 m_total_money">
-                        <td colspan="7"><a href="#"  title="短信提醒会员支付"><img src="{$Think.ADMIN_IMAGES}m_icon07.png" /></a>应付总额（元）：<span>￥5790.00</span></td>
+                        <td colspan="7"><a href="javascript:sendInfo({$_GET['uid']},'2');"  title="短信提醒会员支付"><img src="{$Think.ADMIN_IMAGES}m_icon07.png" /></a>应付总额（元）：<span>￥{$noPays.total}</span></td>
                     </tr>
                     </tbody>
                 </table>
@@ -217,60 +219,49 @@
                         <th width="10%">服务价（元）</th>
                         <th width="12.4%">类型及应付额（元）</th>
                     </tr>
-
-                    <tr class="">
-                        <td rowspan="2">2015-02-12 10:02:03</td>
-                        <td rowspan="2" class="cd"><a href="../case/casePayDetail.html" target="main">ZXRSB00000022888488488488</a></td>
-                        <td>商标注册申请代理服务</td>
-                        <td>韩馥【45类】</td>
-                        <td>已支付</td>
-                        <td class="price">￥3200.00</td>
-                        <td class="price1" rowspan="2">￥3200.00</td>
-                    </tr>
-                    <tr class="">
-                        <td>商标注册申请代理服务</td>
-                        <td>韩馥【45类】</td>
-                        <td class="m_state">服务开始<a href="../service/serviceDetailWCS_edit.html"><img src="{$Think.ADMIN_IMAGES}m_icon10.png"></a></td>
-                        <td class="price"> ￥3200.00</td>
-                    </tr>
-                    <tr class="tr_bgc1">
-                        <td>2015-02-12 10:02:03</td>
-                        <td class="cd"><a href="../case/casePayDetail.html" target="main">ZXRSB00000022888488488488</a></td>
-                        <td>商标注册申请代理服务</td>
-                        <td>韩馥【45类】</td>
-                        <td>服务结束</td>
-                        <td class="price">￥3200.00</td>
-                        <td class="price1" >￥3200.00</td>
-                    </tr>
-                    <tr class="">
-                        <td rowspan="3">2015-02-12 10:02:03</td>
-                        <td rowspan="3" class="cd"><a href="../case/casePayDetail.html" target="main">ZXRSB00000022888488488488</a></td>
-                        <td>商标注册申请代理服务</td>
-                        <td>韩馥【45类】</td>
-                        <td>编修审核</td>
-                        <td class="price">￥3200.00</td>
-                        <td rowspan="3" class="m_yfk"> ￥3200.00</td>
-                    </tr>
-                    <tr class="">
-                        <td>商标注册申请代理服务</td>
-                        <td>韩馥【45类】</td>
-                        <td>下发受理</td>
-                        <td class="price">￥3200.00</td>
-                    </tr>
-                    <tr class="">
-                        <td>商标注册申请代理服务</td>
-                        <td>韩馥【45类】</td>
-                        <td>报件</td>
-                        <td class="price">￥3200.00</td>
-                    </tr>
+                    
+                    
+                    <volist name="Pays" id="vo" mod="2" >
+                      <tr <eq name="mod" value="0"> class="tr_bgc1" </eq> >   
+                     <if condition="$vo.goods_number gt 1 ">
+                         
+                         <volist name="vo['goods']" id="gg" key="k" >
+                            <if condition="$k eq 1 ">    <td rowspan="{$vo.goods_number}">{$vo.createtime|date='Y-m-d H:i:s',###}</td> </if>
+                            <if condition="$k eq 1 ">    <td rowspan="{$vo.goods_number}" class="cd"><a href="/admin/Uorder/orderdetailed/pay/1/orderid/{$vo.order_id}" target="main">{$vo.order_card}</a></td> </if>
+                            <if condition="$k gt 1 "> <tr> </if> 
+                                <td><a href="javascript:void(0)">{$gg.short_title}[￥{$gg.goods_price}]</a></td>
+                                <td>{$gg.name}【{$gg.style}】</td>
+                                <td>{$gg.status}<if condition=" $gg.virt_status eq '2' OR $gg.virt_status eq '5' OR $gg.virt_status eq '7'  "><?php if($gg['erji'] ==='国内注册'){?><a  href="/Admin/Uorder/ordergoodsdetail/ordergid/<?php echo $gg['id'] ?>" target="main"> <?php }else{ ?> <a  href="/Admin/Uorder/patentdetail/ordergid/{$gg.id}" target="main"> <?php } ?>  <img src="{$Think.ADMIN_IMAGES}m_icon10.png"> </a></if></td>
+                                <td class="price">￥{$gg.service_price}</td>
+                                <if condition="$k eq 1 ">    <td rowspan="{$vo.goods_number}" class="m_yfk"> ￥{$vo.totalprice}</td> </if>
+                            <if condition="$k gt 1 ">  </tr> </if> 
+                          </volist> 
+                         
+                    <else />
+                        <volist name="vo['goods']" key="k" id="gg">
+                           
+                                <td>{$vo.createtime|date='Y-m-d H:i:s',###}</td>
+                                <td class="cd"><a href="/admin/Uorder/orderdetailed/pay/1/orderid/{$vo.order_id}" target="main">{$vo.order_card}</a></td>
+                                <td><a href="javascript:void(0)">{$gg.short_title}[￥{$gg.goods_price}]</a></td>
+                                <td>{$gg.name}<if condition="!empty($gg['style'])">【{$gg.style}】</if></td>
+                        <td>{$gg.status}<if condition=" $gg.virt_status eq '2' OR $gg.virt_status eq '5' OR $gg.virt_status eq '7'  "><?php if($gg['erji'] ==='国内注册'){?><a  href="/Admin/Uorder/ordergoodsdetail/ordergid/<?php echo $gg['id'] ?>" target="main"> <?php }else{ ?> <a  href="/Admin/Uorder/patentdetail/ordergid/{$gg.id}" target="main"> <?php } ?> <img src="{$Think.ADMIN_IMAGES}m_icon10.png"> </a></if></td>
+                                <td class="price">￥{$gg.service_price}</td>
+                                <td class="price1" >￥{$gg.service_price}</td>
+                            
+                        </volist>
+                    </if>
+                      </tr>
+                    </volist>
+ 
                     <tr class="tr_bgc1 m_total_money m_yzf">
-                        <td colspan="7">应付总额（元）：￥5790.00<br />优惠：套餐-500.00 盘缠-5.0 优惠券-100<br />应付总额（元）：<span>￥3059.00</span></td>
+                        <td colspan="7">应付总额（元）：￥{$Pays.total}<br />优惠： 盘缠-{$Pays.coil_money} 优惠券-{$Pays.onsale_money}<br />应付总额（元）：<span>￥{$Pays.pay_money}</span></td>
                     </tr>
                     </tbody>
                 </table>
             </li>
             <li class="public" style="display:none;">
                 <table class="m_jyr">
+                    <if condition="!empty($Person)">
                     <tr>
                         <td width="6%">个人</td>
                         <td width="94%">
@@ -286,108 +277,56 @@
                                     <th width="7%">邮编</th>
                                     <th width="10%">查看</th>
                                 </tr>
-
+                                <volist name="Person" key="k" id="pp">
                                 <tr class="">
-                                    <td >张某耨</td>
-                                    <td >zhangjiongji</td>
-                                    <td>中国</td>
-                                    <td>1002935221215151515</td>
-                                    <td>北京市海淀区</td>
-                                    <td>beijingshihaidianqu</td>
-                                    <td>123456</td>
-                                    <td ><a href="#">身份证</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">执照</a></td>
+                                    <td >{$pp.trader_name}</td>
+                                    <td >{$pp.e_trader_name}</td>
+                                    <td>{$pp.trader_province}</td>
+                                    <td>{$pp.trader_number}</td>
+                                    <td>{$pp.trader_address}</td>
+                                    <td>{$pp.e_trader_address}</td>
+                                    <td>{$pp.postcode}</td>
+                                    <td ><a href="{$pp.trader_photo}" target="_blank">身份证</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{$pp.trader_fbfphoto}" target="_blank">执照</a></td>
                                 </tr>
-                                <tr class="">
-                                    <td >张某耨</td>
-                                    <td >zhangjiongji</td>
-                                    <td>中国</td>
-                                    <td>1002935221215151515</td>
-                                    <td>北京市海淀区</td>
-                                    <td>beijingshihaidianqu</td>
-                                    <td>123456</td>
-                                    <td ><a href="#">身份证</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">执照</a></td>
-                                </tr>
-                                <tr class="">
-                                    <td >张某耨</td>
-                                    <td >zhangjiongji</td>
-                                    <td>中国</td>
-                                    <td>1002935221215151515</td>
-                                    <td>北京市海淀区</td>
-                                    <td>beijingshihaidianqu</td>
-                                    <td>123456</td>
-                                    <td ><a href="#">身份证</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">执照</a></td>
-                                </tr>
-                                <tr class="">
-                                    <td >张某耨</td>
-                                    <td >zhangjiongji</td>
-                                    <td>中国</td>
-                                    <td>1002935221215151515</td>
-                                    <td>北京市海淀区</td>
-                                    <td>beijingshihaidianqu</td>
-                                    <td>123456</td>
-                                    <td ><a href="#">身份证</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">执照</a></td>
-                                </tr>
+                                </volist>
 
                                 </tbody>
                             </table>
                         </td>
                     </tr>
+                    </if>
+                    <if condition="!empty($Company)">
                     <tr>
                         <td>企业</td>
                         <td>
                             <table class="spffxx">
                                 <tbody>
                                 <tr>
-                                    <th width="16%">真实姓名（中文）</th>
-                                    <th width="16%">真实姓名（英文）</th>
+                                    <th width="16%">企业名称（中文）</th>
+                                    <th width="16%">企业名称（英文）</th>
                                     <th width="16%">国籍</th>
                                     <th width="16%">地址（中文）</th>
                                     <th width="16%">地址（英文）</th>
                                     <th width="8%">邮编</th>
                                     <th width="10%">查看</th>
                                 </tr>
-
+                                <volist name="Company" key="k" id="cc">
                                 <tr class="">
-                                    <td >张某耨</td>
-                                    <td >zhangjiongji</td>
-                                    <td>中国</td>
-                                    <td>北京市海淀区</td>
-                                    <td>beijingshihaidianqu</td>
-                                    <td>123456</td>
-                                    <td ><a href="#">执照</a></td>
+                                    <td >{$cc.trader_name}</td>
+                                    <td >{$cc.e_trader_name}</td>
+                                    <td>{$cc.trader_province}</td>
+                                    <td>{$cc.trader_address}</td>
+                                    <td>{$cc.e_trader_address}</td>
+                                    <td>{$cc.postcode}</td>
+                                    <td ><a href="{$cc.trader_fbfphoto}" target="_blank">执照</a></td>
                                 </tr>
-                                <tr class="">
-                                    <td >张某耨</td>
-                                    <td >zhangjiongji</td>
-                                    <td>中国</td>
-                                    <td>北京市海淀区</td>
-                                    <td>beijingshihaidianqu</td>
-                                    <td>123456</td>
-                                    <td ><a href="#">执照</a></td>
-                                </tr>
-                                <tr class="">
-                                    <td >张某耨</td>
-                                    <td >zhangjiongji</td>
-                                    <td>中国</td>
-                                    <td>北京市海淀区</td>
-                                    <td>beijingshihaidianqu</td>
-                                    <td>123456</td>
-                                    <td ><a href="#">执照</a></td>
-                                </tr>
-                                <tr class="">
-                                    <td >张某耨</td>
-                                    <td >zhangjiongji</td>
-                                    <td>中国</td>
-                                    <td>北京市海淀区</td>
-                                    <td>beijingshihaidianqu</td>
-                                    <td>123456</td>
-                                    <td ><a href="#">执照</a></td>
-                                </tr>
-
+                                </volist>
+                                
                                 </tbody>
                             </table>
                         </td>
                     </tr>
+                    </if>
                 </table>
             </li>
             <li class="public" style="display:none;">
@@ -399,296 +338,48 @@
                         <th width="33.2%">收货人联系方式</th>
 
                     </tr>
+                    <volist name="Consignee" key="k" id="cc">
                     <tr class="">
-                        <td class="m_mraddress">张某耨</td>
-                        <td>北京市房山区长阳一村长阳家园</td>
-                        <td>12456258954</td>
+                        <td <eq name="cc.is_check" value="1"> class="m_mraddress" </eq>>{$cc.sh_name}</td>
+                        <td>{$cc.sh_city}{$cc.sh_province}{$cc.sh_minute_address}</td>
+                        <td>{$cc.sh_phone}</td>
 
                     </tr>
-                    <tr class="tr_bgc1">
-                        <td class="m_mraddress">张某耨</td>
-                        <td>北京市房山区长阳一村长阳家园</td>
-                        <td>12456258954</td>
-
-                    </tr>
-                    <tr class="">
-                        <td class="m_mraddress">张某耨</td>
-                        <td>北京市房山区长阳一村长阳家园</td>
-                        <td>12456258954</td>
-
-                    </tr>
-                    <tr class="tr_bgc1">
-                        <td class="m_mraddress">张某耨</td>
-                        <td>北京市房山区长阳一村长阳家园</td>
-                        <td>12456258954</td>
-
-                    </tr>
+                    </volist>
+                    
 
                     </tbody>
                 </table>
             </li>
             <li class="m_yhq" style="display:none;">
-                <p class="m_yhq_title">【商标注册优惠券】</p>
+                <p class="m_yhq_title">【优惠券】</p>
                 <ul>
+                    <volist name="Coupon" key="k" id="cc">
                     <li class="yhj2">
                         <a>
                             <div class="con1">
                                 <b class="b1"></b><b class="b2"></b>
-                                <p class="p1">￥100<span>元</span></p>
+                                <p class="p1">￥{$cc.sale_money}<span>元</span></p>
                                 <p class="p2">
                                     <span class="span1">发行商：</span>
                                     <span class="span2">中细软集团</span>
                                 </p>
                                 <p class="p2">
                                     <span class="span1">使用条件：</span>
-                                    <span class="span2"></span>
+                                    <span class="span2">{$cc.is_where}</span>
                                 </p>
                                 <p class="p2">
                                     <span class="span1">有效时间：</span>
-                                    <span class="span2">2014-11-05 至 2014-11-30</span>
+                                    <span class="span2">{$cc.startTime|date='Y-m-d H:i:s',###} 至 {$cc.endTime|date='Y-m-d H:i:s',###}</span>
                                 </p>
                             </div>
                             <div class="con2"></div>
                         </a>
                     </li>
-                    <li class="yhj2">
-                        <a>
-                            <div class="con1">
-                                <b class="b1"></b><b class="b2"></b>
-                                <p class="p1">￥200<span>元</span></p>
-                                <p class="p2">
-                                    <span class="span1">发行商：</span>
-                                    <span class="span2">中细软集团</span>
-                                </p>
-                                <p class="p2">
-                                    <span class="span1">使用条件：</span>
-                                    <span class="span2"></span>
-                                </p>
-                                <p class="p2">
-                                    <span class="span1">有效时间：</span>
-                                    <span class="span2">2014-11-05 至 2014-11-30</span>
-                                </p>
-                            </div>
-                            <div class="con2"></div>
-                        </a>
-                    </li>
-                    <li class="yhj2">
-                        <a>
-                            <div class="con1">
-                                <b class="b1"></b><b class="b2"></b>
-                                <p class="p1">￥300<span>元</span></p>
-                                <p class="p2">
-                                    <span class="span1">发行商：</span>
-                                    <span class="span2">中细软集团</span>
-                                </p>
-                                <p class="p2">
-                                    <span class="span1">使用条件：</span>
-                                    <span class="span2"></span>
-                                </p>
-                                <p class="p2">
-                                    <span class="span1">有效时间：</span>
-                                    <span class="span2">2014-11-05 至 2014-11-30</span>
-                                </p>
-                            </div>
-                            <div class="con2"></div>
-                        </a>
-                    </li>
-                    <li class="yhj2">
-                        <a>
-                            <div class="con1">
-                                <b class="b1"></b><b class="b2"></b>
-                                <p class="p1">￥400<span>元</span></p>
-                                <p class="p2">
-                                    <span class="span1">发行商：</span>
-                                    <span class="span2">中细软集团</span>
-                                </p>
-                                <p class="p2">
-                                    <span class="span1">使用条件：</span>
-                                    <span class="span2"></span>
-                                </p>
-                                <p class="p2">
-                                    <span class="span1">有效时间：</span>
-                                    <span class="span2">2014-11-05 至 2014-11-30</span>
-                                </p>
-                            </div>
-                            <div class="con2"></div>
-                        </a>
-                    </li>
+                    </volist>
+                   
                 </ul>
-                <p class="m_yhq_title">【商标设计优惠券】</p>
-                <ul>
-                    <li class="yhj1">
-                        <a>
-                            <div class="con1">
-                                <b class="b1"></b><b class="b2"></b>
-                                <p class="p1">￥100<span>元</span></p>
-                                <p class="p2">
-                                    <span class="span1">发行商：</span>
-                                    <span class="span2">中细软集团</span>
-                                </p>
-                                <p class="p2">
-                                    <span class="span1">使用条件：</span>
-                                    <span class="span2"></span>
-                                </p>
-                                <p class="p2">
-                                    <span class="span1">有效时间：</span>
-                                    <span class="span2">2014-11-05 至 2014-11-30</span>
-                                </p>
-                            </div>
-                            <div class="con2"></div>
-                        </a>
-                    </li>
-                    <li class="yhj1">
-                        <a>
-                            <div class="con1">
-                                <b class="b1"></b><b class="b2"></b>
-                                <p class="p1">￥200<span>元</span></p>
-                                <p class="p2">
-                                    <span class="span1">发行商：</span>
-                                    <span class="span2">中细软集团</span>
-                                </p>
-                                <p class="p2">
-                                    <span class="span1">使用条件：</span>
-                                    <span class="span2"></span>
-                                </p>
-                                <p class="p2">
-                                    <span class="span1">有效时间：</span>
-                                    <span class="span2">2014-11-05 至 2014-11-30</span>
-                                </p>
-                            </div>
-                            <div class="con2"></div>
-                        </a>
-                    </li>
-                    <li class="yhj1">
-                        <a>
-                            <div class="con1">
-                                <b class="b1"></b><b class="b2"></b>
-                                <p class="p1">￥300<span>元</span></p>
-                                <p class="p2">
-                                    <span class="span1">发行商：</span>
-                                    <span class="span2">中细软集团</span>
-                                </p>
-                                <p class="p2">
-                                    <span class="span1">使用条件：</span>
-                                    <span class="span2"></span>
-                                </p>
-                                <p class="p2">
-                                    <span class="span1">有效时间：</span>
-                                    <span class="span2">2014-11-05 至 2014-11-30</span>
-                                </p>
-                            </div>
-                            <div class="con2"></div>
-                        </a>
-                    </li>
-                    <li class="yhj1">
-                        <a>
-                            <div class="con1">
-                                <b class="b1"></b><b class="b2"></b>
-                                <p class="p1">￥400<span>元</span></p>
-                                <p class="p2">
-                                    <span class="span1">发行商：</span>
-                                    <span class="span2">中细软集团</span>
-                                </p>
-                                <p class="p2">
-                                    <span class="span1">使用条件：</span>
-                                    <span class="span2"></span>
-                                </p>
-                                <p class="p2">
-                                    <span class="span1">有效时间：</span>
-                                    <span class="span2">2014-11-05 至 2014-11-30</span>
-                                </p>
-                            </div>
-                            <div class="con2"></div>
-                        </a>
-                    </li>
-                </ul>
-                <p class="m_yhq_title">【商标案件优惠券】</p>
-                <ul>
-                    <li class="yhj3">
-                        <a>
-                            <div class="con1">
-                                <b class="b1"></b><b class="b2"></b>
-                                <p class="p1">￥100<span>元</span></p>
-                                <p class="p2">
-                                    <span class="span1">发行商：</span>
-                                    <span class="span2">中细软集团</span>
-                                </p>
-                                <p class="p2">
-                                    <span class="span1">使用条件：</span>
-                                    <span class="span2"></span>
-                                </p>
-                                <p class="p2">
-                                    <span class="span1">有效时间：</span>
-                                    <span class="span2">2014-11-05 至 2014-11-30</span>
-                                </p>
-                            </div>
-                            <div class="con2"></div>
-                        </a>
-                    </li>
-                    <li class="yhj3">
-                        <a>
-                            <div class="con1">
-                                <b class="b1"></b><b class="b2"></b>
-                                <p class="p1">￥200<span>元</span></p>
-                                <p class="p2">
-                                    <span class="span1">发行商：</span>
-                                    <span class="span2">中细软集团</span>
-                                </p>
-                                <p class="p2">
-                                    <span class="span1">使用条件：</span>
-                                    <span class="span2"></span>
-                                </p>
-                                <p class="p2">
-                                    <span class="span1">有效时间：</span>
-                                    <span class="span2">2014-11-05 至 2014-11-30</span>
-                                </p>
-                            </div>
-                            <div class="con2"></div>
-                        </a>
-                    </li>
-                    <li class="yhj3">
-                        <a>
-                            <div class="con1">
-                                <b class="b1"></b><b class="b2"></b>
-                                <p class="p1">￥300<span>元</span></p>
-                                <p class="p2">
-                                    <span class="span1">发行商：</span>
-                                    <span class="span2">中细软集团</span>
-                                </p>
-                                <p class="p2">
-                                    <span class="span1">使用条件：</span>
-                                    <span class="span2"></span>
-                                </p>
-                                <p class="p2">
-                                    <span class="span1">有效时间：</span>
-                                    <span class="span2">2014-11-05 至 2014-11-30</span>
-                                </p>
-                            </div>
-                            <div class="con2"></div>
-                        </a>
-                    </li>
-                    <li class="yhj3">
-                        <a>
-                            <div class="con1">
-                                <b class="b1"></b><b class="b2"></b>
-                                <p class="p1">￥400<span>元</span></p>
-                                <p class="p2">
-                                    <span class="span1">发行商：</span>
-                                    <span class="span2">中细软集团</span>
-                                </p>
-                                <p class="p2">
-                                    <span class="span1">使用条件：</span>
-                                    <span class="span2"></span>
-                                </p>
-                                <p class="p2">
-                                    <span class="span1">有效时间：</span>
-                                    <span class="span2">2014-11-05 至 2014-11-30</span>
-                                </p>
-                            </div>
-                            <div class="con2"></div>
-                        </a>
-                    </li>
-                </ul>
+
             </li>
         </ul>
     </div>
@@ -705,6 +396,6 @@
 
 </script>
 <script type="text/javascript" src="{$Think.ADMIN_JS}memberDetail.js"></script>
-
+<script type="text/javascript" src="{$Think.ADMIN_JS}guest.js?aa=<?php echo mt_rand(10000000,99999999);?>"></script>
 </body>
 </html>

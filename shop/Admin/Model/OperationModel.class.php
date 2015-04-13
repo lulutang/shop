@@ -22,7 +22,7 @@ class OperationModel extends Model {
         	$count = $m -> count();
         }
  
-		$groupType = $m->query('SELECT now_servername from shop_goods group by now_servername');
+		$groupType = $m->query('SELECT now_servername from '.SELF_DB_PREFIX.'goods group by now_servername');
 		
 		$result = array();
         if( $lists ) {
@@ -84,7 +84,6 @@ class OperationModel extends Model {
     		$model = M('Onsale');
     		//对应商品促销的优惠活动
     		if(isset($info['data'])) {
-    			
     			$data = $info['data'];
     			$info['type'] = $info['type'] == '单品促销' ? 1 : 2;
     			$info['startTime'] = strtotime($info['startTime']);
@@ -97,8 +96,12 @@ class OperationModel extends Model {
     			$info['sale_where'] = (int)$info['sale_where'];
     			$info['use'] = (int)$info['use'];
     			$info['state'] = 2;//未确认状态
-
-    			$dataArr = explode(',', $data);
+				if(!empty($data)){
+					$dataArr = explode(',', $data);
+					$info['num'] = count($dataArr);
+				}else{
+					$info['num'] = 0;
+				}
     			
     			unset($info['data']);
     			
@@ -113,8 +116,9 @@ class OperationModel extends Model {
     				}
     			}
     		}
-    		
     		$onsaleId = $model ->add($info);
+    		
+    		unset($info['num']);//把数量消除
     		
     		if($session) {
     			$sessionArr = array_merge($session,array(array('onsaleId' => $onsaleId, 'sale_endTime' => $info['sale_endTime'], 'data' => $data)));
@@ -216,8 +220,12 @@ class OperationModel extends Model {
      */
     public function couponUpdate($where, $save){
     	if($where && $save) {
+    		//商品确定
     		$model = M('Goods_onsale');
-    		$result = $model -> where($where) -> save($save) ;
+    		$result = $model -> where($where) -> save($save);
+    		//活动确定
+    		$model = M('Onsale');
+    		$result = $model -> where('id = '.$where['onsale_id']) -> save($save);
     		return $result;
     	}else{
     		return false;
@@ -311,9 +319,52 @@ class OperationModel extends Model {
     		$res['createTime'] = time();
     		$add = $res;
     		return M('Goods_onsale')->add($add);
-    	
     	}
     	return false;
+    }
+    
+    /**
+     * 获取优惠活动
+     */
+    public function getActivity($page, $pageSize) {
+    	$model = M('Onsale');
+    	$res = $model -> field('id, name, money, startTime, endTime, sale_where, faxing, num') ->page($page, $pageSize)-> select();
+    	$count = $model -> field('count(*) as num') -> count();
+    	return array('list' => $res, 'count' => $count['num']);
+    }
+    
+    /**
+     * 获取优惠活动
+     */
+    public function searchActivity($page, $pageSize, $where) {
+    	$model = M('Onsale');
+    	if($where) {
+    		$res = $model -> field('id, name, money, startTime, endTime, sale_where, faxing, num') -> where($where) -> page($page, $pageSize) -> select();
+    		$count = $model -> field('count(*) as num') -> where($where) -> count();
+    	} else {
+    		$res = $model -> field('id, name, money, startTime, endTime, sale_where, faxing, num') -> page($page, $pageSize) -> select();
+    		$count = $model -> field('count(*) as num') -> count();
+    	}
+    
+    	return array('list' => $res, 'count' => $count['num']);
+    }
+    /**
+     * 获取优惠活动详细信息
+     * @param int $id 活动id
+     */
+    public function getActivityDetail($id) {
+    	if($id > 0) {
+    		//活动商品信息
+    		$model = M('Goods_onsale as g');
+    		$model->join('shop_goods as s ON s.goods_id = g.goods_id');
+    		$goodsList = $model -> field('g.money, g.use, g.sale_where, g.sale_startTime, g.sale_endTime, s.goods_id, s.short_title, s.goods_code, s.thumb') -> where('g.onsale_id = '.$id ) -> select();
+    		//活动信息
+    		$shopModel = M('Onsale');
+    		$huodong = $shopModel -> field('id, name, type, num, startTime, endTime ') -> where('id = '.$id ) -> find();
+    		
+    		return array('list' => $goodsList, 'huodong' => $huodong);
+    		
+    	}
     	
     }
     

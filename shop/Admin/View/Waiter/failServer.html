@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>工作台</title>
+<link href="{$Think.ADMIN_CSS}s_style.css" rel="stylesheet" type="text/css">
+<link href="{$Think.ADMIN_CSS}global.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <div class="content_right">
+    <div class="indent" onclick="changeWin()"></div>
+    <div class="link_path">您所在的位置：<a href="/admin/Uorder/ordergoods">订单管理</a>&nbsp;>&nbsp;<a href="/admin/Uorder/ordergoods">所有服务</a></div>
+    
+    <div class="table_list casePay s">
+      <div class="case_search">
+      <form method="post" action="/admin/Waiter/failServer">
+        <select onchange="searchSelectS()" name="titlename">
+            <if condition="$map['titlename'] eq 'bargain'">
+                <option value="bargain" selected>合同编号</option>
+                <else/>
+                <option value="bargain">合同编号</option>
+            </if>
+          
+          <if condition="$map['titlename'] eq 'user_name'">
+                <option value="user_name" selected>客官昵称</option>
+                <else/>
+                <option value="user_name">客官昵称</option>
+            </if>
+          
+          <if condition="$map['titlename'] eq 'phone'">
+                <option value="phone" selected>手机号码</option>
+                <else/>
+                <option value="phone">手机号码</option>
+            </if>
+          
+          <if condition="$map['titlename'] eq 'style_name'">
+                <option value="style_name" selected>服务名称</option>
+                <else/>
+                <option value="style_name">服务名称</option>
+            </if>
+          
+        </select>
+        <input type="text" class="input" name="searchdata" placeholder="请输入合同编号" style="width:200px" value="{$map['searchdata']}"/>
+
+        &nbsp;&nbsp;&nbsp;&nbsp;支付时间：<input type="text" class="input_d" name="starttime" value="{$map['starttime']}" onclick="SelectDate(this,'yyyy-MM-dd hh:mm:ss')" id="sstarttime"/>&nbsp;至&nbsp;
+            <input type="text" class="input_d" name="endtime" value="{$map['endtime']}" onclick="SelectDate(this,'yyyy-MM-dd hh:mm:ss')" id="sstarttime"/>
+        <input name="input" type="submit" value="搜索" class="search_btn">
+        </form>
+      </div>
+      <table class="spffxx">
+        <tbody>
+          <tr>            
+            <th width="17%">合同编号</th>
+            <th width="9%">客官昵称</th>
+            <th width="10%">手机号码</th>
+            <th width="18%">商品详情</th>
+            <th width="10%">服务详情</th>
+            <th width="10%">服务价（元）</th>
+            <th width="12%" id="th" value="{$cate}" style="cursor:Pointer">支付时间
+                <if condition="$sortorder eq desc">
+                    <a class="cur">
+                <else/>
+                    <a>
+                </if>
+                <b></b></a>
+            </th>
+            <th width="8%">状态</th>
+            <th width="6%">操作</th>
+          </tr>
+        <foreach name="data" item="ogd" key="k">
+            <if condition="$k%2 eq 0">
+                <tr class="tr_bgc1">
+                    <else/>
+                <tr class="tr_bgc2">
+            </if>
+            <td>{$ogd["bargain"]}</a>
+            <td>{$ogd["user_name"]}</td>
+            <td>{$ogd["phone"]}</td>
+            <td><a href="/Home/Goods/gooddetails/id/{$ogd['goods_id']}" target="_blank">{$ogd["message"]->short_title}<br>[￥{$ogd["goods_price"]}]</a></td>
+            <td>
+                <if condition="$ogd['style'] eq 38">
+                    {$ogd["message"]->name}
+                    <br>{$ogd["message"]->style}
+                </if>
+                <if condition="$ogd['style'] eq 5">
+                    {$ogd["message"]->name}
+                </if>
+                <if condition="$ogd['style'] eq 6"> 
+                    {$ogd["mbtext"]}
+                </if>
+            </td>   
+            <td class="price">
+                <if condition="0 lt $ogd['subd_num']">
+                    <b class="add">增+{$ogd['subd_num']}</b>
+                </if>
+                ￥{$ogd["service_price"]}</td>
+            <td>
+                <if condition="!empty($ogd['pay_time'])">
+                {$ogd["pay_time"]|date="Y-m-d",###}<br>{$ogd["pay_time"]|date="H:i:s",###}
+                </if>
+            </td>
+            <td class="{$ogd['color']}">{$ogd["status"]}</td>
+            <td><a href="/admin/Uorder/shopenrollover/ordergid/{$ogd['id']}" class="s_deal">处理</a></td>
+          </tr> 
+        </foreach> 
+          <if condition="empty($data)">
+            <tr class="tr_bgc1 no_data">
+                <td  colspan="9">未找到符合该条件的数据，尝试<a href="http://zhikubao.net/#/Search" target="_blank">平台搜索！</a></td>
+            </tr>
+          </if>
+        </tbody>
+      </table>
+    </div>    
+    <div class="pageNew">
+           {$page}  
+    </div>
+  </div>
+   <span id="status" style="display:none">{$get['erji']}</span>
+</body>
+<script type="text/javascript" src="{$Think.ADMIN_JS}jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}order.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_JS}Calendar1.js"></script>

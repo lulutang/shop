@@ -17,14 +17,20 @@
           <td width="20%">客官昵称：{$userdata["user_name"]}<img src="{$Think.ADMIN_IMAGES}u{$userdata['rank']}.png" class="imgqq"></th>
           <td width="20%">客官姓名：{$userdata["truename"]}</th>
           <td width="20%">可用盘缠：<span>{$userdata["coil"]}盘缠</span></th>
-          <td width="20%">手机号码：{$userdata["mobile_phone"]}</th>
-          <td width="20%">QQ：{$userdata["qq"]}<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin={$userdata['qq']}&site=qq&menu=yes"><img border="0" src="{$Think.ADMIN_IMAGES}icon09.jpg" class="imgqq" alt="点击这里给我发消息"></a></th>
+          <td width="20%">手机号码：{$orderfind["phone"]}</th>
+          <td width="20%">QQ：{$userdata["qq"]}
+              <if condition="empty($userdata['qq'])">
+                  <a href="javascript:;" onclick="alert('该用户没有录入qq')">
+                  <else/>
+                  <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin={$userdata['qq']}&site=qq&menu=yes">
+              </if>
+                  <img border="0" src="{$Think.ADMIN_IMAGES}icon09.jpg" class="imgqq" alt="点击这里给我发消息"></a></th>
         </tr>
         <tr>
           <td class="cased" colspan="5">
             <ul class="detail">
             	<li><span>订单编号：</span>{$orderfind["order_card"]}</li>
-                <li><span>资金交易编号：</span> {$orderfind["fundnum"]} </li>
+                <li><span>资金交易编号：</span> {$orderfind["trade_no"]} </li>
                 <li><span>支付方式：</span>
                     <if condition="$orderfind['pay_type'] eq 0">线下</if>
                     <if condition="$orderfind['pay_type'] eq 1">财付通</if>
@@ -83,13 +89,19 @@
             <th width="23%">服务状态</th>
             <th width="25%">服务价（元）</th>
           </tr>
-        <foreach name="ordergoods" item="ogs">
-          <tr class="tr_bgc1">
+        <foreach name="ordergoods" item="ogs" key="k">
+            <if condition="$k%2 eq 0">
+                <tr class="tr_bgc1">
+                <else/>
+                <tr class="tr_bgc2">
+            </if>
+          
               <td><a href="/Home/Goods/gooddetails/id/{$ogs['goods_id']}" target="_blank">{$ogs['erji']}[￥{$ogs['goods_price']}]</a></td>
             <td>
                     <if condition="$ogs['style'] eq 38">
-                           {$ogs["message"]["name"]} <br>
-                           {$ogs["message"]["style"]}
+                           {$ogs["message"]["name"]}<br>
+                           <if condition="!empty($ogs['message']['style'])">{$ogs["message"]["style"]}</if>
+                           
                         </if>
                         <if condition="$ogs['style'] eq 5">
                             {$ogs["message"]["name"]}

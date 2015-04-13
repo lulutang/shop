@@ -32,9 +32,9 @@
             <th>操作</th>
           </tr>
           
-          <foreach name="data" item="vo" >
+          <foreach name="data" item="vo" key="key">
              
-          <tr>
+          <tr <if condition="$key%2 neq 0">class="tr_bgcolor" </if>>
             <td>{$vo.act_id}</td>
             <td>{$vo.act_name}</td>
             <td><if condition="($vo.act_type eq 1) "> 商品服务买赠<elseif condition="$vo.act_type eq 2"/>单品促销</if></td>

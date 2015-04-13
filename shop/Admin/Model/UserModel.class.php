@@ -172,7 +172,7 @@ class UserModel extends Model{
     * @param  string $where    查询条件
     */
     public function UserInfos($start,$end,$where){
-        $userInfos = $this -> db(1,"DB_CONFIG1") -> table("ecs_users") -> where($where) -> order("reg_time desc") -> limit($start,$end) -> select();
+        $userInfos = $this -> field('user_id,email,mobile_phone,reg_time,last_login,bind_mobile')-> db(1,"DB_CONFIG1") -> table("ecs_users") -> where($where) -> order("reg_time desc") -> limit($start,$end) -> select();
         return $userInfos;
     }
     /**
@@ -231,7 +231,7 @@ class UserModel extends Model{
     * @param  string $phone 用户手机
     */
     public function CheckPhone($phone){
-        $result = $this -> db(1,"DB_CONFIG1") -> table("ecs_users") -> where("mobile_phone = '".$phone."'") -> select();
+        $result = $this -> db(1,"DB_CONFIG1") -> table("ecs_users") -> where("mobile_phone = '".$phone."'") -> find();
         if($result){
             return TRUE;
         }

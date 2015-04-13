@@ -15,24 +15,28 @@
     <div class="link_path">您所在的位置：<a href="javascript:void(0)">客官管理 </a>&nbsp;>&nbsp;<a href="javascript:void(0)">所有客官</a></div>
     <table class="customer_listbox">
     	<tr>
+           
         	<td class="meter_search" colspan="9">
             <a href="/index.php/Admin/Guest/addGuest">新增</a> 
             <p class="search">
-            	<select class="select200" onchange="searchSelect()">
-                	<option value="1">手机号码</option>
-                    <option value="2">客官姓名</option>
-                    <option value="3">客官昵称</option>
-                    <option value="4">QQ</option>
-                    <option value="5">订单（总）</option>
-                    <option value="6">商品服务（总）</option>
-                    <option value="7">消费总额以下</option>
-                    <option value="8">创建时间</option>
-                    <option value="9">最后登录时间</option>
-                </select>
-                <input class="text200" type="text" placeholder="请选择手机号码"/>
-                <input class="btn_search" type="button" value="搜索" />
+                <form method="post" action="/Admin/Guest/lists">
+                    <select name="titlename" class="select200" onchange="searchSelect()">
+                        <option value="mobile_phone" <if condition="$map['titlename'] eq 'mobile_phone'"> selected </if> >手机号码</option>
+                        <option value="truename" <if condition="$map['titlename'] eq 'truename'"> selected </if> >客官姓名</option>
+                        <option value="user_name" <if condition="$map['titlename'] eq 'user_name'"> selected </if> >客官昵称</option>
+                        <option value="qq" <if condition="$map['titlename'] eq 'qq'"> selected </if> >QQ</option>
+<!--                        <option value="totalorder" <if condition="$map['titlename'] eq 'totalorder'"> selected </if> >订单（总）</option>
+                        <option value="totalserver" <if condition="$map['titlename'] eq 'totalserver'"> selected </if> >商品服务（总）</option>-->
+                        <option value="user_money" <if condition="$map['titlename'] eq 'user_money'"> selected </if> >消费总额以下</option>
+                        <option value="reg_time" <if condition="$map['titlename'] eq 'reg_time'"> selected </if> >创建时间</option>
+                        <option value="last_time" <if condition="$map['titlename'] eq 'last_time'"> selected </if> >最后登录时间</option>
+                    </select>
+                    <input class="text200" name="searchdata" value="{$map['searchdata']}" type="text" placeholder="请选择手机号码"/>
+                    <input class="btn_search" type="submit" value="搜索" />
+                </form>
             </p>
             </td>
+           
         </tr>
         
         <tr>
@@ -43,8 +47,8 @@
             <th width="8%">订单（总）</th>
             <th width="12%">商品服务（总）</th>
             <th width="12%">消费总额（元）</th>
-            <th width="12%">创建时间 <a href="javascript:void(0)"><b></b></a></th>
-            <th width="14%">最后登录时间 <a href="javascript:void(0)"><b></b></a></th>
+            <th width="12%">创建时间 <a href="/Admin/Guest/lists/regtime/{$ordertime}/"><b></b></a></th>
+            <th width="14%">最后登录时间 <a href="/Admin/Guest/lists/login/asc{$login}/"><b></b></a></th>
         </tr>
         
         <foreach name="userinfo" item="vo" >
@@ -53,8 +57,8 @@
             <td>{$vo.truename}</td>
             <td>{$vo.mobile_phone}</td>
             <td>{$vo.qq}</td>
-            <td>9</td>
-            <td>12</td>
+            <td>{$vo.totalorder}</td>
+            <td>{$vo.totalserver}</td>
             <td>￥{$vo.user_money}</td>
             <td><php>echo date('Y-m-d H:i:s',$vo['reg_time'])</php></td>
             <td><php>if($vo['last_login']!='0'){ echo date('Y-m-d H:i:s',$vo['last_login']); }</php></td>

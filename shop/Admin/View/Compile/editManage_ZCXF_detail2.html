@@ -63,19 +63,18 @@
         <p class="s_pprice" style="width:26%">订单编号：{$minfo['order_code']}</p>
       </div>
       <div class="s_content">
-          <a href="javascript:void(0)" class="s_a_sqs">申请书</a>
-          <a href="javascript:void(0)" class="s_a_wts">委托书</a>
+          <a href="/admin/Uorder/apply/ordergid/{$minfo['oid']}" class="s_a_sqs" target="_blank">申请书</a>
+          <a href="/admin/Uorder/deput/ordergid/{$minfo['oid']}" class="s_a_wts" target="_blank">委托书</a>
         <div class="s_dtr">
           <p class="s_pn">商标名称：</p>
           <p class="s_pd">
             <b>{$minfo['goods_name']}</b><b>商标类别：{$minfo['style_name']}</b>
             <a href="{$minfo['enroll']}" target="_blank">商标图样</a>
-            <if condition="$minfo['is_person'] eq 2">
+            <if condition="$minfo['is_person'] neq 1">
             <a href="{$minfo['trader_fbfphoto']}" target="_blank">企业主体资格</a>
-            </else>
-          
-          <a href="{$minfo['trader_photo']}" target="_blank">身份证</a><a href="{$minfo['trader_fbfphoto']}" target="_blank">个体执照</a>
-          </if>
+            <else/>
+            <a href="{$minfo['trader_photo']}" target="_blank">身份证</a><a href="{$minfo['trader_fbfphoto']}" target="_blank">个体执照</a>
+            </if>
           </p>
         </div>
         <div class="s_dtr clearfix" style='height: auto'><p class="s_pn">商品/服务项目：</p><p class="s_pd">{$minfo['subd']}</p></div>
@@ -144,7 +143,7 @@
       <div class="s_content">
         <div class="s_edit_btns">
           <p>
-            受理附件：<a href="javascript:void(0)" class="show">查看</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+             受理附件：<a href="{$minfo['accept_adj']}" class="show" target="_blank">查看</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             发文编号：{$minfo['dispatch_num']}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             发文日期：<if condition="empty($minfo['dispatch_time'])"><else/>{$minfo['dispatch_time']|date='Y-m-d H:i:s',###}</if>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             录入人：{$minfo['xf_user_name']}
@@ -157,7 +156,7 @@
       <div class="s_content">
         <div class="s_edit_btns">
           <p>
-            受理附件：<a href="javascript:void(0)" class="show">查看</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            初审附件：<a href="{$minfo['c_accept_adj']}" class="show" target="_blank">查看</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             公告页号：{$minfo['dispatch_num']}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             公告日期：{$minfo['trialtime']|date='Y-m-d H:i:s',###}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             发件日期：<if condition="empty($minfo['c_dispatch_time'])"><else/>{$minfo['dispatch_time']|date='Y-m-d H:i:s',###}</if>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

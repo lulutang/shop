@@ -168,5 +168,52 @@ class WaiterModel extends Model{
         
         return $res;
     }
+    /**
+     * 获取审核失败的数据
+     */
+    public function getFailData( $start, $end, $where ) {
+        
+        $AA = M("compile");
+        
+        $list = $AA->field('shop_compile.co_id, b.user_name, b.user_id, b.phone, b.bargain, b.service_price,b.style, b.erji, b.goods_price, b.message, b.pay_time, b.virt_status, b.id')->join('shop_order_goods b ON shop_compile.ordergoods_id=b.id')->where( $where ) ->limit( $start, $end ) ->order('b.id desc' )->select();
+   //    echo $AA->getLastSQL();
+        $statusDAta = array('1'=>'编修审核','2'=>'信息初审', '3'=>'报件', '4'=>'下发受理', '5'=>'已支付', '6'=>'服务已结束', '7'=>'服务已开始', '8'=>'下发注册证', '9'=>'初审');
+        $colorDAta = array('1'=>'s_c_qingse','2'=>'s_c_blue', '3'=>'s_c_purple', '4'=>'s_c_yellow', '5'=>'s_c_red', '6'=>'s_c_grey', '7'=>'s_c_green', '8'=>'s_c_green2', '9'=>'s_c_brown');
+        foreach( $list as $key=>$val ){
+            $list[$key]['message'] = json_decode($val['message']);
+            $list[$key]['status'] = $statusDAta[$val['virt_status']];
+            $list[$key]['color'] = $colorDAta[$val['virt_status']];
+        }
+        return $list;
+    }
+    /**
+     * 根据条件计算个数
+     * @param string $where
+     * @return array
+     */
+    public function getfailServerCount( $where ) {
+        
+        $AA = M("compile");
+        
+        $data = $AA -> where( $where ) ->count();
+       
+        return $data;
+    }
+    /**
+     * 更改状态
+     * @param int $co_id
+     * @return unkonwn
+     */
+    public function changeIspass( $co_id ) {
+        
+        $AA = M("compile");
+        
+        $data = array();
+        $data['is_pass'] = '0';
+        
+        $res = $AA -> where('co_id='.$co_id) -> save( $data );  
+        
+        return $res;
+    }
     
 }
